@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>BES SAPA AL HIJRAH 2026 - Portal Resmi Santri</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Playfair+Display:ital,wght@0,600;0,800;1,600;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Amiri:ital@0;1&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS Engine -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Three.js 3D WebGL Library Engine -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            serif: ['"Playfair Display"', 'serif'],
+            decorative: ['"Cinzel Decorative"', '"Playfair Display"', 'serif'],
+            arabic: ['"Amiri"', 'serif'],
+          },
+          colors: {
+            hydrangea: {
+              50: '#f0f7fe',
+              100: '#e1effc',
+              200: '#c5e0fa',
+              300: '#a3caf6',
+              400: '#6ea2db',
+              500: '#4a84c4',
+              600: '#386fa8',
+              700: '#285382',
+              800: '#1c3b5e',
+              900: '#12253c',
+              950: '#0c1b2e',
+            },
+            linen: {
+              50: '#fafbf9',
+              100: '#f2f5f1',
+              200: '#e4ebe2',
+              300: '#cbd3cb',
+              400: '#a8b3a7',
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <?!= include('css'); ?>
+
+  <!-- Dual-Mode Loader: Fallback CSS Otomatis untuk Hosting GitHub Pages -->
+  <script>
+    (function() {
+      if (typeof google === 'undefined') {
+        fetch('css.html')
+          .then(function(res) { return res.text(); })
+          .then(function(html) {
+            var temp = document.createElement('div');
+            temp.innerHTML = html;
+            var styleEl = temp.querySelector('style');
+            if (styleEl) document.head.appendChild(styleEl);
+          })
+          .catch(function(err) { console.warn('Pemuatan css.html via GitHub:', err); });
+      }
+    })();
+  </script>
+</head>
+<body class="antialiased selection:bg-hydrangea-400/30 selection:text-hydrangea-900 bg-[#eaf3fc] text-slate-800 min-h-screen flex flex-col justify-between">
+
+  <!-- 3D Celestial Crystal Loading Screen (1 Tema dengan Polyhedra & Stardust WebGL) -->
+  <div id="appLoadingScreen" class="celestial-loading-screen">
+    <div class="loading-ambient-halo"></div>
+
+    <div class="loading-crystal-container">
+      <div class="loading-orbit-ring ring-outer"></div>
+      <div class="loading-orbit-ring ring-middle"></div>
+      
+      <!-- Polyhedron Crystal Emblem SVG -->
+      <div class="loading-crystal-core">
+        <svg class="loading-polyhedron-svg filter-luminescent" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          <circle cx="12" cy="12" r="2.5" fill="#F59E0B"/>
+        </svg>
+      </div>
+
+      <div class="loading-stardust-pulse"></div>
+    </div>
+
+    <div class="loading-title-box">
+      <div class="loading-kicker" id="loadingKicker">BADAN EKSEKUTIF SANTRI</div>
+      <h2 class="loading-brand-title" id="loadingBrandTitle">BES SAPA AL HIJRAH</h2>
+      <div class="loading-tagline" id="loadingTagline">ADAB • ILMU • UKHUWAH</div>
+    </div>
+
+    <div class="loading-track-wrapper">
+      <div class="loading-track-beam" id="loadingTrackBeam"></div>
+    </div>
+  </div>
+
+  <!-- Luminescent Reading Progress Beam -->
+  <div id="scrollProgressBar" class="scroll-progress-bar"></div>
+
+  <!-- Living 3D WebGL Celestial Atmosphere Container -->
+  <div class="royal-silk-atmosphere">
+    <canvas id="webglCanvas" class="webgl-interactive-canvas"></canvas>
+    <div class="sacred-vignette-overlay"></div>
+  </div>
+
+  <header id="mainHeader" class="fixed top-4 left-0 right-0 z-40 px-3 sm:px-6 lg:px-10 transition-all duration-300">
+    <div id="mainNavbarPill" class="w-full max-w-7xl mx-auto wide-silk-nav-capsule rounded-full px-5 sm:px-8 py-2.5 sm:py-3 flex items-center justify-between transition-all duration-300">
+      
+      <!-- Sisi Kiri: Lambang Al Hijrah Asli Transparan -->
+      <div class="flex-1 flex items-center justify-start">
+        <a href="#home" onclick="navigateTo('home'); return false;" class="flex items-center gap-3 group focus:outline-none select-none">
+          <img src="https://lh3.googleusercontent.com/d/1y4RKoHXuKXDnBLCs25jomFLXTkyQL7Pw" onerror="this.src='https://drive.google.com/thumbnail?id=1y4RKoHXuKXDnBLCs25jomFLXTkyQL7Pw&sz=w800'" alt="Lambang Al Hijrah" class="h-9 sm:h-11 w-auto object-contain transition-transform group-hover:scale-105 filter drop-shadow(0 3px 10px rgba(36,75,122,0.25))">
+          <span class="font-black text-hydrangea-900 text-sm sm:text-base tracking-wider hidden sm:inline-block uppercase" id="navBrandTitle">BES SAPA AL HIJRAH</span>
+        </a>
+      </div>
+
+      <!-- Sisi Tengah: Menu Navigasi dengan Smooth Sliding Underline -->
+      <nav class="hidden md:flex flex-none items-center relative py-1" id="navMenuContainer">
+        <button onclick="navigateTo('home')" id="nav-home" class="nav-link-item active-nav-link px-5 py-1.5 text-xs sm:text-sm font-extrabold tracking-widest uppercase transition-colors">
+          BERANDA
+        </button>
+        <button onclick="navigateTo('about')" id="nav-about" class="nav-link-item px-5 py-1.5 text-xs sm:text-sm font-extrabold tracking-widest uppercase transition-colors">
+          TENTANG
+        </button>
+        <button onclick="navigateTo('news')" id="nav-news" class="nav-link-item px-5 py-1.5 text-xs sm:text-sm font-extrabold tracking-widest uppercase transition-colors">
+          WARTA
+        </button>
+        <button onclick="navigateTo('cabinet')" id="nav-cabinet" class="nav-link-item px-5 py-1.5 text-xs sm:text-sm font-extrabold tracking-widest uppercase transition-colors">
+          KABINET
+        </button>
+
+        <div id="navSlidingUnderline" class="nav-sliding-underline"></div>
+      </nav>
+
+      <!-- Sisi Kanan: Hamburger Khusus Mobile -->
+      <div class="flex-1 flex items-center justify-end">
+        <div class="flex md:hidden">
+          <button id="mobileMenuBtn" onclick="toggleMobileMenu()" class="w-10 h-10 rounded-full bg-white/80 hover:bg-white border border-hydrangea-300 flex flex-col items-center justify-center gap-1 p-2 text-hydrangea-900 focus:outline-none cursor-pointer shadow-sm" aria-label="Buka Menu">
+            <span class="w-4 h-0.5 bg-hydrangea-900 rounded-full transition-all duration-300" id="hambLine1"></span>
+            <span class="w-4 h-0.5 bg-hydrangea-900 rounded-full transition-all duration-300" id="hambLine2"></span>
+            <span class="w-4 h-0.5 bg-hydrangea-900 rounded-full transition-all duration-300" id="hambLine3"></span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Drawer Navigasi Mobile -->
+    <div id="mobileDrawer" class="hidden md:hidden mt-2 max-w-sm mx-auto silk-frosted-card rounded-2xl p-3 border border-hydrangea-300 shadow-xl transition-all">
+      <div class="flex flex-col gap-1 text-center">
+        <button onclick="navigateTo('home'); toggleMobileMenu();" class="w-full py-2.5 px-4 text-xs font-black rounded-xl text-hydrangea-900 bg-hydrangea-100 hover:bg-hydrangea-200 uppercase">
+          BERANDA
+        </button>
+        <button onclick="navigateTo('about'); toggleMobileMenu();" class="w-full py-2.5 px-4 text-xs font-black rounded-xl text-slate-700 hover:bg-hydrangea-50 uppercase">
+          TENTANG
+        </button>
+        <button onclick="navigateTo('news'); toggleMobileMenu();" class="w-full py-2.5 px-4 text-xs font-black rounded-xl text-slate-700 hover:bg-hydrangea-50 uppercase">
+          WARTA
+        </button>
+        <button onclick="navigateTo('cabinet'); toggleMobileMenu();" class="w-full py-2.5 px-4 text-xs font-black rounded-xl text-slate-700 hover:bg-hydrangea-50 uppercase">
+          KABINET
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="mainContentContainer" class="w-full flex-grow transition-all">
+
+    <!-- PAGE 1: BERANDA (HOME) -->
+    <section id="page-home" class="page-section active-page w-full px-4 text-center">
+      <div class="w-full pt-24"></div>
+
+      <div class="w-full max-w-4xl flex flex-col items-center justify-center my-auto relative z-10">
+        <div class="aesthetic-ornamental-title select-none mb-10 relative">
+          <!-- Ambient Halo Backlight -->
+          <div class="title-ambient-halo"></div>
+
+          <!-- Kicker: BES High-Fashion Spacing -->
+          <div class="title-kicker-bes" id="homeHeroKicker">B E S</div>
+
+          <!-- Main Display: AL HIJRAH Monumental Glyph-Contoured Shimmer -->
+          <h1 class="title-main-alhijrah">
+            <span class="title-text-gradient" id="homeHeroTitle">AL HIJRAH</span>
+          </h1>
+
+          <!-- Year: 2026 with Diplomatic Hairline Accent -->
+          <div class="title-year-frame">
+            <span class="year-flanking-hairline"></span>
+            <span class="title-year-number" id="homeHeroYear">2026</span>
+            <span class="year-flanking-hairline"></span>
+          </div>
+        </div>
+
+        <button onclick="openPhotobooth()" class="group relative flex items-center bg-white/95 hover:bg-white border-2 border-hydrangea-400 hover:border-hydrangea-600 rounded-2xl px-9 py-4 shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-1 active:translate-y-0 cursor-pointer">
+          <span class="text-hydrangea-950 font-extrabold text-sm sm:text-base pr-4 border-r-2 border-dashed border-hydrangea-200">
+            Take a photo
+          </span>
+          <span class="pl-4 text-hydrangea-700 group-hover:scale-115 transition-transform flex items-center">
+            <svg class="w-5 h-5 text-hydrangea-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+              <circle cx="12" cy="13" r="3" stroke-width="2.2" />
+            </svg>
+          </span>
+        </button>
+      </div>
+
+      <!-- Copyright Beranda Dinamis dari Spreadsheet (Dapat Diedit di Sheet INFO_WEB) -->
+      <div id="homeCopyrightText" class="w-full pb-5 text-center text-xs text-hydrangea-800 font-extrabold select-none relative z-10">
+        &copy; 2026 BES AL HIJRAH. Adab, Ilmu & Ukhuwah.
+      </div>
+    </section>
+
+    <!-- PAGE 2: PHOTOBOOTH STUDIO (NATIVE KAMERA PADA GITHUB PAGES) -->
+    <section id="page-photobooth" class="page-section w-full">
+      <div class="w-full max-w-2xl flex items-center justify-between px-2 flex-shrink-0">
+        <button onclick="exitPhotobooth()" class="w-10 h-10 rounded-full bg-hydrangea-800 hover:bg-hydrangea-900 text-white flex items-center justify-center transition-all shadow-md active:scale-95 flex-shrink-0 cursor-pointer" title="Kembali ke Beranda">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/>
+          </svg>
+        </button>
+        
+        <div class="text-center flex-1 px-3">
+          <h2 class="text-xs sm:text-sm md:text-base font-extrabold text-hydrangea-950">
+            Capture your moment with the BES photobooth 📸
+          </h2>
+          <p class="text-[10px] sm:text-xs text-hydrangea-700 mt-0.5 font-bold">
+            Pick a frame and take your photo! Click the frame you want
+          </p>
+        </div>
+
+        <div class="w-10 h-10 invisible"></div>
+      </div>
+
+      <div class="carousel-stage-wrapper">
+        <div class="carousel-strip-container" id="carouselStripContainer">
+          
+          <!-- Template 1: Haru Sky Pastel & Cloud Sparkle ☁️✨ -->
+          <div id="card-analog" onclick="revolveToTemplate('analog')" class="carousel-strip-item analog-film-theme group">
+            <div class="haru-floating-sparkle sparkle-tl">✨</div>
+            <div class="haru-floating-sparkle sparkle-tr">☁️</div>
+            <div class="haru-floating-sparkle sparkle-br">🫧</div>
+            
+            <div class="text-center pt-1.5 pb-1 relative z-10">
+              <div class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-white/95 text-[8px] sm:text-[9px] font-black text-sky-600 shadow-sm border border-sky-200 uppercase tracking-wider">
+                <span>☁️</span> <span>HARU SANTRI</span> <span>✨</span>
+              </div>
+              <div class="flex items-center justify-between px-3 mt-1 text-[7px] sm:text-[8px] text-sky-800 font-extrabold">
+                <span>LIFE 4 CUTS 🧸</span>
+                <span class="font-mono bg-white/90 text-sky-700 px-1.5 py-0.5 rounded shadow-xs">'26 09 19</span>
+              </div>
+            </div>
+
+            <div class="strip-slots-box my-1 px-1 relative z-10">
+              <div class="frame-photo-slot haru-polaroid-slot" id="slot-analog-1"></div>
+              <div class="slot-sticker-divider">
+                <span>✨</span><span>🎀</span><span>☁️</span><span>⭐</span>
+              </div>
+              <div class="frame-photo-slot haru-polaroid-slot" id="slot-analog-2">
+                <span class="text-xs text-sky-500 font-extrabold flex items-center gap-1"><span>Pose 2</span> <span>🌸</span></span>
+              </div>
+              <div class="slot-sticker-divider">
+                <span>🫧</span><span>💖</span><span>✨</span><span>🧸</span>
+              </div>
+              <div class="frame-photo-slot haru-polaroid-slot" id="slot-analog-3">
+                <span class="text-xs text-sky-500 font-extrabold flex items-center gap-1"><span>Pose 3</span> <span>⭐</span></span>
+              </div>
+            </div>
+
+            <div class="pt-1 text-center relative z-10 border-t border-sky-200/90">
+              <div class="text-[8px] sm:text-[9px] font-black text-sky-900 tracking-wider flex items-center justify-center gap-1">
+                <span>📸</span> <span>BES AL HIJRAH Y2K CUTS</span> <span>🫧</span>
+              </div>
+              <div class="text-[6px] sm:text-[7px] text-sky-700 font-bold uppercase tracking-widest mt-0.5">SWEET YOUTH MEMORIES • 2026</div>
+            </div>
+          </div>
+
+          <!-- Template 2: Sekolah Alam Botanical Scrapbook 🌿🌻 -->
+          <div id="card-herbarium" onclick="revolveToTemplate('herbarium')" class="carousel-strip-item herbarium-journal-theme group">
+            <div class="washi-tape-strip washi-top-left"></div>
+            <div class="washi-tape-strip washi-bottom-right"></div>
+            <div class="scrapbook-stamp-seal">📮 2026</div>
+
+            <div class="text-center pt-2 pb-1 relative z-10">
+              <div class="text-[9px] sm:text-[11px] font-serif font-black tracking-wider text-[#3d2e1e] flex items-center justify-center gap-1.5">
+                <span>🌿</span> <span>Sekolah Alam Al Hijrah</span> <span>☕</span>
+              </div>
+              <div class="text-[7px] sm:text-[8px] text-[#8c7b6b] font-serif italic">Herbarium Journal • Bintuju Tapsel</div>
+            </div>
+
+            <div class="strip-slots-box my-1 px-1 relative z-10">
+              <div class="frame-photo-slot herbarium-photo-slot" id="slot-herbarium-1"></div>
+              <div class="nature-leaf-divider">
+                <span>🍃</span><span>── ☕ ──</span><span>🌻</span>
+              </div>
+              <div class="frame-photo-slot herbarium-photo-slot" id="slot-herbarium-2">
+                <span class="text-xs text-amber-900/70 font-serif italic flex items-center gap-1"><span>Pose 2</span> <span>🌿</span></span>
+              </div>
+              <div class="nature-leaf-divider">
+                <span>📖</span><span>── 🍂 ──</span><span>🌱</span>
+              </div>
+              <div class="frame-photo-slot herbarium-photo-slot" id="slot-herbarium-3">
+                <span class="text-xs text-amber-900/70 font-serif italic flex items-center gap-1"><span>Pose 3</span> <span>🍂</span></span>
+              </div>
+            </div>
+
+            <div class="pt-1 text-center relative z-10 border-t border-[#d4c5b2]">
+              <div class="text-[8px] sm:text-[9px] text-[#4a3f35] font-black tracking-wider uppercase flex items-center justify-center gap-1">
+                <span>🌾</span> <span>Catatan Kenangan Santri</span> <span>🍃</span>
+              </div>
+              <div class="text-[6px] sm:text-[7px] text-[#8c7b6b] font-medium">Mekar Bertumbuh di Bumi Pesantren</div>
+            </div>
+          </div>
+
+          <!-- Template 3: The Royal Diplomatic & Golden Seal 👑⚜️ -->
+          <div id="card-diplomatic" onclick="revolveToTemplate('diplomatic')" class="carousel-strip-item diplomatic-press-theme group">
+            <div class="royal-corner-filigree filigree-tl">⚜️</div>
+            <div class="royal-corner-filigree filigree-tr">⚜️</div>
+
+            <div class="text-center pt-2 pb-1 relative z-10 border-b border-[#F59E0B]/30">
+              <div class="inline-flex items-center gap-1 text-[9px] sm:text-[11px] font-serif font-black tracking-widest text-[#F59E0B] uppercase">
+                <span>👑</span> <span>BES SAPA AL HIJRAH</span> <span>🏛️</span>
+              </div>
+              <div class="text-[7px] sm:text-[8px] text-slate-300 tracking-widest uppercase font-semibold mt-0.5">The Royal Diplomatic Press 2026</div>
+            </div>
+
+            <div class="strip-slots-box my-1 px-1 relative z-10">
+              <div class="frame-photo-slot royal-gold-slot" id="slot-diplomatic-1"></div>
+              <div class="royal-insignia-divider">
+                <span>⭐</span><span>⚜️</span><span>👑</span><span>⚜️</span><span>⭐</span>
+              </div>
+              <div class="frame-photo-slot royal-gold-slot" id="slot-diplomatic-2">
+                <span class="text-xs text-amber-300/80 font-serif italic flex items-center gap-1"><span>Pose 2</span> <span>💎</span></span>
+              </div>
+              <div class="royal-insignia-divider">
+                <span>🎖️</span><span>⚜️</span><span>⭐</span><span>⚜️</span><span>🎖️</span>
+              </div>
+              <div class="frame-photo-slot royal-gold-slot" id="slot-diplomatic-3">
+                <span class="text-xs text-amber-300/80 font-serif italic flex items-center gap-1"><span>Pose 3</span> <span>👑</span></span>
+              </div>
+            </div>
+
+            <div class="pt-1.5 text-center relative z-10 border-t border-[#F59E0B]/30 flex flex-col items-center">
+              <div class="inline-flex items-center gap-1.5 text-[8px] sm:text-[9px] text-[#F59E0B] font-serif font-black tracking-widest uppercase">
+                <span>⚜️</span> <span>ADAB • ILMU • UKHUWAH</span> <span>⚜️</span>
+              </div>
+              <div class="text-[6px] sm:text-[7px] text-slate-400 tracking-wider uppercase mt-0.5">Official Executive Memorabilia</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="w-full max-w-xs mt-2 flex flex-col gap-1.5 items-center flex-shrink-0">
+        <button id="btnStartPhotoSequence" onclick="startPhotoSequence()" disabled class="w-full py-2.5 px-4 rounded-xl bg-slate-300 text-slate-500 font-bold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-not-allowed">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+          </svg>
+          <span id="btnStartText">Menghubungkan Kamera...</span>
+        </button>
+
+        <button id="btnDownloadStrip" onclick="downloadPhotoStrip()" disabled class="hidden w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-hydrangea-700 to-hydrangea-600 hover:from-hydrangea-800 hover:to-hydrangea-700 text-white font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+          </svg>
+          <span>Unduh Strip Foto (PNG)</span>
+        </button>
+
+        <div class="w-full flex gap-2">
+          <button onclick="switchCameraFacing()" class="flex-1 py-1.5 px-3 rounded-lg bg-hydrangea-100 hover:bg-hydrangea-200 text-hydrangea-900 text-[11px] font-extrabold transition-colors flex items-center justify-center gap-1 cursor-pointer">
+            <span>🔄</span>
+            <span>Balik Kamera</span>
+          </button>
+          <button onclick="revolveNextTemplate()" class="flex-1 py-1.5 px-3 rounded-lg bg-linen-100 hover:bg-linen-200 text-slate-800 text-[11px] font-extrabold transition-colors flex items-center justify-center gap-1 cursor-pointer">
+            <span>🎡</span>
+            <span>Ganti Frame</span>
+          </button>
+        </div>
+      </div>
+
+      <div id="cameraFlash" class="hidden fixed inset-0 pointer-events-none bg-white z-50"></div>
+    </section>
+
+    <!-- PAGE 3: TENTANG (ABOUT) -->
+    <section id="page-about" class="page-section w-full flex-col max-w-6xl mx-auto px-4 sm:px-6 pt-24 sm:pt-28 pb-20">
+      
+      <!-- 1. VISI UTAMA (DARI SHEET VISI_MISI) -->
+      <div class="scroll-reveal text-center max-w-4xl mx-auto mb-16 pt-4">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-black bg-hydrangea-100 text-hydrangea-800 border border-hydrangea-300 shadow-sm mb-5 uppercase tracking-widest" id="aboutVisionBadge">
+          VISI UTAMA LEMBAGA
+        </div>
+        <h2 class="kolektiva-vision-title text-3xl sm:text-5xl md:text-6xl font-black text-hydrangea-950 tracking-tight leading-tight uppercase mb-4" id="aboutVisionHeadline">
+          “PELOPOR PENDIDIKAN KARAKTER & PARENTING”
+        </h2>
+        <p class="text-sm sm:text-base text-slate-700 max-w-2xl mx-auto font-semibold leading-relaxed" id="aboutVisionText">
+          Menjadi sekolah percontohan dalam pendidikan karakter dan pemberdayaan parenting.
+        </p>
+        <p class="text-xs sm:text-sm text-slate-500 max-w-xl mx-auto mt-2 font-medium" id="aboutVisionDesc">
+          Membangun sinergi komprehensif antara keteladanan asrama pesantren dan keterlibatan aktif orang tua.
+        </p>
+      </div>
+
+      <!-- 2. MISI STRATEGIS (DARI SHEET VISI_MISI) -->
+      <div class="scroll-reveal grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-20 pb-16 border-b border-hydrangea-200">
+        
+        <div class="lg:col-span-5 flex flex-col justify-center text-left">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-[11px] font-black bg-hydrangea-800 text-white w-max mb-3 uppercase tracking-wider" id="aboutMissionBadge">
+            LANGKAH STRATEGIS
+          </div>
+          <h3 class="text-3xl sm:text-4xl font-black text-hydrangea-950 tracking-tight leading-tight mb-4">
+            MISI <span class="text-hydrangea-600">AL HIJRAH</span>
+          </h3>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium mb-6">
+            Program aksi terpadu dan berkelanjutan kami untuk mewujudkan ekosistem pesantren yang unggul dalam ilmu, luhur dalam adab, dan mandiri secara kepemimpinan.
+          </p>
+          <div class="hidden lg:flex items-center gap-3 pt-4 border-t border-hydrangea-200 text-xs font-bold text-hydrangea-700">
+            <span>🌿 Sekolah Alam Penghafal Al-Quran Al HIJRAH</span>
+            <span>•</span>
+            <span>Bintuju, Tapsel</span>
+          </div>
+        </div>
+
+        <div class="lg:col-span-7 space-y-4" id="aboutMissionsContainer">
+          <div class="kolektiva-mission-card p-4 sm:p-5 rounded-2xl flex items-start gap-4">
+            <div class="kolektiva-num-badge">01</div>
+            <p class="text-xs sm:text-sm text-slate-800 leading-relaxed font-bold mt-1" id="aboutMission1">
+              Mengintegrasikan pendidikan umum dan agama sebagai kesatuan yang utuh dalam kehidupan sehari-hari.
+            </p>
+          </div>
+
+          <div class="kolektiva-mission-card p-4 sm:p-5 rounded-2xl flex items-start gap-4">
+            <div class="kolektiva-num-badge">02</div>
+            <p class="text-xs sm:text-sm text-slate-800 leading-relaxed font-bold mt-1" id="aboutMission2">
+              Menghantarkan anak pada konsep dasar keterampilan dan kepemimpinan Islam.
+            </p>
+          </div>
+
+          <div class="kolektiva-mission-card p-4 sm:p-5 rounded-2xl flex items-start gap-4">
+            <div class="kolektiva-num-badge">03</div>
+            <p class="text-xs sm:text-sm text-slate-800 leading-relaxed font-bold mt-1" id="aboutMission3">
+              Mengembangkan proses pembelajaran inovatif, kreatif, kondusif, dan konstruktif.
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 3. PROFIL YAYASAN & PILAR KREDENSIAL (DARI SHEET INFO_WEB) -->
+      <div class="scroll-reveal grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch mb-20 pb-16 border-b border-hydrangea-200">
+        
+        <div class="lg:col-span-7 flex flex-col justify-center text-left pr-0 lg:pr-4">
+          <div class="flex flex-wrap items-center gap-2.5 mb-5">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-extrabold bg-hydrangea-800 text-white shadow-sm tracking-wide">
+              <span class="w-2 h-2 rounded-full bg-sky-300 animate-pulse"></span>
+              <span>NPYN:</span> <span id="aboutNpynBadge">AB7038</span>
+            </div>
+            <div class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold bg-white/95 text-hydrangea-900 border border-hydrangea-300 shadow-sm" id="aboutLegalBadge">
+              <svg class="w-3.5 h-3.5 text-hydrangea-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span id="aboutLegalBadgeText">Lembaga Resmi Berizin Operasional</span>
+            </div>
+          </div>
+
+          <h3 class="text-3xl sm:text-4xl lg:text-5xl font-black text-hydrangea-950 tracking-tight leading-tight mb-5" id="aboutYayasanName">
+            Yayasan Al Hijrah Bintuju
+          </h3>
+
+          <div class="flex items-center gap-4 py-3 px-4 rounded-2xl bg-white/90 border border-hydrangea-200 shadow-sm mb-5 max-w-md">
+            <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-hydrangea-800 to-hydrangea-700 text-white flex items-center justify-center shadow-md flex-shrink-0">
+              <svg class="w-5 h-5 text-sky-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+            </div>
+            <div class="flex flex-col justify-center">
+              <span class="text-[10px] font-black uppercase tracking-widest text-hydrangea-600" id="aboutLeaderTitle">Pimpinan Yayasan</span>
+              <span class="text-base sm:text-lg font-black text-hydrangea-950 leading-tight" id="aboutLeader">
+                Masnawan
+              </span>
+            </div>
+          </div>
+
+          <p class="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium pl-3.5 border-l-2 border-hydrangea-400" id="aboutProfile">
+            Yayasan Al Hijrah Bintuju membawahi ekosistem pendidikan Sekolah Alam Penghafal Al-Quran Al HIJRAH (SAPA AL HIJRAH) yang menyeluruh dan berkesinambungan. Berkomitmen menghantarkan santri menguasai sinergi antara keluhuran adab ubudiyah, tahfidz Al-Quran, kecakapan kepemimpinan alamiah, dan kemandirian santripreneur masa depan.
+          </p>
+        </div>
+
+        <div class="lg:col-span-5 flex justify-center items-center">
+          <div class="silk-tilt-card w-full h-full p-6 sm:p-7 rounded-3xl silk-frosted-card border border-hydrangea-300 shadow-xl flex flex-col justify-between select-none relative overflow-hidden">
+            <div class="absolute -right-6 -bottom-6 w-36 h-36 opacity-10 pointer-events-none">
+              <img src="https://lh3.googleusercontent.com/d/1y4RKoHXuKXDnBLCs25jomFLXTkyQL7Pw" alt="Seal" class="w-full h-full object-contain">
+            </div>
+
+            <div>
+              <div class="flex items-center justify-between pb-3 mb-4 border-b border-hydrangea-200">
+                <span class="text-xs font-black uppercase tracking-wider text-hydrangea-900 flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-hydrangea-600 animate-pulse"></span>
+                  <span>STANDAR AKADEMIK RESMI</span>
+                </span>
+                <span class="px-2.5 py-0.5 rounded-full bg-hydrangea-100 text-[10px] font-extrabold text-hydrangea-900">TERVERIFIKASI</span>
+              </div>
+
+              <h4 class="text-lg sm:text-xl font-extrabold text-hydrangea-950 mb-2">
+                Pilar Keunggulan Santri
+              </h4>
+              <p class="text-xs text-slate-600 leading-relaxed mb-5">
+                Mengintegrasikan kurikulum madrasah terpadu, tahfidz Al-Qur'an, kepanduan berkarakter, serta unit ekonomi santripreneur mandiri.
+              </p>
+
+              <div class="grid grid-cols-2 gap-2.5 mb-4">
+                <div class="p-3 rounded-2xl bg-white/95 border border-hydrangea-200 shadow-sm transition-transform hover:-translate-y-0.5">
+                  <div class="text-xs font-black text-hydrangea-950">4 Jenjang</div>
+                  <div class="text-[10px] text-slate-600 font-semibold">PAUD hingga SMA IT</div>
+                </div>
+                <div class="p-3 rounded-2xl bg-white/95 border border-hydrangea-200 shadow-sm transition-transform hover:-translate-y-0.5">
+                  <div class="text-xs font-black text-hydrangea-950">2 NPSN Resmi</div>
+                  <div class="text-[10px] text-slate-600 font-semibold">Kemendikbudristek RI</div>
+                </div>
+                <div class="p-3 rounded-2xl bg-white/95 border border-hydrangea-200 shadow-sm transition-transform hover:-translate-y-0.5">
+                  <div class="text-xs font-black text-hydrangea-950">Kewirausahaan</div>
+                  <div class="text-[10px] text-slate-600 font-semibold">Santripreneur</div>
+                </div>
+                <div class="p-3 rounded-2xl bg-white/95 border border-hydrangea-200 shadow-sm transition-transform hover:-translate-y-0.5">
+                  <div class="text-xs font-black text-hydrangea-950">Kemitraan</div>
+                  <div class="text-[10px] text-slate-600 font-semibold">Strategis</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="pt-3 border-t border-hydrangea-200 flex items-center justify-between text-[10px] font-bold text-hydrangea-800">
+              <span class="flex items-center gap-1">
+                <svg class="w-3.5 h-3.5 text-hydrangea-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                <span>SAPA AL HIJRAH</span>
+              </span>
+              <span>Bintuju • Tapsel</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 4. EKOSISTEM PENDIDIKAN FORMAL & NONFORMAL (DARI SHEET PENDIDIKAN) -->
+      <div class="scroll-reveal mb-20 relative" id="milestoneSectionContainer">
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-8 pb-3 border-b border-hydrangea-200 gap-2">
+          <div>
+            <span class="text-xs font-black uppercase tracking-widest text-hydrangea-700" id="aboutEduSectionBadge">Ekosistem Edukasi Terpadu</span>
+            <h3 class="text-2xl sm:text-3xl font-extrabold text-hydrangea-950" id="aboutEduSectionTitle">Pendidikan Formal & Nonformal</h3>
+          </div>
+          <span class="text-xs font-semibold text-slate-600" id="aboutEduSectionSubtitle">Usia Dini hingga Menengah Atas</span>
+        </div>
+
+        <div class="milestone-track-beam-wrapper hidden lg:block">
+          <div class="milestone-track-beam-bg"></div>
+          <div class="milestone-track-beam-glow" id="milestoneTrackBeamGlow"></div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 relative z-10" id="educationStepsGridContainer">
+          
+          <div class="academic-step-item group" id="milestone-card-1" onmouseenter="activateMilestoneStep(1)">
+            <div class="step-badge">01</div>
+            <div class="crest-jewel-badge mb-3">
+              <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                <circle cx="12" cy="7" r="2" stroke-width="2" />
+              </svg>
+            </div>
+            <h4 class="font-extrabold text-hydrangea-950 text-sm mb-1.5" id="aboutEduPaudTitle">PAUD & TK Al Hijrah</h4>
+            <p class="text-xs text-slate-600 leading-relaxed mb-4" id="aboutEduPaudDesc">
+              Pondasi penanaman tauhid, adab dasar, dan pembentukan karakter fitrah bagi anak usia emas secara kondusif.
+            </p>
+            <div class="mt-auto">
+              <span class="inline-block px-2.5 py-1 rounded-lg text-[10px] font-bold bg-linen-100 text-slate-800 border border-linen-300 shadow-sm" id="aboutEduPaudTag">
+                Usia Emas
+              </span>
+            </div>
+          </div>
+
+          <div class="academic-step-item group" id="milestone-card-2" onmouseenter="activateMilestoneStep(2)">
+            <div class="step-badge">02</div>
+            <div class="crest-jewel-badge mb-3">
+              <svg class="w-6 h-6 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+              </svg>
+            </div>
+            <h4 class="font-extrabold text-hydrangea-950 text-sm mb-1.5" id="aboutEduMisTitle">MIS Terpadu Al Hijrah</h4>
+            <p class="text-xs text-slate-600 leading-relaxed mb-4" id="aboutEduMisDesc">
+              Pendidikan dasar terpadu yang memadukan tahfidz juz amma, penguasaan literasi-numerasi, dan pembiasaan ibadah.
+            </p>
+            <div class="mt-auto">
+              <span class="inline-block px-2.5 py-1 rounded-lg text-[10px] font-bold bg-linen-100 text-slate-800 border border-linen-300 shadow-sm" id="aboutEduMisTag">
+                Madrasah Ibtidaiyah
+              </span>
+            </div>
+          </div>
+
+          <div class="academic-step-item group step-highlight" id="milestone-card-3" onmouseenter="activateMilestoneStep(3)">
+            <div class="step-badge">03</div>
+            <div class="crest-jewel-badge mb-3">
+              <svg class="w-6 h-6 text-hydrangea-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+              </svg>
+            </div>
+            <h4 class="font-extrabold text-hydrangea-950 text-sm mb-1.5" id="aboutEduSmpTitle">SMP IT Al Hijrah Bintuju</h4>
+            <p class="text-xs text-slate-600 leading-relaxed mb-4" id="aboutEduSmpDesc">
+              Pendidikan menengah pertama berasrama dengan penguatan dasar keterampilan, sains, dan kepemimpinan Islam.
+            </p>
+            <div class="mt-auto flex items-center justify-between">
+              <span class="inline-block px-2.5 py-1 rounded-lg text-[10px] font-extrabold bg-hydrangea-800 text-white shadow-sm">
+                NPSN: <span id="aboutEduSmpNpsn">69981571</span>
+              </span>
+            </div>
+          </div>
+
+          <div class="academic-step-item group step-highlight" id="milestone-card-4" onmouseenter="activateMilestoneStep(4)">
+            <div class="step-badge">04</div>
+            <div class="crest-jewel-badge mb-3">
+              <svg class="w-6 h-6 text-hydrangea-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+              </svg>
+            </div>
+            <h4 class="font-extrabold text-hydrangea-950 text-sm mb-1.5" id="aboutEduSmaTitle">SMA IT Al Hijrah</h4>
+            <p class="text-xs text-slate-600 leading-relaxed mb-4" id="aboutEduSmaDesc">
+              Jenjang menengah atas berbasis keilmuan kontemporer, kesiapan perguruan tinggi, dan praktek Santripreneur mandiri.
+            </p>
+            <div class="mt-auto flex items-center justify-between">
+              <span class="inline-block px-2.5 py-1 rounded-lg text-[10px] font-extrabold bg-hydrangea-800 text-white shadow-sm">
+                NPSN: <span id="aboutEduSmaNpsn">70009975</span>
+              </span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- 5. SANTREPRENEUR & KEMITRAAN (DARI SHEET PROGRAM_UNGGULAN) -->
+      <div class="scroll-reveal grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
+        <div class="editorial-feature-card flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-[10px] font-black uppercase tracking-widest text-hydrangea-700" id="aboutEntBadge">
+                EKONOMI KREATIF PESANTREN
+              </span>
+              <div class="w-8 h-8 rounded-lg bg-hydrangea-100 flex items-center justify-center text-hydrangea-800">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                </svg>
+              </div>
+            </div>
+            <h4 class="text-lg sm:text-xl font-extrabold text-hydrangea-950 mb-3" id="aboutEntTitle">
+              Program Pemberdayaan & Santripreneur
+            </h4>
+            <p class="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium mb-6" id="aboutEntDesc">
+              Mengembangkan program kewirausahaan mandiri berbasis pesantren. Salah satu unit usaha ekonomi kreatif unggulan yang dikembangkan adalah produksi makanan lokal khas (dodol tradisional) sebagai wadah kemandirian santri dan pemberdayaan masyarakat sekitar Bintuju.
+            </p>
+          </div>
+          <div class="flex flex-wrap gap-2 pt-2 border-t border-hydrangea-100">
+            <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-hydrangea-50 text-hydrangea-900 border border-hydrangea-200" id="aboutEntTag1">Kemandirian Santri</span>
+            <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-hydrangea-50 text-hydrangea-900 border border-hydrangea-200" id="aboutEntTag2">Produk Dodol Khas</span>
+            <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-hydrangea-50 text-hydrangea-900 border border-hydrangea-200" id="aboutEntTag3">Pemberdayaan Warga</span>
+          </div>
+        </div>
+
+        <div class="editorial-feature-card flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-[10px] font-black uppercase tracking-widest text-hydrangea-700" id="aboutPartBadge">
+                KOLABORASI PERGURUAN TINGGI
+              </span>
+              <div class="w-8 h-8 rounded-lg bg-hydrangea-100 flex items-center justify-center text-hydrangea-800">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+              </div>
+            </div>
+            <h4 class="text-lg sm:text-xl font-extrabold text-hydrangea-950 mb-3" id="aboutPartTitle">
+              Kegiatan Kemitraan Strategis
+            </h4>
+            <p class="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium mb-6" id="aboutPartDesc">
+              Yayasan kerap menjadi mitra lokasi strategis untuk berbagai kegiatan pengabdian masyarakat, riset terapan, dan pelatihan vokasi, termasuk program edukasi kelestarian lingkungan hidup serta pengembangan potensi lokal yang bersinergi aktif bersama lembaga perguruan tinggi.
+            </p>
+          </div>
+          <div class="flex flex-wrap gap-2 pt-2 border-t border-hydrangea-100">
+            <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-hydrangea-50 text-hydrangea-900 border border-hydrangea-200" id="aboutPartTag1">Edukasi Lingkungan</span>
+            <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-hydrangea-50 text-hydrangea-900 border border-hydrangea-200" id="aboutPartTag2">Pengabdian Kampus</span>
+            <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-hydrangea-50 text-hydrangea-900 border border-hydrangea-200" id="aboutPartTag3">Potensi Tapanuli Selatan</span>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- PAGE 4: WARTA (NEWS) -->
+    <section id="page-news" class="page-section w-full flex-col max-w-6xl mx-auto px-4 sm:px-6 pt-24 sm:pt-28 pb-20">
+      
+      <!-- VIEW 1: KATALOG WARTA SANTRI -->
+      <div id="newsCatalogView" class="w-full flex flex-col">
+        <div class="scroll-reveal flex flex-col md:flex-row md:items-center justify-between pb-6 mb-8 border-b border-hydrangea-200 gap-4">
+          <div>
+            <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-[11px] font-black bg-hydrangea-800 text-white w-max mb-2 uppercase tracking-wider">
+              INFORMASI & SYIAR
+            </div>
+            <h2 class="text-3xl sm:text-4xl font-black text-hydrangea-950 tracking-tight">
+              Warta <span class="text-hydrangea-600">Santri</span>
+            </h2>
+          </div>
+
+          <div class="w-full md:w-80 relative">
+            <input 
+              type="text" 
+              id="newsSearchInput" 
+              oninput="handleNewsSearch(event)" 
+              placeholder="Cari warta santri..." 
+              class="w-full py-2.5 pl-10 pr-4 rounded-2xl bg-white/95 backdrop-blur-md border border-hydrangea-300 text-slate-800 text-xs font-bold focus:outline-none focus:border-hydrangea-600 focus:ring-2 focus:ring-hydrangea-300/40 shadow-sm transition-all"
+            >
+            <svg class="w-4 h-4 text-hydrangea-600 absolute left-3.5 top-3 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+        </div>
+
+        <div id="newsCardsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7"></div>
+
+        <div id="newsEmptyState" class="hidden text-center py-16">
+          <div class="text-4xl mb-3">🔍</div>
+          <h3 class="text-base font-extrabold text-hydrangea-950 mb-1">Warta Tidak Ditemukan</h3>
+          <p class="text-xs text-slate-500 font-semibold">Coba gunakan kata kunci pencarian lain.</p>
+        </div>
+      </div>
+
+      <!-- VIEW 2: MODE BACA ARTIKEL PENUH -->
+      <div id="newsDetailView" class="hidden w-full flex-col">
+        <div class="relative w-full min-h-[460px] sm:min-h-[520px] rounded-3xl overflow-hidden shadow-2xl flex flex-col justify-between p-6 sm:p-10 pb-28 sm:pb-32">
+          <img id="detailHeroImage" src="" alt="Banner Warta" class="absolute inset-0 w-full h-full object-cover">
+          <div class="absolute inset-0 bg-gradient-to-t from-[#0a1728] via-[#0c1b2e]/85 to-black/60"></div>
+
+          <div class="relative z-10">
+            <button onclick="closeNewsDetail()" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/20 hover:bg-white/35 backdrop-blur-md border border-white/30 text-white font-black text-xs transition-all transform hover:-translate-x-1 cursor-pointer shadow-lg">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+              <span>Kembali ke Warta</span>
+            </button>
+          </div>
+
+          <div class="relative z-10 max-w-4xl pt-8 pb-4">
+            <div class="inline-block px-3 py-1 rounded-md bg-white text-slate-900 text-[10px] font-black tracking-widest uppercase mb-3 shadow-md" id="detailBadge">NEWS</div>
+            <h1 class="text-2xl sm:text-4xl md:text-5xl font-black text-white tracking-tight leading-tight mb-4" id="detailTitle">
+              Judul Artikel Warta Santri
+            </h1>
+            <div class="flex flex-wrap items-center gap-4 text-xs sm:text-sm text-hydrangea-200 font-bold">
+              <span class="flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-hydrangea-400"></span>
+                <span id="detailAuthor">SUPER ADMIN BES</span>
+              </span>
+              <span>•</span>
+              <span id="detailDate">28 AUG 2026</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="relative z-20 -mt-16 sm:-mt-20 max-w-4xl mx-auto w-full px-2 sm:px-4">
+          <div class="bg-white rounded-3xl p-6 sm:p-10 shadow-2xl border border-hydrangea-200">
+            <p class="text-base sm:text-lg font-bold text-hydrangea-950 leading-relaxed pb-6 mb-6 border-b border-hydrangea-100" id="detailLead">
+              Ringkasan lead warta santri...
+            </p>
+            <div class="space-y-4 text-sm sm:text-base text-slate-700 font-normal leading-relaxed" id="detailFullContent"></div>
+            <div class="mt-10 pt-6 border-t border-hydrangea-100 flex flex-wrap items-center justify-between gap-4">
+              <div class="text-xs font-black uppercase tracking-wider text-slate-400">Bagikan Warta Ini:</div>
+              <div class="flex items-center gap-2">
+                <button onclick="shareArticleWhatsApp()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-2 transition-colors shadow-sm cursor-pointer">
+                  <span>📱 WhatsApp</span>
+                </button>
+                <button onclick="copyArticleLink()" class="px-4 py-2 rounded-xl bg-hydrangea-100 hover:bg-hydrangea-200 text-hydrangea-900 font-bold text-xs flex items-center gap-2 transition-colors border border-hydrangea-300 cursor-pointer">
+                  <span>🔗 Salin Tautan</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- PAGE 5: KABINET (100% DINAMIS DARI SHEET KABINET) -->
+    <section id="page-cabinet" class="page-section w-full flex-col max-w-6xl mx-auto px-4 pt-24 sm:pt-28 pb-24">
+      
+      <!-- 1. TAJUK UTAMA RESMI -->
+      <div class="scroll-reveal text-center mb-10">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[11px] font-black bg-gradient-to-r from-hydrangea-800 to-hydrangea-700 text-white w-max mb-3 uppercase tracking-widest shadow-md border border-hydrangea-600/40">
+          <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+          <span>STRUKTUR ORGANISASI KABINET 2026</span>
+        </div>
+        <h2 class="text-3xl sm:text-5xl md:text-6xl font-black text-[#12253C] tracking-tight leading-tight uppercase">
+          KABINET <span class="text-[#386FA8]">BES SAPA AL HIJRAH</span>
+        </h2>
+      </div>
+
+      <!-- 2. KOREOGRAFI AMPLOP INTERAKTIF & PANGGUNG PRESIDENSI -->
+      <div class="cabinet-presidium-zone state-envelope-closed" id="cabinetPresidiumZone">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch mb-8">
+          
+          <!-- SISI KIRI: THE ROYAL MIDNIGHT ENVELOPE -->
+          <div class="lg:col-span-4 flex flex-col items-center justify-center">
+            <div class="envelope-interactive-card" id="envelopeInteractiveCard" onclick="toggleWelcomingEnvelope()">
+              
+              <!-- Flap Segitiga 3D Fold -->
+              <div class="envelope-3d-flap" id="envelopeFlap">
+                <svg class="w-full h-full" viewBox="0 0 280 115" preserveAspectRatio="none">
+                  <polygon points="0,0 280,0 140,110" fill="url(#flapGoldGrad)" />
+                  <polyline points="0,0 140,110 280,0" fill="none" stroke="#F59E0B" stroke-width="2.5" />
+                  <defs>
+                    <linearGradient id="flapGoldGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stop-color="#12253C" />
+                      <stop offset="100%" stop-color="#0C1B2E" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
+
+              <!-- Badan Saku Amplop -->
+              <div class="envelope-3d-body">
+                <svg class="w-full h-full" viewBox="0 0 280 190" preserveAspectRatio="none">
+                  <rect width="280" height="190" fill="#0C1B2E" />
+                  <polygon points="0,0 140,105 0,190" fill="#12253C" />
+                  <polygon points="280,0 140,105 280,190" fill="#162E4C" />
+                  <polygon points="0,190 280,190 140,105" fill="#091524" />
+                  <polyline points="0,190 140,105 280,190" fill="none" stroke="#F59E0B" stroke-width="1.8" opacity="0.8" />
+                </svg>
+
+                <!-- Segel Lilin Emas Timbul (#F59E0B) -->
+                <div class="wax-seal-golden-button" id="waxSealButton">
+                  <div class="wax-seal-ring"></div>
+                  <span class="wax-seal-monogram">BES</span>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="envelope-trigger-hint uppercase tracking-wider" id="envelopeHint">
+              BUKA DOKUMEN AMANAT
+            </div>
+          </div>
+
+          <!-- SISI KANAN: DYNAMIC RECEPTACLE (SURAT DARI SHEET SAMBUTAN) -->
+          <div class="lg:col-span-8 relative flex flex-col justify-center">
+            
+            <div id="speechLetterPaper" class="speech-letter-paper shadow-2xl rounded-3xl p-6 sm:p-7 bg-white flex flex-col justify-between relative overflow-hidden">
+              <div class="letterhead-gold-border-decor pointer-events-none"></div>
+              <div class="letterhead-watermark-seal pointer-events-none"></div>
+
+              <div class="relative z-10">
+                <div class="flex items-center justify-end pb-3 mb-4 border-b border-slate-100">
+                  <div class="inline-flex p-1 rounded-xl bg-[#EAF3FC] border border-[#A3CAF6]/40">
+                    <button onclick="switchSpeechLeader('KETUA')" id="btnSpeechLeaderKetua" class="px-4 py-1.5 rounded-lg text-xs font-black tracking-wider uppercase transition-all bg-[#12253C] text-[#F59E0B] shadow-sm cursor-pointer">
+                      PRESIDEN
+                    </button>
+                    <button onclick="switchSpeechLeader('WAKIL')" id="btnSpeechLeaderWakil" class="px-4 py-1.5 rounded-lg text-xs font-black tracking-wider uppercase transition-all text-[#285382] hover:text-[#12253C] cursor-pointer">
+                      WAKIL PRESIDEN
+                    </button>
+                  </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6">
+                  <div class="letter-portrait-wrapper flex-shrink-0">
+                    <img id="letterLeaderPhoto" src="https://lh3.googleusercontent.com/d/1FWshZwTq7wPKDf2T0s2s8wzZ01STkkFI" onerror="this.src='https://drive.google.com/thumbnail?id=1FWshZwTq7wPKDf2T0s2s8wzZ01STkkFI&sz=w800'" alt="Pemimpin BES" class="letter-portrait-img">
+                  </div>
+                  
+                  <div class="flex-1 text-center sm:text-left pt-1">
+                    <div class="font-serif italic text-base sm:text-lg text-[#12253C] mb-2 font-bold">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+                    <p class="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium" id="letterLeaderMessage">
+                      Bismillah, ahlan wa sahlan di portal resmi BES SAPA AL HIJRAH. Bersama kepengurusan Kabinet 2026, kita satukan tekad untuk mengokohkan adab, kedisiplinan ubudiyah, serta kecendekiaan generasi penghafal Al-Qur'an yang mandiri dan berintegritas tinggi.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="relative z-10 mt-5 pt-3.5 border-t border-dashed border-slate-200 flex items-center justify-between text-xs">
+                <div>
+                  <div class="font-black text-[#12253C] text-sm uppercase tracking-wide" id="letterLeaderName">PUTRI</div>
+                  <div class="text-[10px] font-black text-[#F59E0B] uppercase tracking-widest" id="letterLeaderRole">PRESIDEN BES SAPA AL HIJRAH 2026</div>
+                </div>
+                <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest hidden sm:block">
+                  KABINET BES 2026
+                </div>
+              </div>
+            </div>
+
+            <!-- WADAH ATAS PANGGUNG PRESIDENSI -->
+            <div id="presidiumTopSlot" class="w-full"></div>
+
+          </div>
+
+        </div>
+
+        <!-- WADAH BAWAH PANGGUNG PRESIDENSI -->
+        <div id="presidiumDropSlot" class="w-full mb-8"></div>
+
+        <!-- TEMPLATE PANGGUNG PRESIDENSI KETUA & WAKIL -->
+        <div id="presidiumShowcaseBox" class="kolektiva-stage-card rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden transition-all duration-500">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-center relative z-10">
+            
+            <div class="lg:col-span-5 flex flex-col text-left pr-0 lg:pr-4">
+              <div class="luminescent-vector-hero mb-3" id="presidiumLogoWrap">
+                <svg class="w-20 h-20 text-[#A3CAF6] filter-luminescent" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                  <circle cx="12" cy="12" r="2.5" fill="#F59E0B"/>
+                </svg>
+              </div>
+
+              <h3 class="text-2xl sm:text-3xl font-black text-white tracking-tight uppercase leading-tight mb-2">
+                PRESIDENSI BES
+              </h3>
+
+              <p class="text-xs sm:text-sm text-slate-300 leading-relaxed font-normal">
+                Pucuk pimpinan Badan Eksekutif Santri. Menakhodai arah gerak, keteladanan adab harian, serta harmonisasi khidmah seluruh kementerian.
+              </p>
+            </div>
+
+            <div class="lg:col-span-7 flex flex-col w-full">
+              <div class="flex items-center gap-2 mb-3 pb-2 border-b border-white/10 text-xs font-black uppercase tracking-widest text-slate-300">
+                <svg class="w-4 h-4 text-[#F59E0B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+                <span>SUSUNAN JAJARAN</span>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="presidiumMembersBox">
+                <div class="kolektiva-member-card">
+                  <span class="member-role-tag">PRESIDEN KABINET</span>
+                  <div class="member-name-text" id="presidiumLeaderName">Putri</div>
+                </div>
+
+                <div class="kolektiva-member-card">
+                  <span class="member-role-tag">WAKIL PRESIDEN KABINET</span>
+                  <div class="member-name-text" id="presidiumViceLeaderName">Anggina</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 3. SELURUH KEMENTERIAN MENGALIR KE BAWAH SECARA 100% DINAMIS DARI SHEET KABINET -->
+      <div class="mt-8 space-y-8" id="sequentialMinistriesContainer">
+        <!-- Kontainer dinamis: Kementerian, deskripsi, logo bersinar, serta daftar menteri/bendahara/staf di-render otomatis dari Spreadsheet -->
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- GLOBAL FOOTER DINAMIS -->
+  <footer id="mainGlobalFooter" class="hidden w-full bg-gradient-to-b from-[#0c1b2e] to-[#060e18] text-white relative overflow-hidden border-t-2 border-hydrangea-700/60 transition-all duration-300">
+    
+    <div class="footer-giant-watermark select-none pointer-events-none">
+      AL HIJRAH
+    </div>
+
+    <div class="w-full max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 pt-16 pb-12 relative z-10">
+      
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-10 lg:gap-12 pb-12 border-b border-white/10">
+        
+        <!-- KOLOM 1: Brand & Alamat -->
+        <div class="md:col-span-6 lg:col-span-5 flex flex-col justify-start">
+          <div class="flex items-center gap-3 mb-4">
+            <img src="https://lh3.googleusercontent.com/d/1y4RKoHXuKXDnBLCs25jomFLXTkyQL7Pw" onerror="this.src='https://drive.google.com/thumbnail?id=1y4RKoHXuKXDnBLCs25jomFLXTkyQL7Pw&sz=w800'" alt="Logo Al Hijrah" class="h-12 w-auto object-contain filter drop-shadow(0 2px 8px rgba(0,0,0,0.5))">
+            <div>
+              <h3 class="font-black text-white text-xl sm:text-2xl tracking-wider uppercase" id="footerBrandTitle">
+                BES SAPA AL HIJRAH
+              </h3>
+              <div class="text-xs text-hydrangea-300 font-bold tracking-widest uppercase" id="footerSchoolSubtitle">
+                Sekolah Alam Penghafal Al-Quran Al HIJRAH
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-3 mt-3 text-slate-300">
+            <span class="text-rose-400 text-lg flex-shrink-0 mt-0.5">📍</span>
+            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed font-medium" id="footerLocation">
+              Jl. Mandailing KM 14, Kelurahan/Desa Bintuju, Kecamatan Angkola Muara Tais, Kabupaten Tapanuli Selatan, Sumatera Utara
+            </p>
+          </div>
+
+          <div class="mt-4 text-[11px] text-hydrangea-300 font-semibold">
+            NPYN Lembaga: <span class="text-white font-bold" id="footerNpyn">AB7038</span> • Pimpinan: <span class="text-white font-bold" id="footerLeader">Masnawan</span>
+          </div>
+        </div>
+
+        <!-- KOLOM 2: Tautan Cepat -->
+        <div class="md:col-span-3 lg:col-span-3">
+          <h4 class="text-sm font-black tracking-widest text-white uppercase mb-5 flex items-center gap-2">
+            <span class="w-1.5 h-3.5 bg-hydrangea-400 rounded-full"></span>
+            <span>TAUTAN CEPAT</span>
+          </h4>
+          <ul class="space-y-2.5 text-xs sm:text-sm font-semibold text-slate-300">
+            <li>
+              <a href="#home" onclick="navigateTo('home'); return false;" class="hover:text-hydrangea-300 transition-colors flex items-center gap-2">
+                <span>›</span> <span>Beranda Utama</span>
+              </a>
+            </li>
+            <li>
+              <a href="#about" onclick="navigateTo('about'); return false;" class="hover:text-hydrangea-300 transition-colors flex items-center gap-2">
+                <span>›</span> <span>Tentang Lembaga</span>
+              </a>
+            </li>
+            <li>
+              <a href="#news" onclick="navigateTo('news'); return false;" class="hover:text-hydrangea-300 transition-colors flex items-center gap-2">
+                <span>›</span> <span>Warta & Informasi</span>
+              </a>
+            </li>
+            <li>
+              <a href="#cabinet" onclick="navigateTo('cabinet'); return false;" class="hover:text-hydrangea-300 transition-colors flex items-center gap-2">
+                <span>›</span> <span>Kabinet & Jajaran</span>
+              </a>
+            </li>
+            <li>
+              <a href="#photobooth" onclick="openPhotobooth(); return false;" class="hover:text-hydrangea-300 transition-colors flex items-center gap-2 text-hydrangea-300">
+                <span>›</span> <span>Photobooth Studio 📸</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- KOLOM 3: Ikuti Kami (Dapat Disunting Link di Sheet INFO_WEB) -->
+        <div class="md:col-span-3 lg:col-span-4">
+          <h4 class="text-sm font-black tracking-widest text-white uppercase mb-5 flex items-center gap-2">
+            <span class="w-1.5 h-3.5 bg-hydrangea-400 rounded-full"></span>
+            <span>IKUTI KAMI</span>
+          </h4>
+          <p class="text-xs text-slate-300 leading-relaxed mb-4">
+            Terhubung langsung dengan aktivitas, prestasi, dan syiar santri Sekolah Alam Penghafal Al-Quran Al HIJRAH (SAPA AL HIJRAH).
+          </p>
+          <div class="flex items-center gap-3">
+            <!-- Facebook -->
+            <a id="footerFbBtn" href="https://facebook.com" target="_blank" rel="noopener noreferrer" class="footer-social-btn" title="Facebook Resmi">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/>
+              </svg>
+            </a>
+
+            <!-- Instagram -->
+            <a id="footerIgBtn" href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="footer-social-btn" title="Instagram Resmi">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+              </svg>
+            </a>
+
+            <!-- Gmail Web Compose -->
+            <a id="footerEmailBtn" href="https://mail.google.com/mail/?view=cm&fs=1&to=alhijrahb7@gmail.com" target="_blank" rel="noopener noreferrer" class="footer-social-btn" title="Kirim Surel Gmail">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+              </svg>
+            </a>
+
+            <!-- WhatsApp Hotline -->
+            <a id="footerWaBtn" href="https://wa.me/6281234567890" target="_blank" rel="noopener noreferrer" class="footer-social-btn" title="Hubungi via WhatsApp">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0012.04 2m.01 1.67c2.2 0 4.26.86 5.82 2.42a8.225 8.225 0 012.41 5.83c0 4.54-3.7 8.24-8.24 8.24-1.48 0-2.93-.4-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.19 8.19 0 01-1.26-4.38c0-4.54 3.7-8.24 8.24-8.24m4.52 11.66c-.19.53-1.06 1.04-1.47 1.08-.38.04-.88.06-2.55-.63-2.14-.88-3.52-3.05-3.63-3.2-.11-.15-.87-1.16-.87-2.22 0-1.06.55-1.58.75-1.8.19-.21.42-.27.56-.27.14 0 .28 0 .4.01.13.01.3-.05.47.36.19.45.64 1.56.7 1.68.06.12.1.26.02.41-.08.16-.12.25-.23.38-.11.13-.24.29-.34.39-.12.11-.24.23-.1.47.14.24.62 1.03 1.34 1.67.92.82 1.7 1.07 1.94 1.19.24.12.38.1.52-.06.14-.16.6-.7.76-.94.16-.24.32-.2.54-.12.22.08 1.4.66 1.64.78.24.12.4.18.46.28.06.1.06.59-.13 1.12z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-semibold text-slate-400">
+        <div id="footerCopyrightText">
+          &copy; 2026 BES SAPA AL HIJRAH - SEKOLAH ALAM PENGHAFAL AL-QURAN AL HIJRAH. ALL RIGHTS RESERVED.
+        </div>
+        <div class="text-hydrangea-300 font-extrabold tracking-wider" id="footerTaglineText">
+          KABINET BES 2026 • ADAB, ILMU & UKHUWAH
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <button id="btnScrollToTop" onclick="scrollToTopSmooth()" class="hidden fixed bottom-6 right-6 z-40 w-11 h-11 rounded-full bg-hydrangea-800 hover:bg-hydrangea-900 text-white shadow-xl flex items-center justify-center transition-all duration-300 transform hover:-translate-y-1 active:scale-95 cursor-pointer border-2 border-hydrangea-400/50" title="Kembali ke Atas" aria-label="Kembali ke Atas">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+    </svg>
+  </button>
+
+  <div id="toastContainer" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
+  <canvas id="exportCanvas" class="hidden"></canvas>
+
+  <?!= include('js'); ?>
+
+  <!-- Dual-Mode Loader: Fallback JS Otomatis untuk Hosting GitHub Pages -->
+  <script>
+    (function() {
+      if (typeof google === 'undefined') {
+        fetch('js.html')
+          .then(function(res) { return res.text(); })
+          .then(function(html) {
+            var temp = document.createElement('div');
+            temp.innerHTML = html;
+            var scriptEl = temp.querySelector('script');
+            if (scriptEl) {
+              var newScript = document.createElement('script');
+              newScript.textContent = scriptEl.textContent;
+              document.body.appendChild(newScript);
+            }
+          })
+          .catch(function(err) { console.warn('Pemuatan js.html via GitHub:', err); });
+      }
+    })();
+  </script>
+</body>
+</html>

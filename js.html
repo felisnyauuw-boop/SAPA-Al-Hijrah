@@ -1,0 +1,1934 @@
+<script>
+  /**
+   * =========================================================================
+   * LOGIKA SISTEM TERPADU & TIGA DIMENSI - BES AL HIJRAH (GITHUB PAGES EDITION)
+   * File: js.html
+   * Terintegrasi: Loading Screen 3D Celestial Crystal, REST API Fetcher,
+   * Native Photobooth WebCam (Bebas Iframe Sandbox), & 7 Sheet Tematik.
+   * =========================================================================
+   */
+
+  // GANTI DENGAN URL WEB APP GOOGLE APPS SCRIPT ANDA (HASIL DEPLOY code.gs)
+  var GAS_API_URL = 'https://script.google.com/macros/s/AKfycbz_CONTOH_ID_APPS_SCRIPT_ANDA/exec';
+
+  var appState = {
+    currentPage: 'home',
+    mobileMenuOpen: false,
+    envelopeOpen: false,
+    activeLeaderRole: 'KETUA',
+    infoWeb: {},
+    sambutan: [],
+    warta: [],
+    kabinet: [],
+    pendidikan: [],
+    programUnggulan: [],
+    visiMisi: { visi: null, misi: [] },
+    news: { items: [], activeArticleId: null },
+    photobooth: {
+      stream: null,
+      facingMode: 'user',
+      activeFilter: 'natural',
+      templates: ['analog', 'herbarium', 'diplomatic'],
+      centerTemplate: 'herbarium',
+      photos: {
+        analog: [null, null, null],
+        herbarium: [null, null, null],
+        diplomatic: [null, null, null]
+      },
+      currentPoseIndex: 0,
+      isBusy: false,
+      cameraReady: false
+    }
+  };
+
+  var threeEngine = {
+    scene: null,
+    camera: null,
+    renderer: null,
+    canvas: null,
+    crystals: [],
+    stardustParticles: null,
+    clock: null,
+    mouse: { x: 0, y: 0, targetX: 0, targetY: 0 },
+    isInitialized: false
+  };
+
+  function dismissLoadingScreen() {
+    var loader = document.getElementById('appLoadingScreen');
+    if (!loader) return;
+    if (!loader.classList.contains('loading-dismissed')) {
+      loader.classList.add('loading-dismissed');
+      setTimeout(function() {
+        loader.style.display = 'none';
+      }, 900);
+    }
+  }
+
+  function calculateFrustumBounds(camera, targetZ) {
+    var dist = camera.position.z - (targetZ || 0);
+    var vFov = (camera.fov * Math.PI) / 180;
+    var height = 2 * Math.tan(vFov / 2) * dist;
+    var width = height * camera.aspect;
+    return { width: width, height: height };
+  }
+
+  function initThreeWebGLAtmosphere() {
+    var canvas = document.getElementById('webglCanvas');
+    if (!canvas || typeof THREE === 'undefined') return;
+
+    try {
+      threeEngine.canvas = canvas;
+      threeEngine.clock = new THREE.Clock();
+      threeEngine.crystals = [];
+
+      var width = window.innerWidth;
+      var height = window.innerHeight;
+      var isMobile = width < 640;
+
+      threeEngine.scene = new THREE.Scene();
+      threeEngine.camera = new THREE.PerspectiveCamera(45, width / height, 1, 3500);
+      threeEngine.camera.position.set(0, 0, isMobile ? 960 : 850);
+
+      threeEngine.renderer = new THREE.WebGLRenderer({
+        canvas: canvas,
+        alpha: true,
+        antialias: true,
+        powerPreference: 'high-performance'
+      });
+      threeEngine.renderer.setSize(width, height);
+      threeEngine.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+
+      var ambientLight = new THREE.AmbientLight(0xffffff, 1.35);
+      threeEngine.scene.add(ambientLight);
+
+      var keyLight = new THREE.DirectionalLight(0xfff8ee, 2.2);
+      keyLight.position.set(450, 580, 480);
+      threeEngine.scene.add(keyLight);
+
+      var fillLight = new THREE.DirectionalLight(0x7fb8f5, 1.65);
+      fillLight.position.set(-460, -340, 240);
+      threeEngine.scene.add(fillLight);
+
+      var rimLight = new THREE.DirectionalLight(0xf59e0b, 1.3);
+      rimLight.position.set(0, -420, -220);
+      threeEngine.scene.add(rimLight);
+
+      buildFrostedPolyhedraField();
+      buildStardustField();
+
+      window.addEventListener('resize', onThreeWindowResize);
+      window.addEventListener('mousemove', onThreeMouseMove);
+      window.addEventListener('touchmove', onThreeTouchMove, { passive: true });
+
+      threeEngine.isInitialized = true;
+      animateThreeWebGL();
+    } catch (e) {
+      console.warn('Three.js Polyhedra fallback active:', e);
+    }
+  }
+
+  function buildFrostedPolyhedraField() {
+    var isMobile = window.innerWidth < 640;
+    var scaleFactor = isMobile ? 0.72 : 1.0;
+
+    var polyConfigs = [
+      { type: 'icosa', radius: 46 * scaleFactor, norm: [-0.38, 0.36, -60], color: 0xf0f7ff, rotSpeed: [0.006, 0.008, 0.005], floatAmp: 14, floatFreq: 0.8 },
+      { type: 'octa', radius: 32 * scaleFactor, norm: [-0.44, 0.22, -140], color: 0xdbeafe, rotSpeed: [-0.007, 0.009, 0.004], floatAmp: 11, floatFreq: 1.1 },
+      { type: 'dodeca', radius: 26 * scaleFactor, norm: [-0.22, 0.44, -100], color: 0x244b78, rotSpeed: [0.005, -0.006, 0.007], floatAmp: 16, floatFreq: 0.7 },
+      { type: 'octa', radius: 44 * scaleFactor, norm: [0.38, 0.36, -50], color: 0xf0f7ff, rotSpeed: [-0.006, -0.008, 0.005], floatAmp: 15, floatFreq: 0.9 },
+      { type: 'icosa', radius: 34 * scaleFactor, norm: [0.44, 0.22, -150], color: 0xdbeafe, rotSpeed: [0.008, -0.007, -0.004], floatAmp: 12, floatFreq: 1.2 },
+      { type: 'tetra', radius: 26 * scaleFactor, norm: [0.22, 0.44, -120], color: 0x386fa8, rotSpeed: [0.007, 0.009, -0.006], floatAmp: 17, floatFreq: 0.75 },
+      { type: 'octa', radius: 36 * scaleFactor, norm: [-0.44, -0.08, -50], color: 0x1c3b5e, rotSpeed: [-0.005, 0.007, -0.006], floatAmp: 13, floatFreq: 0.85 },
+      { type: 'dodeca', radius: 42 * scaleFactor, norm: [-0.38, -0.32, -90], color: 0xf0f7ff, rotSpeed: [0.006, -0.005, 0.008], floatAmp: 16, floatFreq: 0.95 },
+      { type: 'icosa', radius: 28 * scaleFactor, norm: [-0.22, -0.42, -140], color: 0xdbeafe, rotSpeed: [-0.008, 0.006, 0.005], floatAmp: 10, floatFreq: 1.3 },
+      { type: 'icosa', radius: 38 * scaleFactor, norm: [0.44, -0.08, -60], color: 0x244b78, rotSpeed: [0.005, -0.008, 0.006], floatAmp: 14, floatFreq: 0.9 },
+      { type: 'octa', radius: 42 * scaleFactor, norm: [0.38, -0.32, -100], color: 0xf0f7ff, rotSpeed: [-0.007, 0.006, -0.007], floatAmp: 15, floatFreq: 1.05 },
+      { type: 'dodeca', radius: 30 * scaleFactor, norm: [0.22, -0.42, -130], color: 0xdbeafe, rotSpeed: [0.009, -0.005, 0.006], floatAmp: 11, floatFreq: 1.15 },
+      { type: 'tetra', radius: 22 * scaleFactor, norm: [-0.15, 0.32, -320], color: 0x386fa8, rotSpeed: [0.004, 0.005, 0.004], floatAmp: 9, floatFreq: 0.6 },
+      { type: 'octa', radius: 24 * scaleFactor, norm: [0.15, 0.32, -310], color: 0x1c3b5e, rotSpeed: [-0.005, 0.006, -0.004], floatAmp: 9, floatFreq: 0.65 }
+    ];
+
+    for (var i = 0; i < polyConfigs.length; i++) {
+      var cfg = polyConfigs[i];
+      var group = createSinglePolyhedron(cfg);
+      threeEngine.scene.add(group);
+
+      var bounds = calculateFrustumBounds(threeEngine.camera, cfg.norm[2]);
+      var posX = cfg.norm[0] * bounds.width;
+      var posY = cfg.norm[1] * bounds.height;
+      var posZ = cfg.norm[2];
+      group.position.set(posX, posY, posZ);
+
+      threeEngine.crystals.push({
+        group: group,
+        normPos: cfg.norm,
+        basePos: new THREE.Vector3(posX, posY, posZ),
+        rotSpeed: cfg.rotSpeed,
+        floatAmp: cfg.floatAmp,
+        floatFreq: cfg.floatFreq,
+        phase: i * 0.48
+      });
+    }
+  }
+
+  function createSinglePolyhedron(cfg) {
+    var group = new THREE.Group();
+    var geo;
+
+    switch (cfg.type) {
+      case 'icosa': geo = new THREE.IcosahedronGeometry(cfg.radius, 0); break;
+      case 'octa': geo = new THREE.OctahedronGeometry(cfg.radius, 0); break;
+      case 'dodeca': geo = new THREE.DodecahedronGeometry(cfg.radius, 0); break;
+      case 'tetra': geo = new THREE.TetrahedronGeometry(cfg.radius, 0); break;
+      default: geo = new THREE.IcosahedronGeometry(cfg.radius, 0);
+    }
+
+    var isDarkJewel = (cfg.color === 0x1c3b5e || cfg.color === 0x244b78 || cfg.color === 0x386fa8);
+
+    var bodyMat = new THREE.MeshPhysicalMaterial({
+      color: cfg.color,
+      roughness: isDarkJewel ? 0.12 : 0.18,
+      metalness: isDarkJewel ? 0.32 : 0.14,
+      transmission: isDarkJewel ? 0.58 : 0.82,
+      transparent: true,
+      opacity: isDarkJewel ? 0.92 : 0.82,
+      reflectivity: 0.98,
+      clearcoat: 1.0,
+      clearcoatRoughness: 0.05,
+      ior: 1.54,
+      side: THREE.DoubleSide
+    });
+
+    var mesh = new THREE.Mesh(geo, bodyMat);
+    group.add(mesh);
+
+    var edgeGeo = new THREE.EdgesGeometry(geo);
+    var edgeMat = new THREE.LineBasicMaterial({
+      color: 0xf59e0b,
+      linewidth: 2,
+      transparent: true,
+      opacity: 0.98
+    });
+    var edges = new THREE.LineSegments(edgeGeo, edgeMat);
+    group.add(edges);
+
+    var innerCoreGeo = new THREE.SphereGeometry(cfg.radius * 0.22, 12, 12);
+    var innerCoreMat = new THREE.MeshBasicMaterial({
+      color: isDarkJewel ? 0xf59e0b : 0x93c5fd,
+      transparent: true,
+      opacity: 0.55
+    });
+    var core = new THREE.Mesh(innerCoreGeo, innerCoreMat);
+    group.add(core);
+
+    group.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, 0);
+    return group;
+  }
+
+  function buildStardustField() {
+    var count = window.innerWidth < 640 ? 320 : 680;
+    var geo = new THREE.BufferGeometry();
+    var positions = new Float32Array(count * 3);
+    var colors = new Float32Array(count * 3);
+
+    var colGold = new THREE.Color(0xf59e0b);
+    var colIce = new THREE.Color(0x60a5fa);
+    var colWhite = new THREE.Color(0xffffff);
+
+    for (var i = 0; i < count; i++) {
+      var i3 = i * 3;
+      positions[i3] = (Math.random() - 0.5) * 1650;
+      positions[i3 + 1] = (Math.random() - 0.5) * 1250;
+      positions[i3 + 2] = (Math.random() - 0.5) * 750 - 100;
+
+      var chosen = Math.random() < 0.25 ? colGold : (Math.random() < 0.6 ? colIce : colWhite);
+      colors[i3] = chosen.r;
+      colors[i3 + 1] = chosen.g;
+      colors[i3 + 2] = chosen.b;
+    }
+
+    geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+    var glowTexture = createParticleGlowTexture();
+    var material = new THREE.PointsMaterial({
+      size: 14,
+      map: glowTexture,
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.72,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false
+    });
+
+    threeEngine.stardustParticles = new THREE.Points(geo, material);
+    threeEngine.scene.add(threeEngine.stardustParticles);
+  }
+
+  function createParticleGlowTexture() {
+    var canvas = document.createElement('canvas');
+    canvas.width = 64;
+    canvas.height = 64;
+    var ctx = canvas.getContext('2d');
+
+    var grad = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+    grad.addColorStop(0, 'rgba(255, 255, 255, 1)');
+    grad.addColorStop(0.35, 'rgba(163, 202, 246, 0.85)');
+    grad.addColorStop(0.7, 'rgba(40, 83, 130, 0.25)');
+    grad.addColorStop(1, 'rgba(18, 37, 60, 0)');
+
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, 64, 64);
+
+    var texture = new THREE.Texture(canvas);
+    texture.needsUpdate = true;
+    return texture;
+  }
+
+  function onThreeMouseMove(e) {
+    threeEngine.mouse.targetX = (e.clientX / window.innerWidth) * 2 - 1;
+    threeEngine.mouse.targetY = -(e.clientY / window.innerHeight) * 2 + 1;
+  }
+
+  function onThreeTouchMove(e) {
+    if (e.touches && e.touches[0]) {
+      threeEngine.mouse.targetX = (e.touches[0].clientX / window.innerWidth) * 2 - 1;
+      threeEngine.mouse.targetY = -(e.touches[0].clientY / window.innerHeight) * 2 + 1;
+    }
+  }
+
+  function onThreeWindowResize() {
+    if (!threeEngine.renderer || !threeEngine.camera) return;
+    var w = window.innerWidth;
+    var h = window.innerHeight;
+    var isMobile = w < 640;
+
+    threeEngine.camera.aspect = w / h;
+    threeEngine.camera.position.z = isMobile ? 960 : 850;
+    threeEngine.camera.updateProjectionMatrix();
+
+    threeEngine.renderer.setSize(w, h);
+    threeEngine.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+
+    for (var i = 0; i < threeEngine.crystals.length; i++) {
+      var item = threeEngine.crystals[i];
+      var bounds = calculateFrustumBounds(threeEngine.camera, item.normPos[2]);
+      item.basePos.x = item.normPos[0] * bounds.width;
+      item.basePos.y = item.normPos[1] * bounds.height;
+
+      var scale = isMobile ? 0.72 : 1.0;
+      item.group.scale.set(scale, scale, scale);
+    }
+  }
+
+  function animateThreeWebGL() {
+    if (!threeEngine.isInitialized) return;
+    requestAnimationFrame(animateThreeWebGL);
+
+    var time = threeEngine.clock.getElapsedTime();
+
+    threeEngine.mouse.x += (threeEngine.mouse.targetX - threeEngine.mouse.x) * 0.045;
+    threeEngine.mouse.y += (threeEngine.mouse.targetY - threeEngine.mouse.y) * 0.045;
+
+    for (var i = 0; i < threeEngine.crystals.length; i++) {
+      var item = threeEngine.crystals[i];
+      var grp = item.group;
+
+      grp.rotation.x += item.rotSpeed[0];
+      grp.rotation.y += item.rotSpeed[1];
+      grp.rotation.z += item.rotSpeed[2];
+
+      var floatOffset = Math.sin(time * item.floatFreq + item.phase) * item.floatAmp;
+      grp.position.y = item.basePos.y + floatOffset;
+
+      var depthFactor = (1200 + item.basePos.z) / 1200;
+      grp.position.x = item.basePos.x + (threeEngine.mouse.x * 24 * depthFactor);
+    }
+
+    if (threeEngine.stardustParticles) {
+      threeEngine.stardustParticles.rotation.y = time * 0.018;
+      threeEngine.stardustParticles.rotation.x = Math.sin(time * 0.012) * 0.035;
+    }
+
+    threeEngine.renderer.render(threeEngine.scene, threeEngine.camera);
+  }
+
+  function formatGoogleDriveImageUrl(url) {
+    if (!url) {
+      return 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1000&auto=format&fit=crop&q=80';
+    }
+    var str = String(url).trim();
+    var match = str.match(/(?:id=|\/d\/|file\/d\/|open\?id=)([a-zA-Z0-9_-]{20,})/);
+    var fileId = match ? match[1] : null;
+
+    if (!fileId && /^[a-zA-Z0-9_-]{20,50}$/.test(str)) {
+      fileId = str;
+    }
+
+    if (fileId) {
+      return 'https://drive.google.com/thumbnail?id=' + fileId + '&sz=w1200';
+    }
+
+    return str;
+  }
+
+  function handleImageFallback(imgEl, originalUrl) {
+    if (!imgEl) return;
+    var retryCount = parseInt(imgEl.getAttribute('data-retry') || '0', 10);
+    var match = (originalUrl || '').match(/(?:id=|\/d\/|file\/d\/|open\?id=)([a-zA-Z0-9_-]{20,})/);
+    var fileId = match ? match[1] : ((originalUrl && /^[a-zA-Z0-9_-]{20,50}$/.test(originalUrl)) ? originalUrl : null);
+
+    if (fileId && retryCount === 0) {
+      imgEl.setAttribute('data-retry', '1');
+      imgEl.src = 'https://lh3.googleusercontent.com/d/' + fileId + '=w1200';
+    } else if (fileId && retryCount === 1) {
+      imgEl.setAttribute('data-retry', '2');
+      imgEl.src = 'https://drive.google.com/uc?export=view&id=' + fileId;
+    } else {
+      imgEl.onerror = null;
+      imgEl.src = 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1000&auto=format&fit=crop&q=80';
+    }
+  }
+
+  function playSynthesizedShutterSound() {
+    try {
+      var AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      var ctx = new AudioCtx();
+
+      var osc = ctx.createOscillator();
+      var gain = ctx.createGain();
+
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(820, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(140, ctx.currentTime + 0.08);
+
+      gain.gain.setValueAtTime(0.35, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.12);
+
+      setTimeout(function() {
+        var osc2 = ctx.createOscillator();
+        var gain2 = ctx.createGain();
+
+        osc2.type = 'sine';
+        osc2.frequency.setValueAtTime(640, ctx.currentTime);
+        osc2.frequency.exponentialRampToValueAtTime(80, ctx.currentTime + 0.09);
+
+        gain2.gain.setValueAtTime(0.28, ctx.currentTime);
+        gain2.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+
+        osc2.connect(gain2);
+        gain2.connect(ctx.destination);
+
+        osc2.start(ctx.currentTime);
+        osc2.stop(ctx.currentTime + 0.1);
+      }, 70);
+    } catch (err) {
+      console.warn('Audio Synthesis Guardrail:', err);
+    }
+  }
+
+  function navigateTo(pageId) {
+    if (appState.currentPage === pageId) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      rearmAndTriggerPageAnimations(pageId);
+      return;
+    }
+
+    if (appState.currentPage === 'photobooth' && pageId !== 'photobooth') {
+      stopWebcamStream();
+      restoreHeader();
+    }
+
+    var currentActive = document.querySelector('.page-section.active-page');
+
+    if (currentActive && currentActive.id !== 'page-' + pageId) {
+      currentActive.classList.add('page-exiting');
+      setTimeout(function() {
+        currentActive.classList.remove('active-page', 'page-exiting');
+        performPageEntrance(pageId);
+      }, 140);
+    } else {
+      performPageEntrance(pageId);
+    }
+  }
+
+  function performPageEntrance(pageId) {
+    appState.currentPage = pageId;
+
+    if (pageId !== 'news') {
+      closeNewsDetail();
+    }
+
+    var sections = document.querySelectorAll('.page-section');
+    sections.forEach(function(sec) { sec.classList.remove('active-page', 'page-exiting'); });
+
+    var target = document.getElementById('page-' + pageId);
+    if (target) {
+      target.classList.add('active-page');
+    }
+
+    var navButtons = document.querySelectorAll('.nav-link-item');
+    navButtons.forEach(function(btn) { btn.classList.remove('active-nav-link'); });
+
+    var activeNavBtn = document.getElementById('nav-' + pageId);
+    if (activeNavBtn) activeNavBtn.classList.add('active-nav-link');
+
+    var globalFooter = document.getElementById('mainGlobalFooter');
+    if (globalFooter) {
+      if (pageId === 'home' || pageId === 'photobooth') {
+        globalFooter.classList.add('hidden');
+      } else {
+        globalFooter.classList.remove('hidden');
+      }
+    }
+
+    updateNavUnderline();
+    window.scrollTo({ top: 0, behavior: 'instant' });
+
+    var scrollBar = document.getElementById('scrollProgressBar');
+    if (scrollBar) scrollBar.style.width = '0%';
+
+    setTimeout(function() {
+      rearmAndTriggerPageAnimations(pageId);
+    }, 20);
+  }
+
+  function rearmAndTriggerPageAnimations(pageId) {
+    if (pageId === 'home' || pageId === 'photobooth') return;
+
+    var pageEl = document.getElementById('page-' + pageId);
+    if (!pageEl) return;
+
+    var reveals = pageEl.querySelectorAll('.scroll-reveal');
+    var winHeight = window.innerHeight || document.documentElement.clientHeight;
+
+    reveals.forEach(function(el) {
+      el.style.transition = 'none';
+      el.style.transitionDelay = '0ms';
+      el.classList.remove('scroll-reveal-visible');
+    });
+
+    void pageEl.offsetHeight;
+
+    reveals.forEach(function(el) {
+      el.style.transition = '';
+    });
+
+    var inViewIndex = 0;
+    reveals.forEach(function(el) {
+      var rect = el.getBoundingClientRect();
+      if (rect.top < winHeight * 0.95 && rect.bottom > 0) {
+        el.style.transitionDelay = (inViewIndex * 65) + 'ms';
+        inViewIndex++;
+      } else {
+        el.style.transitionDelay = '0ms';
+      }
+    });
+
+    void pageEl.offsetHeight;
+
+    requestAnimationFrame(function() {
+      reveals.forEach(function(el) {
+        var rect = el.getBoundingClientRect();
+        if (rect.top < winHeight * 0.95 && rect.bottom > 0) {
+          el.classList.add('scroll-reveal-visible');
+        }
+      });
+    });
+
+    setTimeout(function() {
+      reveals.forEach(function(el) {
+        el.style.transitionDelay = '';
+      });
+    }, (inViewIndex * 65) + 650);
+
+    if (pageId === 'about') {
+      var beam = document.getElementById('milestoneTrackBeamGlow');
+      if (beam) beam.style.width = '0%';
+      for (var i = 1; i <= 4; i++) {
+        var card = document.getElementById('milestone-card-' + i);
+        if (card) card.classList.remove('border-hydrangea-500', 'shadow-md');
+      }
+      setTimeout(function() {
+        playMilestoneSequence();
+      }, 120);
+    }
+  }
+
+  function updateNavUnderline() {
+    var activeBtn = document.getElementById('nav-' + appState.currentPage);
+    var underline = document.getElementById('navSlidingUnderline');
+    var container = document.getElementById('navMenuContainer');
+    if (!activeBtn || !underline || !container) return;
+
+    var leftPos = activeBtn.offsetLeft;
+    var btnWidth = activeBtn.offsetWidth;
+
+    underline.style.left = leftPos + 'px';
+    underline.style.width = btnWidth + 'px';
+  }
+
+  function toggleMobileMenu() {
+    var drawer = document.getElementById('mobileDrawer');
+    var hamb1 = document.getElementById('hambLine1');
+    var hamb2 = document.getElementById('hambLine2');
+    var hamb3 = document.getElementById('hambLine3');
+
+    appState.mobileMenuOpen = !appState.mobileMenuOpen;
+
+    if (drawer) {
+      if (appState.mobileMenuOpen) {
+        drawer.classList.remove('hidden');
+      } else {
+        drawer.classList.add('hidden');
+      }
+    }
+
+    if (hamb1 && hamb2 && hamb3) {
+      if (appState.mobileMenuOpen) {
+        hamb1.style.transform = 'translateY(6px) rotate(45deg)';
+        hamb2.style.opacity = '0';
+        hamb3.style.transform = 'translateY(-6px) rotate(-45deg)';
+      } else {
+        hamb1.style.transform = 'none';
+        hamb2.style.opacity = '1';
+        hamb3.style.transform = 'none';
+      }
+    }
+  }
+
+  function handleNavbarScroll() {
+    var navPill = document.getElementById('mainNavbarPill');
+    if (navPill) {
+      if (window.scrollY > 30) {
+        navPill.classList.add('navbar-scrolled');
+      } else {
+        navPill.classList.remove('navbar-scrolled');
+      }
+    }
+
+    var progressBar = document.getElementById('scrollProgressBar');
+    if (progressBar) {
+      var winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+      var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      var scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+      progressBar.style.width = Math.min(Math.max(scrolled, 0), 100) + '%';
+    }
+
+    var btnTop = document.getElementById('btnScrollToTop');
+    if (btnTop) {
+      if (window.scrollY > 350 && appState.currentPage !== 'home' && appState.currentPage !== 'photobooth') {
+        btnTop.classList.remove('hidden');
+      } else {
+        btnTop.classList.add('hidden');
+      }
+    }
+  }
+
+  function scrollToTopSmooth() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function initScrollReveal() {
+    if (!('IntersectionObserver' in window)) {
+      var allReveals = document.querySelectorAll('.scroll-reveal');
+      allReveals.forEach(function(el) { el.classList.add('scroll-reveal-visible'); });
+      return;
+    }
+
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('scroll-reveal-visible');
+        }
+      });
+    }, { 
+      threshold: 0.08,
+      rootMargin: '0px 0px -40px 0px'
+    });
+
+    var targets = document.querySelectorAll('.scroll-reveal');
+    targets.forEach(function(t) { observer.observe(t); });
+  }
+
+  function initInteractiveMilestones() {
+    var container = document.getElementById('milestoneSectionContainer');
+    if (!container) return;
+
+    if ('IntersectionObserver' in window) {
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            playMilestoneSequence();
+          }
+        });
+      }, { threshold: 0.2 });
+      observer.observe(container);
+    } else {
+      activateMilestoneStep(4);
+    }
+  }
+
+  function playMilestoneSequence() {
+    activateMilestoneStep(1);
+    setTimeout(function() { activateMilestoneStep(2); }, 350);
+    setTimeout(function() { activateMilestoneStep(3); }, 700);
+    setTimeout(function() { activateMilestoneStep(4); }, 1050);
+  }
+
+  function activateMilestoneStep(stepNum) {
+    var beam = document.getElementById('milestoneTrackBeamGlow');
+    if (beam) {
+      var percentages = { 1: '25%', 2: '50%', 3: '75%', 4: '100%' };
+      beam.style.width = percentages[stepNum] || '100%';
+    }
+
+    for (var i = 1; i <= 4; i++) {
+      var card = document.getElementById('milestone-card-' + i);
+      if (card) {
+        if (i <= stepNum) {
+          card.classList.add('border-hydrangea-500', 'shadow-md');
+        } else {
+          card.classList.remove('border-hydrangea-500', 'shadow-md');
+        }
+      }
+    }
+  }
+
+  function initSilkTilt() {
+    var cards = document.querySelectorAll('.silk-tilt-card');
+    cards.forEach(function(card) {
+      card.addEventListener('mousemove', function(e) {
+        var rect = card.getBoundingClientRect();
+        var x = e.clientX - rect.left;
+        var y = e.clientY - rect.top;
+        var centerX = rect.width / 2;
+        var centerY = rect.height / 2;
+        var rotateX = ((y - centerY) / centerY) * -6;
+        var rotateY = ((x - centerX) / centerX) * 6;
+        card.style.transform = 'perspective(1000px) rotateX(' + rotateX.toFixed(2) + 'deg) rotateY(' + rotateY.toFixed(2) + 'deg) translateY(-4px)';
+      });
+
+      card.addEventListener('mouseleave', function() {
+        card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
+      });
+    });
+  }
+
+  function toggleWelcomingEnvelope() {
+    var zone = document.getElementById('cabinetPresidiumZone');
+    var hint = document.getElementById('envelopeHint');
+    var topSlot = document.getElementById('presidiumTopSlot');
+    var dropSlot = document.getElementById('presidiumDropSlot');
+    var presidiumBox = document.getElementById('presidiumShowcaseBox');
+
+    appState.envelopeOpen = !appState.envelopeOpen;
+
+    if (zone) {
+      if (appState.envelopeOpen) {
+        zone.classList.remove('state-envelope-closed');
+        zone.classList.add('state-envelope-open');
+        if (hint) hint.textContent = 'TUTUP DOKUMEN AMANAT';
+
+        if (dropSlot && presidiumBox) {
+          dropSlot.appendChild(presidiumBox);
+        }
+      } else {
+        zone.classList.remove('state-envelope-open');
+        zone.classList.add('state-envelope-closed');
+        if (hint) hint.textContent = 'BUKA DOKUMEN AMANAT';
+
+        if (topSlot && presidiumBox) {
+          topSlot.appendChild(presidiumBox);
+        }
+      }
+    }
+  }
+
+  function switchSpeechLeader(role) {
+    appState.activeLeaderRole = role;
+    var btnK = document.getElementById('btnSpeechLeaderKetua');
+    var btnW = document.getElementById('btnSpeechLeaderWakil');
+
+    if (role === 'KETUA') {
+      if (btnK) btnK.className = 'px-4 py-1.5 rounded-lg text-xs font-black tracking-wider uppercase transition-all bg-[#12253C] text-[#F59E0B] shadow-sm cursor-pointer';
+      if (btnW) btnW.className = 'px-4 py-1.5 rounded-lg text-xs font-black tracking-wider uppercase transition-all text-[#285382] hover:text-[#12253C] cursor-pointer';
+    } else {
+      if (btnW) btnW.className = 'px-4 py-1.5 rounded-lg text-xs font-black tracking-wider uppercase transition-all bg-[#12253C] text-[#F59E0B] shadow-sm cursor-pointer';
+      if (btnK) btnK.className = 'px-4 py-1.5 rounded-lg text-xs font-black tracking-wider uppercase transition-all text-[#285382] hover:text-[#12253C] cursor-pointer';
+    }
+
+    renderSpeechLetterContent();
+  }
+
+  function renderSpeechLetterContent() {
+    var list = appState.sambutan || [];
+    var defaultKetuaPhoto = 'https://lh3.googleusercontent.com/d/1FWshZwTq7wPKDf2T0s2s8wzZ01STkkFI';
+    var defaultWakilPhoto = 'https://lh3.googleusercontent.com/d/1OzAG_IDNaNyC5gSp8QNidy4cZykBfH4s';
+
+    var leaderData = (appState.activeLeaderRole === 'KETUA') ? (list.find(function(s) { return s.role === 'KETUA' || s.role === 'PRESIDEN'; }) || list[0] || {
+      name: 'PUTRI',
+      title: 'PRESIDEN BES SAPA AL HIJRAH 2026',
+      message: 'Bismillah, ahlan wa sahlan di portal resmi BES SAPA AL HIJRAH. Bersama kepengurusan Kabinet 2026, kita satukan tekad untuk mengokohkan adab, kedisiplinan ubudiyah, serta kecendekiaan generasi penghafal Al-Qur\'an yang mandiri dan berintegritas tinggi.',
+      photoUrl: defaultKetuaPhoto
+    }) : (list.find(function(s) { return s.role === 'WAKIL' || s.role === 'WAKIL PRESIDEN'; }) || list[1] || {
+      name: 'ANGGINA',
+      title: 'WAKIL PRESIDEN BES SAPA AL HIJRAH 2026',
+      message: 'Assalamu\'alaikum warahmatullah. Setiap santri adalah mutiara peradaban. Mari kita rawat tali ukhuwah, memantik daya kreasi, serta mengabdi dengan keikhlasan demi kemaslahatan sekolah alam dan umat.',
+      photoUrl: defaultWakilPhoto
+    });
+
+    var targetPhotoUrl = leaderData.photoUrl;
+    if (!targetPhotoUrl || targetPhotoUrl.indexOf('unsplash.com') !== -1) {
+      targetPhotoUrl = (appState.activeLeaderRole === 'KETUA') ? defaultKetuaPhoto : defaultWakilPhoto;
+    }
+
+    var photoEl = document.getElementById('letterLeaderPhoto');
+    var msgEl = document.getElementById('letterLeaderMessage');
+    var nameEl = document.getElementById('letterLeaderName');
+    var roleEl = document.getElementById('letterLeaderRole');
+
+    if (photoEl) {
+      photoEl.referrerPolicy = 'no-referrer';
+      photoEl.setAttribute('data-orig-url', targetPhotoUrl);
+      photoEl.onerror = function() { handleImageFallback(this, this.getAttribute('data-orig-url')); };
+      photoEl.src = formatGoogleDriveImageUrl(targetPhotoUrl);
+    }
+    if (msgEl) msgEl.textContent = leaderData.message || '';
+    if (nameEl) nameEl.textContent = (leaderData.name || '').toUpperCase();
+    if (roleEl) roleEl.textContent = leaderData.title || (appState.activeLeaderRole === 'KETUA' ? 'PRESIDEN BES SAPA AL HIJRAH 2026' : 'WAKIL PRESIDEN BES SAPA AL HIJRAH 2026');
+
+    setElementTextSafely('presidiumLeaderName', (list[0] && list[0].name) ? list[0].name : 'Putri');
+    setElementTextSafely('presidiumViceLeaderName', (list[1] && list[1].name) ? list[1].name : 'Anggina');
+  }
+
+  var PRESET_ICON_SVGS = {
+    sekjen: '<svg class="w-20 h-20 sm:w-24 sm:h-24 text-[#A3CAF6] filter-luminescent" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg>',
+    keuangan: '<svg class="w-20 h-20 sm:w-24 sm:h-24 text-[#A3CAF6] filter-luminescent" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>',
+    pendidikan: '<svg class="w-20 h-20 sm:w-24 sm:h-24 text-[#A3CAF6] filter-luminescent" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>',
+    keamanan: '<svg class="w-20 h-20 sm:w-24 sm:h-24 text-[#A3CAF6] filter-luminescent" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>',
+    lingkungan: '<svg class="w-20 h-20 sm:w-24 sm:h-24 text-[#A3CAF6] filter-luminescent" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>',
+    bahasa: '<svg class="w-20 h-20 sm:w-24 sm:h-24 text-[#A3CAF6] filter-luminescent" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/></svg>',
+    agama: '<svg class="w-20 h-20 sm:w-24 sm:h-24 text-[#A3CAF6] filter-luminescent" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"/></svg>',
+    sarpras: '<svg class="w-20 h-20 sm:w-24 sm:h-24 text-[#A3CAF6] filter-luminescent" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>',
+    kesehatan: '<svg class="w-20 h-20 sm:w-24 sm:h-24 text-[#A3CAF6] filter-luminescent" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>',
+    kominfo: '<svg class="w-20 h-20 sm:w-24 sm:h-24 text-[#A3CAF6] filter-luminescent" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>',
+    default: '<svg class="w-20 h-20 sm:w-24 sm:h-24 text-[#A3CAF6] filter-luminescent" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>'
+  };
+
+  function renderDynamicMinistries(rawCabinetMembers) {
+    var container = document.getElementById('sequentialMinistriesContainer');
+    if (!container) return;
+
+    if (!rawCabinetMembers || rawCabinetMembers.length === 0) {
+      container.innerHTML = '<div class="text-center py-10 text-slate-400">Data struktur kabinet sedang disinkronisasi...</div>';
+      return;
+    }
+
+    var groupedMap = {};
+    var ministryOrder = [];
+
+    for (var i = 0; i < rawCabinetMembers.length; i++) {
+      var row = rawCabinetMembers[i];
+      var mKey = row.ministry || row.department || 'Kementerian';
+
+      if (!groupedMap[mKey]) {
+        groupedMap[mKey] = {
+          title: mKey,
+          desc: row.desc || 'Menjalankan amanat tugas pokok dan fungsi kementerian di lingkungan BES SAPA AL HIJRAH.',
+          icon: row.icon || 'default',
+          order: row.order || 99,
+          members: []
+        };
+        ministryOrder.push(mKey);
+      }
+
+      if (row.name) {
+        groupedMap[mKey].members.push({
+          role: row.position || 'Staff',
+          name: row.name
+        });
+      }
+    }
+
+    var html = '';
+
+    for (var m = 0; m < ministryOrder.length; m++) {
+      var key = ministryOrder[m];
+      var data = groupedMap[key];
+      var iconSvg = PRESET_ICON_SVGS[data.icon] || PRESET_ICON_SVGS.default;
+
+      var staffHtml = '';
+      for (var s = 0; s < data.members.length; s++) {
+        var mem = data.members[s];
+        staffHtml += '<div class="kolektiva-member-card">' +
+          '<span class="member-role-tag">' + mem.role + '</span>' +
+          '<div class="member-name-text">' + mem.name + '</div>' +
+        '</div>';
+      }
+
+      html += '<div class="kolektiva-stage-card rounded-3xl p-6 sm:p-10 shadow-2xl relative overflow-hidden scroll-reveal">' +
+        '<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative z-10">' +
+          '<div class="lg:col-span-5 flex flex-col justify-start text-left pr-0 lg:pr-6">' +
+            '<div class="luminescent-vector-hero mb-5">' +
+              iconSvg +
+            '</div>' +
+            '<h3 class="text-2xl sm:text-4xl font-black text-white tracking-tight uppercase leading-tight mb-4">' +
+              data.title +
+            '</h3>' +
+            '<div class="flex items-start gap-3 text-xs sm:text-sm text-slate-300 leading-relaxed font-normal">' +
+              '<span class="text-[#A3CAF6] mt-0.5 text-base">📖</span>' +
+              '<p>' + data.desc + '</p>' +
+            '</div>' +
+          '</div>' +
+          '<div class="lg:col-span-7 flex flex-col w-full">' +
+            '<div class="flex items-center gap-2 mb-4 pb-2 border-b border-white/10 text-xs font-black uppercase tracking-widest text-slate-300">' +
+              '<svg class="w-4 h-4 text-[#F59E0B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">' +
+                '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />' +
+              '</svg>' +
+              '<span>SUSUNAN JAJARAN</span>' +
+            '</div>' +
+            '<div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">' +
+              (staffHtml || '<div class="text-xs text-slate-400 italic">Jajaran sedang disusun...</div>') +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    }
+
+    container.innerHTML = html;
+  }
+
+  function applyLoadedData(data) {
+    appState.infoWeb = data.infoWeb || data.config || {};
+    appState.sambutan = data.sambutan || data.speech || [];
+    appState.kabinet = data.kabinet || data.cabinet || [];
+    appState.pendidikan = data.pendidikan || [];
+    appState.programUnggulan = data.programUnggulan || [];
+    appState.visiMisi = data.visiMisi || { visi: null, misi: [] };
+
+    if (data.warta && Array.isArray(data.warta)) {
+      appState.news.items = data.warta;
+    } else if (data.newsData && data.newsData.items) {
+      appState.news.items = data.newsData.items;
+    } else if (Array.isArray(data.news)) {
+      appState.news.items = data.news;
+    }
+
+    renderInfoWebSection();
+    renderSpeechLetterContent();
+    renderNewsGrid();
+    renderDynamicMinistries(appState.kabinet);
+    renderPendidikanSection();
+    renderProgramUnggulanSection();
+    renderVisiMisiSection();
+
+    var topSlot = document.getElementById('presidiumTopSlot');
+    var presidiumBox = document.getElementById('presidiumShowcaseBox');
+    if (topSlot && presidiumBox && !appState.envelopeOpen) {
+      topSlot.appendChild(presidiumBox);
+    }
+
+    setTimeout(function() {
+      initScrollReveal();
+    }, 60);
+
+    // Dismiss 3D Crystal Loading Screen smoothly once data is ready
+    dismissLoadingScreen();
+  }
+
+  function loadFallbackData() {
+    var fallback = {
+      infoWeb: {
+        HERO_KICKER: 'B E S',
+        HERO_TITLE: 'AL HIJRAH',
+        HERO_YEAR: '2026',
+        LOADING_KICKER: 'BADAN EKSEKUTIF SANTRI',
+        LOADING_TITLE: 'BES SAPA AL HIJRAH',
+        LOADING_TAGLINE: 'ADAB • ILMU • UKHUWAH',
+        JUDUL_WEB: 'BES SAPA AL HIJRAH',
+        NAMA_SEKOLAH: 'Sekolah Alam Penghafal Al-Quran Al HIJRAH',
+        NAMA_YAYASAN: 'Yayasan Al Hijrah Bintuju',
+        NPYN: 'AB7038',
+        LEGAL_BADGE: 'Lembaga Resmi Berizin Operasional',
+        PIMPINAN_TITLE: 'Pimpinan Yayasan',
+        PIMPINAN_NAMA: 'Masnawan',
+        ALAMAT: 'Jl. Mandailing KM 14, Kelurahan/Desa Bintuju, Kecamatan Angkola Muara Tais, Kabupaten Tapanuli Selatan, Sumatera Utara',
+        PROFIL_SINGKAT: 'Yayasan Al Hijrah Bintuju membawahi ekosistem pendidikan Sekolah Alam Penghafal Al-Quran Al HIJRAH (SAPA AL HIJRAH) yang menyeluruh dan berkesinambungan. Berkomitmen menghantarkan santri menguasai sinergi antara keluhuran adab ubudiyah, tahfidz Al-Quran, kecakapan kepemimpinan alamiah, dan kemandirian santripreneur masa depan.',
+        COPYRIGHT_BERANDA: '© 2026 BES AL HIJRAH. Adab, Ilmu & Ukhuwah.',
+        COPYRIGHT_FOOTER: '© 2026 BES SAPA AL HIJRAH - SEKOLAH ALAM PENGHAFAL AL-QURAN AL HIJRAH. ALL RIGHTS RESERVED.',
+        TAGLINE_FOOTER: 'KABINET BES 2026 • ADAB, ILMU & UKHUWAH',
+        LINK_WHATSAPP: 'https://wa.me/6281234567890',
+        LINK_INSTAGRAM: 'https://instagram.com',
+        LINK_FACEBOOK: 'https://facebook.com',
+        EMAIL_RESMI: 'alhijrahb7@gmail.com'
+      },
+      sambutan: [
+        {
+          role: 'KETUA',
+          name: 'Putri',
+          title: 'PRESIDEN BES SAPA AL HIJRAH 2026',
+          message: 'Bismillah, ahlan wa sahlan di portal resmi BES SAPA AL HIJRAH. Bersama kepengurusan Kabinet 2026, kita satukan tekad untuk mengokohkan adab, kedisiplinan ubudiyah, serta kecendekiaan generasi penghafal Al-Qur\'an yang mandiri dan berintegritas tinggi.',
+          photoUrl: 'https://lh3.googleusercontent.com/d/1FWshZwTq7wPKDf2T0s2s8wzZ01STkkFI'
+        },
+        {
+          role: 'WAKIL',
+          name: 'Anggina',
+          title: 'WAKIL PRESIDEN BES SAPA AL HIJRAH 2026',
+          message: 'Assalamu\'alaikum warahmatullah. Setiap santri adalah mutiara peradaban. Mari kita rawat tali ukhuwah, memantik daya kreasi, serta mengabdi dengan keikhlasan demi kemaslahatan sekolah alam dan umat.',
+          photoUrl: 'https://lh3.googleusercontent.com/d/1OzAG_IDNaNyC5gSp8QNidy4cZykBfH4s'
+        }
+      ],
+      warta: [
+        {
+          id: 'NEWS-001',
+          title: 'Pekan Kreasi Santripreneur 2026: Produksi Dodol Khas Bintuju Tembus Pameran Vokasi Daerah',
+          date: '28 AUG 2026',
+          author: 'SUPER ADMIN BES',
+          summary: 'Mengangkat kearifan lokal melalui unit usaha mandiri pesantren, santri SAPA AL HIJRAH memamerkan inovasi olahan dodol tradisional bernilai ekonomi tinggi.',
+          content: 'BINTUJU — Sekolah Alam Penghafal Al-Quran Al HIJRAH (SAPA AL HIJRAH) kembali mencatatkan terobosan nyata dalam pengembangan kemandirian ekonomi santri. Melalui program Santripreneur terpadu, santri berhasil memproduksi dan mengemas dodol tradisional khas daerah Bintuju dengan standar higienis dan kemasan modern yang menarik perhatian dalam ajang Pameran Vokasi Daerah Tapanuli Selatan.\n\nUnit usaha ekonomi kreatif ini tidak hanya mengajarkan santri keterampilan mengolah bahan baku lokal kelapa dan ketan pilihan, melainkan juga menanamkan pemahaman menyeluruh tentang manajemen rantai pasok, pembukuan keuangan syariah, serta etika berdagang islami yang jujur dan amanah.\n\nPimpinan Yayasan Al Hijrah, Masnawan, menyampaikan rasa syukurnya atas kegigihan santri dalam berinovasi. "Kemandirian pesantren adalah fondasi peradaban. Melalui unit produksi dodol ini, santri kami buktikan bahwa mereka tidak hanya fasih dalam ilmu agama dan tahfidz Al-Qur\'an, tetapi juga memiliki mental wirausaha yang mandiri, tangguh, dan membawa maslahat bagi masyarakat sekitar Bintuju," ungkap beliau.',
+          imageUrl: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1200&auto=format&fit=crop&q=80'
+        },
+        {
+          id: 'NEWS-002',
+          title: 'Santri SMA IT Al Hijrah Sabet Medali Emas Olimpiade Sains Terpadu Tingkat Sumatera Utara',
+          date: '20 AUG 2026',
+          author: 'SUPER ADMIN BES',
+          summary: 'Integrasi kurikulum sains modern, tadabbur alam, dan penguatan adab ubudiyah membuahkan prestasi membanggakan pada ajang bergengsi sains madrasah tingkat provinsi.',
+          content: 'MEDAN — Prestasi membanggakan kembali dipersembahkan oleh delegasi santri SMA IT Al Hijrah Bintuju. Dalam perhelatan Olimpiade Sains Terpadu Tingkat Provinsi Sumatera Utara yang diikuti ratusan peserta dari berbagai madrasah dan sekolah unggulan, kontingen santri SAPA AL HIJRAH sukses meraih Medali Emas untuk bidang Biologi Terapan dan Fisika Terpadu.',
+          imageUrl: 'https://images.unsplash.com/photo-1577495508048-b635879837f1?w=1200&auto=format&fit=crop&q=80'
+        },
+        {
+          id: 'NEWS-003',
+          title: 'Kajian Akbar Adab & Wawasan Santri: Meneguhkan Integritas Moral di Tengah Arus Kecerdasan Buatan',
+          date: '17 JUL 2026',
+          author: 'SUPER ADMIN BES',
+          summary: 'Membedah pentingnya menjaga orisinalitas ilmu, etika komunikasi islami, serta kepemimpinan beradab di tengah derasnya arus disrupsi teknologi masa kini.',
+          content: 'TAPANULI SELATAN — Bertempat di Aula Utama Kampus Terpadu Bintuju, Badan Eksekutif Santri (BES) SAPA AL HIJRAH sukses menyelenggarakan Kajian Akbar Kepemimpinan dan Adab Santri bertajuk "Meneguhkan Integritas Moral di Tengah Disrupsi Digital dan Era AI".',
+          imageUrl: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=1200&auto=format&fit=crop&q=80'
+        }
+      ],
+      kabinet: [
+        { ministry: 'Sekretariat Jenderal', desc: 'Mengatur tata kelola administrasi...', icon: 'sekjen', position: 'Sekretaris Jenderal', name: 'Safa Alya', order: 1 },
+        { ministry: 'Sekretariat Jenderal', desc: 'Mengatur tata kelola administrasi...', icon: 'sekjen', position: 'Wakil Sekretaris Jenderal', name: 'Ihksan', order: 1 },
+        { ministry: 'Kementerian Keuangan', desc: 'Mengelola arus kas...', icon: 'keuangan', position: 'Menteri', name: 'Aulia', order: 2 },
+        { ministry: 'Kementerian Pendidikan', desc: 'Menghadirkan iklim keilmuan...', icon: 'pendidikan', position: 'Menteri', name: 'Miftah', order: 3 },
+        { ministry: 'Kementerian Keamanan', desc: 'Menjaga stabilitas ketertiban...', icon: 'keamanan', position: 'Menteri', name: 'Ribwan', order: 4 },
+        { ministry: 'Kementerian Lingkungan Hidup', desc: 'Mewujudkan kampus Sekolah Alam...', icon: 'lingkungan', position: 'Menteri', name: 'Hopipah', order: 5 },
+        { ministry: 'Kementerian Bahasa', desc: 'Menggerakkan atmosfer bilingual...', icon: 'bahasa', position: 'Menteri', name: 'Afika', order: 6 },
+        { ministry: 'Kementerian Agama', desc: 'Memakmurkan syiar ubudiyah...', icon: 'agama', position: 'Menteri', name: 'Daviah', order: 7 },
+        { ministry: 'Kementerian Sarana & Prasarana', desc: 'Memelihara sarana prasarana...', icon: 'sarpras', position: 'Menteri', name: 'Salsa', order: 8 },
+        { ministry: 'Kementerian Kesehatan', desc: 'Menjaga kesehatan fisik santri...', icon: 'kesehatan', position: 'Menteri', name: 'Safa', order: 9 },
+        { ministry: 'Kementerian Komunikasi & Hubungan Masyarakat', desc: 'Menjadi corong syiar...', icon: 'kominfo', position: 'Menteri', name: 'Salsabila', order: 10 }
+      ]
+    };
+    applyLoadedData(fallback);
+  }
+
+  function initApplicationData() {
+    // 1. Jalur Google Apps Script Native (Jika dibuka di dalam Google Script)
+    if (typeof google !== 'undefined' && google.script && google.script.run) {
+      google.script.run
+        .withSuccessHandler(function(response) {
+          if (response && response.success && response.data) {
+            applyLoadedData(response.data);
+          } else {
+            loadFallbackData();
+          }
+        })
+        .withFailureHandler(function() {
+          loadFallbackData();
+        })
+        .getInitialAppData();
+      return;
+    }
+
+    // 2. Jalur GitHub Pages Native REST API (Fetch JSON tanpa iframe)
+    if (GAS_API_URL && GAS_API_URL.indexOf('AKfycbz_CONTOH_ID') === -1) {
+      var fetchUrl = GAS_API_URL + (GAS_API_URL.indexOf('?') === -1 ? '?' : '&') + 'action=getData&format=json';
+      fetch(fetchUrl)
+        .then(function(res) { return res.json(); })
+        .then(function(response) {
+          if (response && response.success && response.data) {
+            applyLoadedData(response.data);
+          } else {
+            loadFallbackData();
+          }
+        })
+        .catch(function(err) {
+          console.warn('REST API Fetch Fallback:', err);
+          loadFallbackData();
+        });
+    } else {
+      // 3. Fallback instan jika URL API belum dipasang
+      loadFallbackData();
+    }
+  }
+
+  function setElementTextSafely(elemId, val) {
+    try {
+      var el = document.getElementById(elemId);
+      if (el && val !== undefined && val !== null && String(val).trim() !== '') {
+        el.textContent = String(val).trim();
+      }
+    } catch (err) {
+      console.warn('DOM Guardrail: ' + elemId, err);
+    }
+  }
+
+  function setElementHrefSafely(elemId, url) {
+    try {
+      var el = document.getElementById(elemId);
+      if (el && url && String(url).trim() !== '') {
+        el.href = String(url).trim();
+      }
+    } catch (err) {
+      console.warn('DOM Href Guardrail: ' + elemId, err);
+    }
+  }
+
+  function renderInfoWebSection() {
+    var info = appState.infoWeb;
+    if (!info) return;
+
+    setElementTextSafely('homeHeroKicker', info.HERO_KICKER || info.KICKER_BERANDA);
+    setElementTextSafely('homeHeroTitle', info.HERO_TITLE || info.JUDUL_BERANDA);
+    setElementTextSafely('homeHeroYear', info.HERO_YEAR || info.TAHUN_BERANDA);
+
+    // 3 Baris Teks Dinamis Loading Screen
+    setElementTextSafely('loadingKicker', info.LOADING_KICKER);
+    setElementTextSafely('loadingBrandTitle', info.LOADING_TITLE);
+    setElementTextSafely('loadingTagline', info.LOADING_TAGLINE);
+
+    // Simpan ke localStorage agar saat refresh berikutnya langsung muncul teks kustom (Zero Flicker)
+    try {
+      if (info.LOADING_KICKER) localStorage.setItem('bes_loading_kicker', info.LOADING_KICKER);
+      if (info.LOADING_TITLE) localStorage.setItem('bes_loading_title', info.LOADING_TITLE);
+      if (info.LOADING_TAGLINE) localStorage.setItem('bes_loading_tagline', info.LOADING_TAGLINE);
+    } catch (eCacheSet) {}
+
+    setElementTextSafely('navBrandTitle', info.JUDUL_WEB || info.WEB_TITLE);
+    setElementTextSafely('footerBrandTitle', info.JUDUL_WEB || info.WEB_TITLE);
+    setElementTextSafely('footerSchoolSubtitle', info.NAMA_SEKOLAH || info.SCHOOL_NAME);
+
+    setElementTextSafely('aboutYayasanName', info.NAMA_YAYASAN || info.YAYASAN_NAME);
+    setElementTextSafely('aboutNpynBadge', info.NPYN);
+    setElementTextSafely('footerNpyn', info.NPYN);
+
+    setElementTextSafely('aboutLegalBadgeText', info.LEGAL_BADGE || info.ABOUT_LEGAL_BADGE);
+    setElementTextSafely('aboutLeaderTitle', info.PIMPINAN_TITLE || info.YAYASAN_LEADER_TITLE);
+    setElementTextSafely('aboutLeader', info.PIMPINAN_NAMA || info.YAYASAN_LEADER);
+    setElementTextSafely('footerLeader', info.PIMPINAN_NAMA || info.YAYASAN_LEADER);
+
+    setElementTextSafely('aboutProfile', info.PROFIL_SINGKAT || info.ABOUT_PROFILE);
+    setElementTextSafely('footerLocation', info.ALAMAT || info.LOCATION);
+
+    setElementTextSafely('homeCopyrightText', info.COPYRIGHT_BERANDA);
+    setElementTextSafely('footerCopyrightText', info.COPYRIGHT_FOOTER);
+    setElementTextSafely('footerTaglineText', info.TAGLINE_FOOTER);
+
+    setElementHrefSafely('footerFbBtn', info.LINK_FACEBOOK);
+    setElementHrefSafely('footerIgBtn', info.LINK_INSTAGRAM);
+
+    var rawEmail = info.EMAIL_RESMI || 'alhijrahb7@gmail.com';
+    var cleanEmail = String(rawEmail).replace(/^mailto:/i, '').trim();
+    var targetEmailHref = (cleanEmail.indexOf('http://') === 0 || cleanEmail.indexOf('https://') === 0)
+      ? cleanEmail
+      : ('https://mail.google.com/mail/?view=cm&fs=1&to=' + encodeURIComponent(cleanEmail));
+    setElementHrefSafely('footerEmailBtn', targetEmailHref);
+
+    setElementHrefSafely('footerWaBtn', info.LINK_WHATSAPP);
+  }
+
+  function renderPendidikanSection() {
+    var list = appState.pendidikan || [];
+    if (list.length === 0) return;
+
+    for (var i = 0; i < list.length; i++) {
+      var item = list[i];
+      var idx = i + 1;
+      if (idx === 1) {
+        setElementTextSafely('aboutEduPaudTitle', item.title);
+        setElementTextSafely('aboutEduPaudDesc', item.desc);
+        setElementTextSafely('aboutEduPaudTag', item.tag);
+      } else if (idx === 2) {
+        setElementTextSafely('aboutEduMisTitle', item.title);
+        setElementTextSafely('aboutEduMisDesc', item.desc);
+        setElementTextSafely('aboutEduMisTag', item.tag);
+      } else if (idx === 3) {
+        setElementTextSafely('aboutEduSmpTitle', item.title);
+        setElementTextSafely('aboutEduSmpDesc', item.desc);
+        setElementTextSafely('aboutEduSmpNpsn', item.npsn);
+      } else if (idx === 4) {
+        setElementTextSafely('aboutEduSmaTitle', item.title);
+        setElementTextSafely('aboutEduSmaDesc', item.desc);
+        setElementTextSafely('aboutEduSmaNpsn', item.npsn);
+      }
+    }
+  }
+
+  function renderProgramUnggulanSection() {
+    var list = appState.programUnggulan || [];
+    if (list.length === 0) return;
+
+    if (list[0]) {
+      setElementTextSafely('aboutEntBadge', list[0].badge);
+      setElementTextSafely('aboutEntTitle', list[0].title);
+      setElementTextSafely('aboutEntDesc', list[0].desc);
+      setElementTextSafely('aboutEntTag1', list[0].tag1);
+      setElementTextSafely('aboutEntTag2', list[0].tag2);
+      setElementTextSafely('aboutEntTag3', list[0].tag3);
+    }
+    if (list[1]) {
+      setElementTextSafely('aboutPartBadge', list[1].badge);
+      setElementTextSafely('aboutPartTitle', list[1].title);
+      setElementTextSafely('aboutPartDesc', list[1].desc);
+      setElementTextSafely('aboutPartTag1', list[1].tag1);
+      setElementTextSafely('aboutPartTag2', list[1].tag2);
+      setElementTextSafely('aboutPartTag3', list[1].tag3);
+    }
+  }
+
+  function renderVisiMisiSection() {
+    var vm = appState.visiMisi;
+    if (!vm) return;
+
+    if (vm.visi) {
+      setElementTextSafely('aboutVisionBadge', vm.visi.badge);
+      setElementTextSafely('aboutVisionHeadline', vm.visi.headline);
+      setElementTextSafely('aboutVisionText', vm.visi.desc);
+    }
+
+    if (vm.misi && vm.misi.length > 0) {
+      setElementTextSafely('aboutMissionBadge', vm.misi[0].badge || 'LANGKAH STRATEGIS');
+      if (vm.misi[0]) setElementTextSafely('aboutMission1', vm.misi[0].desc);
+      if (vm.misi[1]) setElementTextSafely('aboutMission2', vm.misi[1].desc);
+      if (vm.misi[2]) setElementTextSafely('aboutMission3', vm.misi[2].desc);
+    }
+  }
+
+  function renderNewsGrid(filterKeyword) {
+    var grid = document.getElementById('newsCardsGrid');
+    var emptyState = document.getElementById('newsEmptyState');
+    if (!grid) return;
+
+    var items = appState.news.items || [];
+    var keyword = (filterKeyword || '').toLowerCase().trim();
+
+    var filtered = items.filter(function(item) {
+      if (!keyword) return true;
+      var text = (item.title + ' ' + (item.summary || '') + ' ' + (item.content || '')).toLowerCase();
+      return text.indexOf(keyword) !== -1;
+    });
+
+    if (filtered.length === 0) {
+      grid.innerHTML = '';
+      if (emptyState) emptyState.classList.remove('hidden');
+      return;
+    }
+
+    if (emptyState) emptyState.classList.add('hidden');
+
+    var html = '';
+    for (var i = 0; i < filtered.length; i++) {
+      var itm = filtered[i];
+      var author = itm.author || 'SUPER ADMIN BES';
+      var date = itm.date || '28 AUG 2026';
+      var rawImgUrl = itm.imageUrl || '';
+      var imgSrc = formatGoogleDriveImageUrl(rawImgUrl);
+
+      html += '<div class="news-editorial-card group scroll-reveal">' +
+        '<div class="news-card-thumbnail-box">' +
+          '<div class="news-floating-category-tag">NEWS</div>' +
+          '<img src="' + imgSrc + '" data-orig-url="' + rawImgUrl + '" alt="' + itm.title + '" referrerpolicy="no-referrer" loading="lazy" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-106" onerror="handleImageFallback(this, this.getAttribute(\'data-orig-url\'))">' +
+        '</div>' +
+        '<div class="news-card-body-content">' +
+          '<div>' +
+            '<div class="news-meta-author-row">' +
+              '<span>' + author + '</span>' +
+              '<span>•</span>' +
+              '<span>' + date + '</span>' +
+            '</div>' +
+            '<h3 class="news-card-headline-title">' + itm.title + '</h3>' +
+          '</div>' +
+          '<div class="pt-2">' +
+            '<button onclick="openNewsDetail(\'' + itm.id + '\')" class="news-btn-selengkapnya">' +
+              '<span>SELENGKAPNYA</span>' +
+              '<span>→</span>' +
+            '</button>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    }
+
+    grid.innerHTML = html;
+  }
+
+  function handleNewsSearch(event) {
+    var query = event.target.value;
+    renderNewsGrid(query);
+    initScrollReveal();
+  }
+
+  function openNewsDetail(newsId) {
+    var items = appState.news.items || [];
+    var article = items.find(function(item) { return item.id === newsId; });
+    if (!article) return;
+
+    appState.news.activeArticleId = newsId;
+
+    var catalogView = document.getElementById('newsCatalogView');
+    var detailView = document.getElementById('newsDetailView');
+    if (catalogView) catalogView.classList.add('hidden');
+    if (detailView) detailView.classList.remove('hidden');
+
+    var heroImg = document.getElementById('detailHeroImage');
+    var titleEl = document.getElementById('detailTitle');
+    var authorEl = document.getElementById('detailAuthor');
+    var dateEl = document.getElementById('detailDate');
+    var leadEl = document.getElementById('detailLead');
+    var fullContentEl = document.getElementById('detailFullContent');
+
+    if (heroImg) {
+      heroImg.referrerPolicy = 'no-referrer';
+      var rawHeroUrl = article.imageUrl || '';
+      heroImg.setAttribute('data-orig-url', rawHeroUrl);
+      heroImg.onerror = function() { handleImageFallback(this, this.getAttribute('data-orig-url')); };
+      heroImg.src = formatGoogleDriveImageUrl(rawHeroUrl);
+    }
+    if (titleEl) titleEl.textContent = article.title;
+    if (authorEl) authorEl.textContent = article.author || 'SUPER ADMIN BES';
+    if (dateEl) dateEl.textContent = article.date || '28 AUG 2026';
+    if (leadEl) leadEl.textContent = article.summary || '';
+
+    if (fullContentEl) {
+      var paragraphs = (article.content || article.summary || '').split('\n\n');
+      var contentHtml = '';
+      for (var p = 0; p < paragraphs.length; p++) {
+        var cleanP = paragraphs[p].trim();
+        if (cleanP) {
+          contentHtml += '<p class="leading-relaxed">' + cleanP.replace(/\n/g, '<br>') + '</p>';
+        }
+      }
+      fullContentEl.innerHTML = contentHtml;
+    }
+
+    var globalFooter = document.getElementById('mainGlobalFooter');
+    if (globalFooter) globalFooter.classList.remove('hidden');
+
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
+
+  function closeNewsDetail() {
+    appState.news.activeArticleId = null;
+
+    var catalogView = document.getElementById('newsCatalogView');
+    var detailView = document.getElementById('newsDetailView');
+    if (detailView) detailView.classList.add('hidden');
+    if (catalogView) catalogView.classList.remove('hidden');
+
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
+
+  function shareArticleWhatsApp() {
+    var items = appState.news.items || [];
+    var article = items.find(function(item) { return item.id === appState.news.activeArticleId; });
+    var title = article ? article.title : 'Warta Santri BES Al Hijrah';
+    var text = encodeURIComponent('Baca warta menarik dari BES Al Hijrah: "' + title + '"\n\n' + window.location.href);
+    window.open('https://api.whatsapp.com/send?text=' + text, '_blank');
+  }
+
+  function copyArticleLink() {
+    var dummyInput = document.createElement('input');
+    dummyInput.setAttribute('value', window.location.href);
+    document.body.appendChild(dummyInput);
+    dummyInput.select();
+    try {
+      document.execCommand('copy');
+      showToast('Tautan artikel berhasil disalin!', 'success');
+    } catch (e) {
+      showToast('Gagal menyalin tautan.', 'warning');
+    }
+    document.body.removeChild(dummyInput);
+  }
+
+  function openPhotobooth() {
+    var header = document.getElementById('mainHeader');
+    if (header) header.classList.add('hidden');
+
+    navigateTo('photobooth');
+    updateCarouselVisuals();
+    requestCameraAccess();
+  }
+
+  function exitPhotobooth() {
+    stopWebcamStream();
+    restoreHeader();
+    navigateTo('home');
+  }
+
+  function restoreHeader() {
+    var header = document.getElementById('mainHeader');
+    if (header) header.classList.remove('hidden');
+  }
+
+  function setLiveFilter(filterName) {
+    appState.photobooth.activeFilter = filterName;
+
+    var btns = document.querySelectorAll('.filter-pill-btn');
+    btns.forEach(function(b) { b.classList.remove('active-filter-pill'); });
+
+    var activeBtn = document.getElementById('filterBtn-' + filterName);
+    if (activeBtn) activeBtn.classList.add('active-filter-pill');
+
+    var centerKey = appState.photobooth.centerTemplate;
+    var slotId = 'slot-' + centerKey + '-' + (appState.photobooth.currentPoseIndex + 1);
+    var slot = document.getElementById(slotId);
+    var video = slot ? slot.querySelector('video') : null;
+
+    if (video) {
+      video.className = 'w-full h-full object-cover live-filter-' + filterName;
+    }
+  }
+
+  function updateCarouselVisuals() {
+    var templates = appState.photobooth.templates;
+    var center = appState.photobooth.centerTemplate;
+
+    var map = {
+      'diplomatic': document.getElementById('card-diplomatic'),
+      'analog': document.getElementById('card-analog'),
+      'herbarium': document.getElementById('card-herbarium')
+    };
+
+    templates.forEach(function(tKey, idx) {
+      var el = map[tKey];
+      if (el) {
+        el.style.order = idx;
+        el.classList.remove('item-center', 'item-side');
+        if (tKey === center) {
+          el.classList.add('item-center');
+        } else {
+          el.classList.add('item-side');
+        }
+      }
+    });
+
+    if (appState.photobooth.cameraReady && appState.photobooth.stream) {
+      mountVideoToActiveCenterSlot(appState.photobooth.currentPoseIndex + 1);
+    } else {
+      renderInSlotCameraNotice();
+    }
+  }
+
+  function revolveToTemplate(targetKey) {
+    if (appState.photobooth.isBusy) return;
+    if (appState.photobooth.centerTemplate === targetKey) return;
+
+    var templates = appState.photobooth.templates;
+    var targetIdx = templates.indexOf(targetKey);
+    if (targetIdx === -1) return;
+
+    if (targetIdx === 0) {
+      var last = templates.pop();
+      templates.unshift(last);
+    } else if (targetIdx === 2) {
+      var first = templates.shift();
+      templates.push(first);
+    }
+
+    appState.photobooth.centerTemplate = targetKey;
+    appState.photobooth.currentPoseIndex = 0;
+    updateCarouselVisuals();
+
+    var btnDl = document.getElementById('btnDownloadStrip');
+    if (btnDl && !appState.photobooth.photos[targetKey][2]) {
+      btnDl.classList.add('hidden');
+      btnDl.disabled = true;
+    }
+  }
+
+  function revolveNextTemplate() {
+    var templates = appState.photobooth.templates;
+    revolveToTemplate(templates[2]);
+  }
+
+  function requestCameraAccess() {
+    var btnStart = document.getElementById('btnStartPhotoSequence');
+    var btnStartText = document.getElementById('btnStartText');
+
+    appState.photobooth.cameraReady = false;
+
+    if (btnStart) {
+      btnStart.disabled = true;
+      btnStart.className = 'w-full py-2.5 px-4 rounded-xl bg-slate-300 text-slate-500 font-bold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-not-allowed';
+    }
+    if (btnStartText) btnStartText.textContent = 'Menghubungkan Kamera...';
+
+    renderInSlotCameraNotice();
+
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      handleCameraDenied();
+      return;
+    }
+
+    stopWebcamStream();
+
+    var constraints = {
+      video: {
+        facingMode: appState.photobooth.facingMode,
+        width: { ideal: 640 },
+        height: { ideal: 480 }
+      },
+      audio: false
+    };
+
+    navigator.mediaDevices.getUserMedia(constraints)
+      .then(function(stream) { handleCameraStreamSuccess(stream); })
+      .catch(function() {
+        navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+          .then(function(stream) { handleCameraStreamSuccess(stream); })
+          .catch(function() { handleCameraDenied(); });
+      });
+  }
+
+  function renderInSlotCameraNotice() {
+    var centerKey = appState.photobooth.centerTemplate;
+    var slotId = 'slot-' + centerKey + '-1';
+    var slot = document.getElementById(slotId);
+    if (!slot) return;
+
+    slot.innerHTML = '<div class="slot-permission-container">' +
+      '<svg class="slot-permission-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">' +
+        '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/>' +
+      '</svg>' +
+      '<div class="slot-permission-title">Izin Kamera Diperlukan.<br>Klik tombol di bawah ini:</div>' +
+      '<button onclick="requestCameraAccess()" class="slot-permission-btn">Izinkan Kamera</button>' +
+    '</div>';
+  }
+
+  function handleCameraStreamSuccess(stream) {
+    appState.photobooth.stream = stream;
+    appState.photobooth.cameraReady = true;
+
+    var btnStart = document.getElementById('btnStartPhotoSequence');
+    var btnStartText = document.getElementById('btnStartText');
+
+    if (btnStart) {
+      btnStart.disabled = false;
+      btnStart.className = 'w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-hydrangea-700 to-hydrangea-600 hover:from-hydrangea-800 hover:to-hydrangea-700 text-white font-bold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 transform active:scale-98 cursor-pointer';
+    }
+    if (btnStartText) btnStartText.textContent = 'Mulai Jepret 3 Pose 📸';
+
+    mountVideoToActiveCenterSlot(appState.photobooth.currentPoseIndex + 1);
+    showToast('Kamera aktif langsung di frame tengah!', 'success');
+  }
+
+  function handleCameraDenied() {
+    appState.photobooth.cameraReady = false;
+    renderInSlotCameraNotice();
+
+    var btnStart = document.getElementById('btnStartPhotoSequence');
+    var btnStartText = document.getElementById('btnStartText');
+
+    if (btnStart) {
+      btnStart.disabled = true;
+      btnStart.className = 'w-full py-2.5 px-4 rounded-xl bg-slate-300 text-slate-500 font-bold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-not-allowed';
+    }
+    if (btnStartText) btnStartText.textContent = 'Izinkan Kamera Dahulu';
+    showToast('Izin akses kamera diperlukan browser.', 'warning');
+  }
+
+  function stopWebcamStream() {
+    if (appState.photobooth.stream) {
+      appState.photobooth.stream.getTracks().forEach(function(track) { track.stop(); });
+      appState.photobooth.stream = null;
+    }
+    appState.photobooth.cameraReady = false;
+  }
+
+  function switchCameraFacing() {
+    appState.photobooth.facingMode = (appState.photobooth.facingMode === 'user') ? 'environment' : 'user';
+    requestCameraAccess();
+  }
+
+  function mountVideoToActiveCenterSlot(slotNum) {
+    var centerKey = appState.photobooth.centerTemplate;
+    var slotId = 'slot-' + centerKey + '-' + slotNum;
+    var slot = document.getElementById(slotId);
+    if (!slot || !appState.photobooth.stream) return;
+
+    slot.innerHTML = '';
+    var video = document.createElement('video');
+    video.autoplay = true;
+    video.playsInline = true;
+    video.muted = true;
+    video.srcObject = appState.photobooth.stream;
+    video.className = 'w-full h-full object-cover live-filter-' + appState.photobooth.activeFilter;
+    video.onloadedmetadata = function() { video.play(); };
+
+    slot.appendChild(video);
+  }
+
+  function startPhotoSequence() {
+    if (appState.photobooth.isBusy || !appState.photobooth.cameraReady) {
+      showToast('Kamera belum aktif!', 'warning');
+      return;
+    }
+
+    var centerKey = appState.photobooth.centerTemplate;
+    appState.photobooth.isBusy = true;
+    appState.photobooth.photos[centerKey] = [null, null, null];
+    appState.photobooth.currentPoseIndex = 0;
+
+    var btnStart = document.getElementById('btnStartPhotoSequence');
+    if (btnStart) {
+      btnStart.disabled = true;
+      btnStart.classList.add('opacity-50', 'cursor-not-allowed');
+    }
+
+    executeSlotCapture(0, function() {
+      executeSlotCapture(1, function() {
+        executeSlotCapture(2, function() {
+          appState.photobooth.isBusy = false;
+          if (btnStart) {
+            btnStart.disabled = false;
+            btnStart.classList.remove('opacity-50', 'cursor-not-allowed');
+          }
+          var btnStartText = document.getElementById('btnStartText');
+          if (btnStartText) btnStartText.textContent = 'Foto Ulang 3 Pose 🔄';
+
+          var btnDl = document.getElementById('btnDownloadStrip');
+          if (btnDl) {
+            btnDl.classList.remove('hidden');
+            btnDl.disabled = false;
+          }
+          showToast('Alhamdulillah! 3 pose berhasil diambil.', 'success');
+        });
+      });
+    });
+  }
+
+  function executeSlotCapture(slotIndex, onCompleted) {
+    appState.photobooth.currentPoseIndex = slotIndex;
+    mountVideoToActiveCenterSlot(slotIndex + 1);
+
+    var centerKey = appState.photobooth.centerTemplate;
+    var slotId = 'slot-' + centerKey + '-' + (slotIndex + 1);
+    var slot = document.getElementById(slotId);
+
+    var overlay = document.createElement('div');
+    overlay.className = 'countdown-badge-overlay';
+    overlay.textContent = '3';
+    if (slot) slot.appendChild(overlay);
+
+    var count = 3;
+    var interval = setInterval(function() {
+      count--;
+      if (count > 0) {
+        overlay.textContent = count;
+      } else {
+        clearInterval(interval);
+        if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+
+        triggerFlash();
+        playSynthesizedShutterSound();
+        captureFromActiveVideo(slotIndex);
+
+        setTimeout(function() { onCompleted(); }, 800);
+      }
+    }, 1000);
+  }
+
+  function triggerFlash() {
+    var flash = document.getElementById('cameraFlash');
+    if (flash) {
+      flash.classList.remove('hidden');
+      flash.classList.add('flash-active');
+      setTimeout(function() {
+        flash.classList.add('hidden');
+        flash.classList.remove('flash-active');
+      }, 300);
+    }
+  }
+
+  function captureFromActiveVideo(slotIndex) {
+    var centerKey = appState.photobooth.centerTemplate;
+    var slotId = 'slot-' + centerKey + '-' + (slotIndex + 1);
+    var slot = document.getElementById(slotId);
+    var video = slot ? slot.querySelector('video') : null;
+
+    var canvas = document.createElement('canvas');
+    canvas.width = 480;
+    canvas.height = 360;
+    var ctx = canvas.getContext('2d');
+
+    var currentFilter = appState.photobooth.activeFilter;
+    if (currentFilter === 'warm') {
+      ctx.filter = 'sepia(0.2) saturate(1.25) brightness(1.04)';
+    } else if (currentFilter === 'noir') {
+      ctx.filter = 'grayscale(1) contrast(1.2) brightness(0.96)';
+    } else {
+      ctx.filter = 'none';
+    }
+
+    if (video && video.readyState >= 2) {
+      if (appState.photobooth.facingMode === 'user') {
+        ctx.translate(canvas.width, 0);
+        ctx.scale(-1, 1);
+      }
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    } else {
+      ctx.fillStyle = '#183354';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 24px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('BES AL HIJRAH', canvas.width / 2, canvas.height / 2);
+    }
+
+    var dataUrl = canvas.toDataURL('image/jpeg', 0.9);
+    appState.photobooth.photos[centerKey][slotIndex] = dataUrl;
+
+    if (slot) {
+      slot.innerHTML = '<img src="' + dataUrl + '" class="w-full h-full object-cover">';
+    }
+  }
+
+  function downloadPhotoStrip() {
+    var centerKey = appState.photobooth.centerTemplate;
+    var photos = appState.photobooth.photos[centerKey];
+    if (!photos[0] || !photos[1] || !photos[2]) {
+      showToast('Ambil 3 foto terlebih dahulu!', 'warning');
+      return;
+    }
+
+    var canvas = document.getElementById('exportCanvas');
+    var ctx = canvas.getContext('2d');
+    canvas.width = 600;
+    canvas.height = 1650;
+
+    var loadedCount = 0;
+    var imageElements = [];
+
+    for (var i = 0; i < 3; i++) {
+      (function(index) {
+        var img = new Image();
+        img.onload = function() {
+          loadedCount++;
+          if (loadedCount === 3) {
+            renderFinalExportCanvas(ctx, canvas, centerKey, imageElements);
+          }
+        };
+        img.src = photos[index];
+        imageElements.push(img);
+      })(i);
+    }
+  }
+
+  function renderFinalExportCanvas(ctx, canvas, template, imgs) {
+    var slotWidth = 490;
+    var slotHeight = 368;
+    var slotX = (canvas.width - slotWidth) / 2;
+    var startY = 160;
+    var gap = 52;
+
+    if (template === 'analog') {
+      var skyGrad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+      skyGrad.addColorStop(0, '#e0f2fe');
+      skyGrad.addColorStop(0.5, '#bae6fd');
+      skyGrad.addColorStop(1, '#7dd3fc');
+      ctx.fillStyle = skyGrad;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.lineWidth = 10;
+      ctx.strokeStyle = '#38bdf8';
+      ctx.strokeRect(16, 16, canvas.width - 32, canvas.height - 32);
+
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(canvas.width / 2 - 170, 45, 340, 52);
+      ctx.lineWidth = 2.5;
+      ctx.strokeStyle = '#7dd3fc';
+      ctx.strokeRect(canvas.width / 2 - 170, 45, 340, 52);
+
+      ctx.fillStyle = '#0284c7';
+      ctx.font = '900 24px "Plus Jakarta Sans", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('☁️ HARU SANTRI ✨ 🧸', canvas.width / 2, 80);
+
+      ctx.fillStyle = '#0369a1';
+      ctx.font = '800 16px monospace';
+      ctx.fillText('LIFE 4 CUTS • \'26 09 19', canvas.width / 2, 130);
+
+      for (var a = 0; a < 3; a++) {
+        var yAnalog = startY + a * (slotHeight + gap);
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(slotX - 10, yAnalog - 10, slotWidth + 20, slotHeight + 20);
+        ctx.drawImage(imgs[a], slotX, yAnalog, slotWidth, slotHeight);
+
+        if (a < 2) {
+          ctx.fillStyle = '#0284c7';
+          ctx.font = '22px "Plus Jakarta Sans", sans-serif';
+          ctx.fillText('✨ 🎀 ☁️ ⭐ 🫧 💖', canvas.width / 2, yAnalog + slotHeight + 35);
+        }
+      }
+
+      ctx.fillStyle = '#075985';
+      ctx.font = '900 22px "Plus Jakarta Sans", sans-serif';
+      ctx.fillText('📸 BES AL HIJRAH Y2K CUTS 🫧', canvas.width / 2, canvas.height - 58);
+
+      ctx.fillStyle = '#0284c7';
+      ctx.font = '800 14px "Plus Jakarta Sans", sans-serif';
+      ctx.fillText('SWEET YOUTH MEMORIES • 2026', canvas.width / 2, canvas.height - 30);
+
+    } else if (template === 'herbarium') {
+      ctx.fillStyle = '#f5eee2';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.lineWidth = 6;
+      ctx.strokeStyle = '#c8b79f';
+      ctx.strokeRect(18, 18, canvas.width - 36, canvas.height - 36);
+
+      ctx.lineWidth = 1.5;
+      ctx.strokeStyle = '#a48c6f';
+      ctx.strokeRect(26, 26, canvas.width - 52, canvas.height - 52);
+
+      ctx.fillStyle = 'rgba(214, 196, 174, 0.9)';
+      ctx.fillRect(20, 20, 110, 32);
+      ctx.fillRect(canvas.width - 130, canvas.height - 52, 110, 32);
+
+      ctx.fillStyle = '#2c251e';
+      ctx.font = 'bold 30px "Playfair Display", serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('🌿 Sekolah Alam Al Hijrah ☕', canvas.width / 2, 85);
+
+      ctx.fillStyle = '#8c7b6b';
+      ctx.font = 'italic 16px "Playfair Display", serif';
+      ctx.fillText('Herbarium Journal • Bintuju Tapsel 📜', canvas.width / 2, 118);
+
+      for (var hIdx = 0; hIdx < 3; hIdx++) {
+        var yHerb = startY + hIdx * (slotHeight + gap);
+        ctx.fillStyle = '#faf7f2';
+        ctx.fillRect(slotX - 8, yHerb - 8, slotWidth + 16, slotHeight + 16);
+        ctx.drawImage(imgs[hIdx], slotX, yHerb, slotWidth, slotHeight);
+
+        ctx.strokeStyle = '#d4c5b2';
+        ctx.lineWidth = 3;
+        ctx.strokeRect(slotX, yHerb, slotWidth, slotHeight);
+
+        if (hIdx < 2) {
+          ctx.fillStyle = '#8c7b6b';
+          ctx.font = '20px serif';
+          ctx.fillText('🍃 ── ☕ ── 🌻 ── 📖 ── 🍂', canvas.width / 2, yHerb + slotHeight + 35);
+        }
+      }
+
+      ctx.fillStyle = '#4a3f35';
+      ctx.font = '800 20px "Plus Jakarta Sans", sans-serif';
+      ctx.fillText('🌾 CATATAN KENANGAN SANTRI 🍃', canvas.width / 2, canvas.height - 62);
+
+      ctx.fillStyle = '#8c7b6b';
+      ctx.font = '600 14px "Plus Jakarta Sans", sans-serif';
+      ctx.fillText('Mekar Bertumbuh di Bumi Pesantren', canvas.width / 2, canvas.height - 34);
+
+    } else {
+      ctx.fillStyle = '#071322';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.lineWidth = 8;
+      ctx.strokeStyle = '#f59e0b';
+      ctx.strokeRect(16, 16, canvas.width - 32, canvas.height - 32);
+
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = '#fef08a';
+      ctx.strokeRect(26, 26, canvas.width - 52, canvas.height - 52);
+
+      ctx.fillStyle = '#f59e0b';
+      ctx.font = '900 28px "Cinzel", "Playfair Display", serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('👑 BES SAPA AL HIJRAH 🏛️', canvas.width / 2, 80);
+
+      ctx.fillStyle = '#e2e8f0';
+      ctx.font = '800 13px "Plus Jakarta Sans", sans-serif';
+      ctx.fillText('THE ROYAL DIPLOMATIC PRESS • 2026 ⚜️', canvas.width / 2, 114);
+
+      for (var d = 0; d < 3; d++) {
+        var yDip = startY + d * (slotHeight + gap);
+        ctx.drawImage(imgs[d], slotX, yDip, slotWidth, slotHeight);
+        ctx.strokeStyle = '#f59e0b';
+        ctx.lineWidth = 4;
+        ctx.strokeRect(slotX, yDip, slotWidth, slotHeight);
+
+        if (d < 2) {
+          ctx.fillStyle = '#f59e0b';
+          ctx.font = '22px serif';
+          ctx.fillText('⭐ ⚜️ 👑 ⚜️ ⭐', canvas.width / 2, yDip + slotHeight + 35);
+        }
+      }
+
+      ctx.fillStyle = '#f59e0b';
+      ctx.font = 'bold 22px "Cinzel", "Playfair Display", serif';
+      ctx.fillText('⚜️ ADAB • ILMU • UKHUWAH ⚜️', canvas.width / 2, canvas.height - 65);
+
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '700 13px "Plus Jakarta Sans", sans-serif';
+      ctx.fillText('EXECUTIVE PRESIDENTIAL MEMORABILIA', canvas.width / 2, canvas.height - 35);
+    }
+
+    var link = document.createElement('a');
+    link.download = 'BES_AlHijrah_' + template + '_' + Date.now() + '.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+    showToast('Strip foto berhasil diunduh!', 'success');
+  }
+
+  function showToast(message, type) {
+    var container = document.getElementById('toastContainer');
+    if (!container) return;
+
+    var toast = document.createElement('div');
+    var bgClass = (type === 'success') ? 'bg-hydrangea-800 text-white' : (type === 'warning' ? 'bg-rose-600 text-white' : 'bg-slate-900 text-white');
+    var icon = (type === 'success') ? '✅' : (type === 'warning' ? '⚠️' : '✨');
+
+    toast.className = 'px-4 py-2 rounded-xl shadow-lg flex items-center gap-2 text-xs font-semibold ' + bgClass;
+    toast.innerHTML = '<span>' + icon + '</span><span>' + message + '</span>';
+
+    container.appendChild(toast);
+    setTimeout(function() {
+      if (toast.parentNode) toast.parentNode.removeChild(toast);
+    }, 3500);
+  }
+
+  window.addEventListener('scroll', handleNavbarScroll);
+  window.addEventListener('resize', updateNavUnderline);
+
+  window.addEventListener('DOMContentLoaded', function() {
+    // Hidrasi instan teks loading screen dari cache lokal sebelum request data selesai
+    try {
+      var cachedKicker = localStorage.getItem('bes_loading_kicker');
+      var cachedTitle = localStorage.getItem('bes_loading_title');
+      var cachedTagline = localStorage.getItem('bes_loading_tagline');
+      if (cachedKicker) setElementTextSafely('loadingKicker', cachedKicker);
+      if (cachedTitle) setElementTextSafely('loadingBrandTitle', cachedTitle);
+      if (cachedTagline) setElementTextSafely('loadingTagline', cachedTagline);
+    } catch (eCacheGet) {}
+
+    try { initApplicationData(); } catch (e1) { console.warn('Guardrail data:', e1); }
+    try { initThreeWebGLAtmosphere(); } catch (e2) { console.warn('Guardrail 3D WebGL:', e2); }
+    try { initSilkTilt(); } catch (e3) { console.warn('Guardrail tilt:', e3); }
+    try { initScrollReveal(); } catch (e4) { console.warn('Guardrail reveal:', e4); }
+    setTimeout(function() { try { updateNavUnderline(); } catch (e5) { console.warn('Guardrail underline:', e5); } }, 250);
+
+    // Safety fallback: pastikan loading screen tertutup maksimal dalam 3 detik jika koneksi lambat
+    setTimeout(function() {
+      dismissLoadingScreen();
+    }, 3000);
+  });
+</script>
