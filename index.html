@@ -56,7 +56,6 @@
     };
   </script>
 
-  <!-- Critical Inline Preloader CSS: Mengunci Ukuran SVG Sejak Milidetik Ke-0 (Anti-Glitch / Anti-FOUC) -->
   <style>
     .celestial-loading-screen {
       position: fixed;
@@ -120,7 +119,6 @@
 
   <?!= include('css'); ?>
 
-  <!-- Dual-Mode Loader: Fallback CSS Otomatis untuk Hosting GitHub Pages -->
   <script>
     (function() {
       if (typeof google === 'undefined') {
@@ -250,21 +248,21 @@
 
   <main id="mainContentContainer" class="w-full flex-grow transition-all">
 
-    <!-- PAGE 1: BERANDA (HOME) - Judul Proporsional Layar HP -->
+    <!-- PAGE 1: BERANDA (HOME) - Judul Proporsional, Gagah, dan Terkunci 1 Baris di HP -->
     <section id="page-home" class="page-section active-page w-full px-4 text-center">
       <div class="w-full pt-20 sm:pt-24"></div>
 
       <div class="w-full max-w-4xl flex flex-col items-center justify-center my-auto relative z-10">
-        <div class="aesthetic-ornamental-title select-none mb-6 sm:mb-8 relative">
+        <div class="aesthetic-ornamental-title select-none mb-6 sm:mb-8 relative w-full max-w-full px-1">
           <!-- Ambient Halo Backlight -->
           <div class="title-ambient-halo"></div>
 
           <!-- Kicker: BES High-Fashion Spacing Dinamis dari Spreadsheet -->
           <div class="title-kicker-bes" id="homeHeroKicker">B E S</div>
 
-          <!-- Main Display: AL HIJRAH Terkunci 1 Baris Penuh (Gagah, Padat, Anti-Gepeng & Anti-Wrap) -->
-          <h1 class="title-main-alhijrah whitespace-nowrap overflow-visible">
-            <span class="title-text-gradient whitespace-nowrap select-none" id="homeHeroTitle">AL HIJRAH</span>
+          <!-- Main Display: AL HIJRAH Terkunci 1 Baris Penuh (Gagah, Padat, Anti-Kecil & Anti-Wrap) -->
+          <h1 class="title-main-alhijrah whitespace-nowrap overflow-visible leading-none">
+            <span class="title-text-gradient whitespace-nowrap select-none block" id="homeHeroTitle">AL HIJRAH</span>
           </h1>
 
           <!-- Year: 2026 with Diplomatic Hairline Accent Dinamis -->
@@ -294,30 +292,30 @@
       </div>
     </section>
 
-    <!-- PAGE 2: PHOTOBOOTH STUDIO (RAPAT VERTIKAL & STIKER 3D DI SISI FRAME) -->
+    <!-- PAGE 2: PHOTOBOOTH STUDIO (KOMPAK, RAPAT TANPA SPACE MELOMPONG, SELA BERSIH ALAMI) -->
     <section id="page-photobooth" class="page-section w-full">
       
-      <!-- Header Ramping (Membuang Ruang Kosong Melompong di HP) -->
-      <div class="w-full max-w-2xl flex items-center justify-between px-3 flex-shrink-0 mb-1">
-        <button onclick="exitPhotobooth()" class="w-9 h-9 rounded-full bg-hydrangea-800 hover:bg-hydrangea-900 text-white flex items-center justify-center transition-all shadow-md active:scale-95 flex-shrink-0 cursor-pointer" title="Kembali ke Beranda">
+      <!-- Header Ramping (Merapatkan Ruang Kosong Melompong di HP) -->
+      <div class="photobooth-top-bar w-full max-w-xl flex items-center justify-between px-3 flex-shrink-0 z-30">
+        <button onclick="exitPhotobooth()" class="w-8 h-8 rounded-full bg-hydrangea-800 hover:bg-hydrangea-900 text-white flex items-center justify-center transition-all shadow-md active:scale-95 flex-shrink-0 cursor-pointer" title="Kembali ke Beranda">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/>
           </svg>
         </button>
         
         <div class="text-center flex-1 px-2">
-          <h2 class="text-xs sm:text-sm md:text-base font-extrabold text-hydrangea-950 leading-tight">
-            Capture your moment with the BES photobooth 📸
+          <h2 class="text-xs sm:text-sm font-extrabold text-hydrangea-950 leading-tight">
+            BES PHOTOBOOTH STUDIO 📸
           </h2>
-          <p class="text-[10px] sm:text-xs text-hydrangea-700 font-bold mt-0.5">
-            Pilih bingkai dan ambil 3 pose kenanganmu
+          <p class="text-[10px] text-hydrangea-700 font-bold">
+            Pilih strip & ambil 3 pose terbaikmu
           </p>
         </div>
 
-        <div class="w-9 h-9 invisible"></div>
+        <div class="w-8 h-8 invisible"></div>
       </div>
 
-      <!-- Carousel Stage Wrapper (Kompak, Menyatu, dan Proporsional dengan Hasil Download) -->
+      <!-- Carousel Stage Wrapper (Menyatu Proporsional dengan Tombol di HP) -->
       <div class="carousel-stage-wrapper">
         <div class="carousel-strip-container" id="carouselStripContainer">
           
@@ -339,7 +337,7 @@
             </div>
 
             <div class="strip-slots-box my-1 px-1 relative z-10">
-              <div class="frame-photo-slot haru-polaroid-slot relative group/slot" id="slot-analog-1">
+              <div class="frame-photo-slot haru-polaroid-slot relative group/slot rounded-xl" id="slot-analog-1">
                 <div class="viewfinder-bracket bracket-tl">┌</div>
                 <div class="viewfinder-bracket bracket-tr">┐</div>
                 <div class="viewfinder-bracket bracket-bl">└</div>
@@ -352,7 +350,7 @@
                 <span class="vf-line"></span>
               </div>
               
-              <div class="frame-photo-slot haru-polaroid-slot relative group/slot" id="slot-analog-2">
+              <div class="frame-photo-slot haru-polaroid-slot relative group/slot rounded-xl" id="slot-analog-2">
                 <div class="viewfinder-bracket bracket-tl">┌</div>
                 <div class="viewfinder-bracket bracket-tr">┐</div>
                 <div class="viewfinder-bracket bracket-bl">└</div>
@@ -366,7 +364,7 @@
                 <span class="vf-line"></span>
               </div>
               
-              <div class="frame-photo-slot haru-polaroid-slot relative group/slot" id="slot-analog-3">
+              <div class="frame-photo-slot haru-polaroid-slot relative group/slot rounded-xl" id="slot-analog-3">
                 <div class="viewfinder-bracket bracket-tl">┌</div>
                 <div class="viewfinder-bracket bracket-tr">┐</div>
                 <div class="viewfinder-bracket bracket-bl">└</div>
@@ -385,38 +383,33 @@
             </div>
           </div>
 
-          <!-- Template 2: Botanical Scrapbook (KREM - STIKER 3D TIMBUL DI SISI LUAR FRAME & SELA BERSIH) -->
+          <!-- Template 2: Botanical Scrapbook (KREM - POLAROID BERSIH, WASHI TAPE ARTISTIK, SELA ALAMI) -->
           <div id="card-herbarium" onclick="revolveToTemplate('herbarium')" class="carousel-strip-item herbarium-journal-theme group relative">
             
-            <!-- STIKER 3D POP-OUT DI SISI-SISI TERLUAR FRAME (LAYER PALING DEPAN) -->
-            <div class="sticker-3d-popout sticker-herb-tl" title="Stiker Daun Zaitun">🌿</div>
-            <div class="sticker-3d-popout sticker-herb-mr" title="Stiker Bunga Matahari">🌻</div>
-            <div class="sticker-3d-popout sticker-herb-bl" title="Stiker Kopi Santri">☕</div>
-            <div class="sticker-3d-popout sticker-herb-br" title="Stiker Daun Gugur">🍂</div>
-
+            <!-- Elemen Scrapbook Artistik: Washi Tape & Stempel Pos Resmi (Bukan Emoji Acak) -->
             <div class="washi-tape-strip washi-top-left"></div>
             <div class="washi-tape-strip washi-bottom-right"></div>
             <div class="scrapbook-stamp-seal">POSTAL // 2026</div>
 
             <div class="text-center pt-2 pb-0.5 relative z-10">
               <div class="text-[9px] sm:text-[11px] font-serif font-black tracking-wider text-[#3d2e1e] flex items-center justify-center gap-1.5">
-                <span>Sekolah Alam Al Hijrah</span>
+                <span>🌿 Sekolah Alam Al Hijrah</span>
               </div>
               <div class="text-[7px] sm:text-[8px] text-[#8c7b6b] font-serif italic">Herbarium Journal • Bintuju Tapsel</div>
             </div>
 
-            <!-- SELA ANTAR FOTO 1, 2, DAN 3 DIBERSIHKAN TOTAL (ALAMI, RAPI, TANPA IKON/TEKS) -->
+            <!-- SELA ANTAR FOTO 1, 2, DAN 3 BERSIH TOTAL ALAMI (CLEAN NATURAL GAP) -->
             <div class="strip-slots-box clean-slots-gap my-1 px-1 relative z-10">
-              <div class="frame-photo-slot herbarium-photo-slot relative" id="slot-herbarium-1"></div>
-              <div class="frame-photo-slot herbarium-photo-slot relative" id="slot-herbarium-2">
+              <div class="frame-photo-slot herbarium-photo-slot rounded-xl relative" id="slot-herbarium-1"></div>
+              <div class="frame-photo-slot herbarium-photo-slot rounded-xl relative" id="slot-herbarium-2">
                 <span class="text-xs text-amber-900/70 font-serif italic flex items-center gap-1"><span>Pose 2</span></span>
               </div>
-              <div class="frame-photo-slot herbarium-photo-slot relative" id="slot-herbarium-3">
+              <div class="frame-photo-slot herbarium-photo-slot rounded-xl relative" id="slot-herbarium-3">
                 <span class="text-xs text-amber-900/70 font-serif italic flex items-center gap-1"><span>Pose 3</span></span>
               </div>
             </div>
 
-            <div class="pt-1 pb-1 text-center relative z-10 border-t border-[#d4c5b2]">
+            <div class="pt-1.5 pb-1 text-center relative z-10 border-t border-[#d4c5b2]">
               <div class="text-[8px] sm:text-[9px] text-[#4a3f35] font-serif font-bold tracking-wider uppercase flex items-center justify-center gap-1">
                 <span>Catatan Kenangan Santri</span>
               </div>
@@ -424,15 +417,10 @@
             </div>
           </div>
 
-          <!-- Template 3: The Royal Diplomatic (NAVY - STIKER 3D EMAS KERAJAAN DI SISI LUAR FRAME & SELA BERSIH) -->
+          <!-- Template 3: The Royal Diplomatic (NAVY - LIS GANDA EMAS MEWAH, SIMETRIS, SELA ALAMI) -->
           <div id="card-diplomatic" onclick="revolveToTemplate('diplomatic')" class="carousel-strip-item diplomatic-press-theme group relative">
             
-            <!-- STIKER 3D POP-OUT EMAS DI SISI-SISI TERLUAR FRAME (LAYER PALING DEPAN) -->
-            <div class="sticker-3d-popout sticker-royal-tr" title="Kilau Emas 3D">✨</div>
-            <div class="sticker-3d-popout sticker-royal-ml" title="Mahkota Emas Presidensial">👑</div>
-            <div class="sticker-3d-popout sticker-royal-br" title="Segel Fleur-de-lis">⚜️</div>
-            <div class="sticker-3d-popout sticker-royal-tl" title="Bintang Khidmah">✦</div>
-
+            <!-- Ornamen Sudut Emas Diplomatik Simetris (Bukan Emoji Acak) -->
             <div class="royal-corner-filigree filigree-tl">⚜️</div>
             <div class="royal-corner-filigree filigree-tr">⚜️</div>
 
@@ -440,21 +428,21 @@
               <div class="inline-flex items-center gap-1 text-[9px] sm:text-[11px] font-serif font-black tracking-widest text-[#F59E0B] uppercase">
                 <span>BES SAPA AL HIJRAH</span>
               </div>
-              <div class="text-[7px] sm:text-[8px] text-slate-300 tracking-widest uppercase font-semibold mt-0.5">The Royal Diplomatic Press 2026</div>
+              <div class="text-[7px] sm:text-[8px] text-slate-300 tracking-widest uppercase font-semibold mt-0.5">THE ROYAL DIPLOMATIC PRESS • 2026</div>
             </div>
 
-            <!-- SELA ANTAR FOTO 1, 2, DAN 3 DIBERSIHKAN TOTAL (ALAMI, RAPI, TANPA BANNER TEBAL) -->
+            <!-- SELA ANTAR FOTO 1, 2, DAN 3 BERSIH TOTAL ALAMI (CLEAN NATURAL GAP) -->
             <div class="strip-slots-box clean-slots-gap my-1 px-1 relative z-10">
-              <div class="frame-photo-slot royal-gold-slot relative" id="slot-diplomatic-1"></div>
-              <div class="frame-photo-slot royal-gold-slot relative" id="slot-diplomatic-2">
+              <div class="frame-photo-slot royal-gold-slot rounded-xl relative" id="slot-diplomatic-1"></div>
+              <div class="frame-photo-slot royal-gold-slot rounded-xl relative" id="slot-diplomatic-2">
                 <span class="text-xs text-amber-300/80 font-serif italic flex items-center gap-1"><span>Pose 2</span></span>
               </div>
-              <div class="frame-photo-slot royal-gold-slot relative" id="slot-diplomatic-3">
+              <div class="frame-photo-slot royal-gold-slot rounded-xl relative" id="slot-diplomatic-3">
                 <span class="text-xs text-amber-300/80 font-serif italic flex items-center gap-1"><span>Pose 3</span></span>
               </div>
             </div>
 
-            <div class="pt-1 pb-1 text-center relative z-10 border-t border-[#F59E0B]/30 flex flex-col items-center">
+            <div class="pt-1.5 pb-1 text-center relative z-10 border-t border-[#F59E0B]/30 flex flex-col items-center">
               <div class="inline-flex items-center gap-1.5 text-[8px] sm:text-[9px] text-[#F59E0B] font-serif font-black tracking-widest uppercase">
                 <span>OFFICIAL EXECUTIVE MEMORABILIA</span>
               </div>
@@ -466,7 +454,7 @@
       </div>
 
       <!-- Kontrol Photobooth: Rapat, Presisi, Menyatu dengan Strip Tanpa Space Melompong -->
-      <div class="w-full max-w-xs mt-2 flex flex-col gap-1.5 items-center flex-shrink-0 z-30">
+      <div class="photobooth-controls-wrapper w-full max-w-xs mt-1 flex flex-col gap-1.5 items-center flex-shrink-0 z-30">
         <button id="btnStartPhotoSequence" onclick="startPhotoSequence()" disabled class="w-full py-2.5 px-4 rounded-xl bg-slate-300 text-slate-500 font-bold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-not-allowed">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
