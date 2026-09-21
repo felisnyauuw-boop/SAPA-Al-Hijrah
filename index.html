@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>BES SAPA AL HIJRAH 2026 - Portal Resmi Santri</title>
 
-  <!-- Favicon Resmi Lembaga: Menghilangkan Galat Favicon 404 di Console -->
+  <!-- Favicon Resmi Lembaga -->
   <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1y4RKoHXuKXDnBLCs25jomFLXTkyQL7Pw">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -250,19 +250,19 @@
 
   <main id="mainContentContainer" class="w-full flex-grow transition-all">
 
-    <!-- PAGE 1: BERANDA (HOME) -->
+    <!-- PAGE 1: BERANDA (HOME) - Judul Proporsional Layar HP -->
     <section id="page-home" class="page-section active-page w-full px-4 text-center">
-      <div class="w-full pt-24"></div>
+      <div class="w-full pt-20 sm:pt-24"></div>
 
       <div class="w-full max-w-4xl flex flex-col items-center justify-center my-auto relative z-10">
-        <div class="aesthetic-ornamental-title select-none mb-10 relative">
+        <div class="aesthetic-ornamental-title select-none mb-6 sm:mb-8 relative">
           <!-- Ambient Halo Backlight -->
           <div class="title-ambient-halo"></div>
 
           <!-- Kicker: BES High-Fashion Spacing Dinamis dari Spreadsheet -->
           <div class="title-kicker-bes" id="homeHeroKicker">B E S</div>
 
-          <!-- Main Display: AL HIJRAH Terkunci 1 Baris Penuh (Anti-Gepeng & Anti-Wrap) -->
+          <!-- Main Display: AL HIJRAH Terkunci 1 Baris Penuh (Gagah, Padat, Anti-Gepeng & Anti-Wrap) -->
           <h1 class="title-main-alhijrah whitespace-nowrap overflow-visible">
             <span class="title-text-gradient whitespace-nowrap select-none" id="homeHeroTitle">AL HIJRAH</span>
           </h1>
@@ -275,7 +275,7 @@
           </div>
         </div>
 
-        <button onclick="openPhotobooth()" class="group relative flex items-center bg-white/95 hover:bg-white border-2 border-hydrangea-400 hover:border-hydrangea-600 rounded-2xl px-9 py-4 shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-1 active:translate-y-0 cursor-pointer">
+        <button onclick="openPhotobooth()" class="group relative flex items-center bg-white/95 hover:bg-white border-2 border-hydrangea-400 hover:border-hydrangea-600 rounded-2xl px-8 sm:px-9 py-3.5 sm:py-4 shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-1 active:translate-y-0 cursor-pointer">
           <span class="text-hydrangea-950 font-extrabold text-sm sm:text-base pr-4 border-r-2 border-dashed border-hydrangea-200">
             Take a photo
           </span>
@@ -289,42 +289,43 @@
       </div>
 
       <!-- Copyright Beranda Dinamis dari Spreadsheet -->
-      <div id="homeCopyrightText" class="w-full pb-5 text-center text-xs text-hydrangea-800 font-extrabold select-none relative z-10">
+      <div id="homeCopyrightText" class="w-full pb-4 sm:pb-5 text-center text-xs text-hydrangea-800 font-extrabold select-none relative z-10">
         &copy; 2026 BES AL HIJRAH. Adab, Ilmu & Ukhuwah.
       </div>
     </section>
 
-    <!-- PAGE 2: PHOTOBOOTH STUDIO (REDESIGNED COMPACT TEMPLATES) -->
+    <!-- PAGE 2: PHOTOBOOTH STUDIO (RAPAT VERTIKAL & STIKER 3D DI SISI FRAME) -->
     <section id="page-photobooth" class="page-section w-full">
-      <div class="w-full max-w-2xl flex items-center justify-between px-2 flex-shrink-0">
-        <button onclick="exitPhotobooth()" class="w-10 h-10 rounded-full bg-hydrangea-800 hover:bg-hydrangea-900 text-white flex items-center justify-center transition-all shadow-md active:scale-95 flex-shrink-0 cursor-pointer" title="Kembali ke Beranda">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      
+      <!-- Header Ramping (Membuang Ruang Kosong Melompong di HP) -->
+      <div class="w-full max-w-2xl flex items-center justify-between px-3 flex-shrink-0 mb-1">
+        <button onclick="exitPhotobooth()" class="w-9 h-9 rounded-full bg-hydrangea-800 hover:bg-hydrangea-900 text-white flex items-center justify-center transition-all shadow-md active:scale-95 flex-shrink-0 cursor-pointer" title="Kembali ke Beranda">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/>
           </svg>
         </button>
         
-        <div class="text-center flex-1 px-3">
-          <h2 class="text-xs sm:text-sm md:text-base font-extrabold text-hydrangea-950">
+        <div class="text-center flex-1 px-2">
+          <h2 class="text-xs sm:text-sm md:text-base font-extrabold text-hydrangea-950 leading-tight">
             Capture your moment with the BES photobooth 📸
           </h2>
-          <p class="text-[10px] sm:text-xs text-hydrangea-700 mt-0.5 font-bold">
-            Pick a frame and take your photo! Click the frame you want
+          <p class="text-[10px] sm:text-xs text-hydrangea-700 font-bold mt-0.5">
+            Pilih bingkai dan ambil 3 pose kenanganmu
           </p>
         </div>
 
-        <div class="w-10 h-10 invisible"></div>
+        <div class="w-9 h-9 invisible"></div>
       </div>
 
+      <!-- Carousel Stage Wrapper (Kompak, Menyatu, dan Proporsional dengan Hasil Download) -->
       <div class="carousel-stage-wrapper">
         <div class="carousel-strip-container" id="carouselStripContainer">
           
-          <!-- Template 1: Retro Camera Studio / Viewfinder Perforated Film Strip (100% UTUH - SUDAH OKEY) -->
+          <!-- Template 1: Retro Camera Studio / Viewfinder Film Strip (100% UTUH - SUDAH OKEY) -->
           <div id="card-analog" onclick="revolveToTemplate('analog')" class="carousel-strip-item analog-film-theme group">
-            <!-- Film Perforation Edge Accents -->
             <div class="film-perforation-strip perf-left"></div>
             <div class="film-perforation-strip perf-right"></div>
             
-            <!-- Viewfinder Studio Header Status -->
             <div class="pt-2 pb-1 px-3 relative z-10">
               <div class="flex items-center justify-between font-mono text-[7px] sm:text-[8px] text-sky-900 font-bold uppercase tracking-wider">
                 <span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span> REC 00:26</span>
@@ -337,7 +338,6 @@
               </div>
             </div>
 
-            <!-- Slots dengan Optical Viewfinder Focus Markers -->
             <div class="strip-slots-box my-1 px-1 relative z-10">
               <div class="frame-photo-slot haru-polaroid-slot relative group/slot" id="slot-analog-1">
                 <div class="viewfinder-bracket bracket-tl">┌</div>
@@ -346,7 +346,6 @@
                 <div class="viewfinder-bracket bracket-br">┘</div>
               </div>
               
-              <!-- Divider 1: Optical Focus Barcode Marker -->
               <div class="viewfinder-strip-divider">
                 <span class="vf-line"></span>
                 <span class="vf-badge font-mono">[ 02 • FOCUS LOCK ]</span>
@@ -361,7 +360,6 @@
                 <span class="text-xs text-sky-600 font-mono font-bold flex items-center gap-1"><span>Pose 2</span></span>
               </div>
               
-              <!-- Divider 2: Optical Shutter Marker -->
               <div class="viewfinder-strip-divider">
                 <span class="vf-line"></span>
                 <span class="vf-badge font-mono">[ 03 • EXPOSURE ]</span>
@@ -377,7 +375,6 @@
               </div>
             </div>
 
-            <!-- Footer: 35mm Chronicle & Metadata Barcode -->
             <div class="pt-1.5 pb-1 text-center relative z-10 border-t border-sky-300/80">
               <div class="text-[8px] sm:text-[9px] font-mono font-black text-sky-950 tracking-wider flex items-center justify-center gap-1.5">
                 <span>BES-ALHIJRAH // 35MM CUTS</span>
@@ -388,65 +385,54 @@
             </div>
           </div>
 
-          <!-- Template 2: Botanical Scrapbook (KREM - TULISAN PANJANG DIHAPUS, GANTI STIKER ESTETIK) -->
-          <div id="card-herbarium" onclick="revolveToTemplate('herbarium')" class="carousel-strip-item herbarium-journal-theme group">
-            <!-- Organic Washi Paper Tapes -->
+          <!-- Template 2: Botanical Scrapbook (KREM - STIKER 3D TIMBUL DI SISI LUAR FRAME & SELA BERSIH) -->
+          <div id="card-herbarium" onclick="revolveToTemplate('herbarium')" class="carousel-strip-item herbarium-journal-theme group relative">
+            
+            <!-- STIKER 3D POP-OUT DI SISI-SISI TERLUAR FRAME (LAYER PALING DEPAN) -->
+            <div class="sticker-3d-popout sticker-herb-tl" title="Stiker Daun Zaitun">🌿</div>
+            <div class="sticker-3d-popout sticker-herb-mr" title="Stiker Bunga Matahari">🌻</div>
+            <div class="sticker-3d-popout sticker-herb-bl" title="Stiker Kopi Santri">☕</div>
+            <div class="sticker-3d-popout sticker-herb-br" title="Stiker Daun Gugur">🍂</div>
+
             <div class="washi-tape-strip washi-top-left"></div>
             <div class="washi-tape-strip washi-bottom-right"></div>
             <div class="scrapbook-stamp-seal">POSTAL // 2026</div>
 
             <div class="text-center pt-2 pb-0.5 relative z-10">
               <div class="text-[9px] sm:text-[11px] font-serif font-black tracking-wider text-[#3d2e1e] flex items-center justify-center gap-1.5">
-                <span>🌿</span> <span>Sekolah Alam Al Hijrah</span>
+                <span>Sekolah Alam Al Hijrah</span>
               </div>
               <div class="text-[7px] sm:text-[8px] text-[#8c7b6b] font-serif italic">Herbarium Journal • Bintuju Tapsel</div>
             </div>
 
-            <!-- Slots dengan Stiker Estetik di Sudut (Compact, Tanpa Tulisan Menggunung) -->
-            <div class="strip-slots-box my-1 px-1 relative z-10">
-              <!-- Slot 1 dengan Pin Daun Estetik -->
-              <div class="frame-photo-slot herbarium-photo-slot relative" id="slot-herbarium-1">
-                <span class="herbarium-corner-sticker sticker-tr" title="Fitrah">🌿</span>
-              </div>
-              
-              <!-- Mini Dashed Botanical Accent (Hanya 6px, Ringan & Manis) -->
-              <div class="herbarium-mini-divider">
-                <span class="h-mini-dash"></span>
-                <span class="h-mini-icon">☕</span>
-                <span class="h-mini-dash"></span>
-              </div>
-              
-              <!-- Slot 2 dengan Pin Bunga Matahari -->
+            <!-- SELA ANTAR FOTO 1, 2, DAN 3 DIBERSIHKAN TOTAL (ALAMI, RAPI, TANPA IKON/TEKS) -->
+            <div class="strip-slots-box clean-slots-gap my-1 px-1 relative z-10">
+              <div class="frame-photo-slot herbarium-photo-slot relative" id="slot-herbarium-1"></div>
               <div class="frame-photo-slot herbarium-photo-slot relative" id="slot-herbarium-2">
-                <span class="herbarium-corner-sticker sticker-tl" title="Mekar">🌻</span>
                 <span class="text-xs text-amber-900/70 font-serif italic flex items-center gap-1"><span>Pose 2</span></span>
               </div>
-              
-              <!-- Mini Dashed Botanical Accent -->
-              <div class="herbarium-mini-divider">
-                <span class="h-mini-dash"></span>
-                <span class="h-mini-icon">📖</span>
-                <span class="h-mini-dash"></span>
-              </div>
-              
-              <!-- Slot 3 dengan Pin Daun Gugur -->
               <div class="frame-photo-slot herbarium-photo-slot relative" id="slot-herbarium-3">
-                <span class="herbarium-corner-sticker sticker-tr" title="Adab">🍂</span>
                 <span class="text-xs text-amber-900/70 font-serif italic flex items-center gap-1"><span>Pose 3</span></span>
               </div>
             </div>
 
-            <!-- Footer: Natural Monogram Signet -->
             <div class="pt-1 pb-1 text-center relative z-10 border-t border-[#d4c5b2]">
               <div class="text-[8px] sm:text-[9px] text-[#4a3f35] font-serif font-bold tracking-wider uppercase flex items-center justify-center gap-1">
-                <span>🌾 Catatan Kenangan Santri</span>
+                <span>Catatan Kenangan Santri</span>
               </div>
               <div class="text-[6px] sm:text-[7px] text-[#8c7b6b] font-medium italic">Lembar Khidmah Penghafal Al-Qur'an</div>
             </div>
           </div>
 
-          <!-- Template 3: The Royal Diplomatic (NAVY - TULISAN GEDE DIHAPUS, GANTI MAHKOTA & BINTANG EMAS) -->
-          <div id="card-diplomatic" onclick="revolveToTemplate('diplomatic')" class="carousel-strip-item diplomatic-press-theme group">
+          <!-- Template 3: The Royal Diplomatic (NAVY - STIKER 3D EMAS KERAJAAN DI SISI LUAR FRAME & SELA BERSIH) -->
+          <div id="card-diplomatic" onclick="revolveToTemplate('diplomatic')" class="carousel-strip-item diplomatic-press-theme group relative">
+            
+            <!-- STIKER 3D POP-OUT EMAS DI SISI-SISI TERLUAR FRAME (LAYER PALING DEPAN) -->
+            <div class="sticker-3d-popout sticker-royal-tr" title="Kilau Emas 3D">✨</div>
+            <div class="sticker-3d-popout sticker-royal-ml" title="Mahkota Emas Presidensial">👑</div>
+            <div class="sticker-3d-popout sticker-royal-br" title="Segel Fleur-de-lis">⚜️</div>
+            <div class="sticker-3d-popout sticker-royal-tl" title="Bintang Khidmah">✦</div>
+
             <div class="royal-corner-filigree filigree-tl">⚜️</div>
             <div class="royal-corner-filigree filigree-tr">⚜️</div>
 
@@ -457,41 +443,17 @@
               <div class="text-[7px] sm:text-[8px] text-slate-300 tracking-widest uppercase font-semibold mt-0.5">The Royal Diplomatic Press 2026</div>
             </div>
 
-            <!-- Slots dengan Aksen Sudut Emas Mewah (Compact, Tanpa Banner Tulisan Tebal) -->
-            <div class="strip-slots-box my-1 px-1 relative z-10">
-              <!-- Slot 1 dengan Bintang Emas Berpendar -->
-              <div class="frame-photo-slot royal-gold-slot relative" id="slot-diplomatic-1">
-                <span class="royal-corner-sticker sticker-tr">✨</span>
-              </div>
-              
-              <!-- Hairline Emas Simetris Mewah -->
-              <div class="royal-mini-divider">
-                <span class="royal-mini-line"></span>
-                <span class="royal-mini-star">✦</span>
-                <span class="royal-mini-line"></span>
-              </div>
-              
-              <!-- Slot 2 dengan Mahkota Emas Presidensial -->
+            <!-- SELA ANTAR FOTO 1, 2, DAN 3 DIBERSIHKAN TOTAL (ALAMI, RAPI, TANPA BANNER TEBAL) -->
+            <div class="strip-slots-box clean-slots-gap my-1 px-1 relative z-10">
+              <div class="frame-photo-slot royal-gold-slot relative" id="slot-diplomatic-1"></div>
               <div class="frame-photo-slot royal-gold-slot relative" id="slot-diplomatic-2">
-                <span class="royal-corner-sticker sticker-tl">👑</span>
                 <span class="text-xs text-amber-300/80 font-serif italic flex items-center gap-1"><span>Pose 2</span></span>
               </div>
-              
-              <!-- Hairline Emas Simetris Mewah -->
-              <div class="royal-mini-divider">
-                <span class="royal-mini-line"></span>
-                <span class="royal-mini-star">✦</span>
-                <span class="royal-mini-line"></span>
-              </div>
-              
-              <!-- Slot 3 dengan Segel Khidmah -->
               <div class="frame-photo-slot royal-gold-slot relative" id="slot-diplomatic-3">
-                <span class="royal-corner-sticker sticker-tr">⚜️</span>
                 <span class="text-xs text-amber-300/80 font-serif italic flex items-center gap-1"><span>Pose 3</span></span>
               </div>
             </div>
 
-            <!-- Footer: Diplomatic Seal & Memorabilia Tag -->
             <div class="pt-1 pb-1 text-center relative z-10 border-t border-[#F59E0B]/30 flex flex-col items-center">
               <div class="inline-flex items-center gap-1.5 text-[8px] sm:text-[9px] text-[#F59E0B] font-serif font-black tracking-widest uppercase">
                 <span>OFFICIAL EXECUTIVE MEMORABILIA</span>
@@ -503,8 +465,8 @@
         </div>
       </div>
 
-      <!-- Kontrol Photobooth: Tombol Kamera & Switch -->
-      <div class="w-full max-w-xs mt-1.5 flex flex-col gap-1.5 items-center flex-shrink-0 z-30">
+      <!-- Kontrol Photobooth: Rapat, Presisi, Menyatu dengan Strip Tanpa Space Melompong -->
+      <div class="w-full max-w-xs mt-2 flex flex-col gap-1.5 items-center flex-shrink-0 z-30">
         <button id="btnStartPhotoSequence" onclick="startPhotoSequence()" disabled class="w-full py-2.5 px-4 rounded-xl bg-slate-300 text-slate-500 font-bold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-not-allowed">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
@@ -534,7 +496,7 @@
       <div id="cameraFlash" class="hidden fixed inset-0 pointer-events-none bg-white z-50"></div>
     </section>
 
-    <!-- PAGE 3: TENTANG (ABOUT) -->
+    <!-- PAGE 3: TENTANG (ABOUT) - 100% UTUH -->
     <section id="page-about" class="page-section w-full flex-col max-w-6xl mx-auto px-4 sm:px-6 pt-24 sm:pt-28 pb-20">
       
       <!-- 1. VISI UTAMA (DARI SHEET VISI_MISI) -->
@@ -843,7 +805,7 @@
 
     </section>
 
-    <!-- PAGE 4: WARTA (NEWS) -->
+    <!-- PAGE 4: WARTA (NEWS) - 100% UTUH -->
     <section id="page-news" class="page-section w-full flex-col max-w-6xl mx-auto px-4 sm:px-6 pt-24 sm:pt-28 pb-20">
       
       <!-- VIEW 1: KATALOG WARTA SANTRI -->
@@ -935,7 +897,7 @@
 
     </section>
 
-    <!-- PAGE 5: KABINET (100% DINAMIS DARI SHEET KABINET) -->
+    <!-- PAGE 5: KABINET (100% UTUH DENGAN AMPLOP 3D INTERAKTIF) -->
     <section id="page-cabinet" class="page-section w-full flex-col max-w-6xl mx-auto px-4 pt-24 sm:pt-28 pb-24">
       
       <!-- 1. TAJUK UTAMA RESMI -->
@@ -1099,14 +1061,14 @@
 
       <!-- 3. SELURUH KEMENTERIAN MENGALIR KE BAWAH SECARA 100% DINAMIS DARI SHEET KABINET -->
       <div class="mt-8 space-y-8" id="sequentialMinistriesContainer">
-        <!-- Kontainer dinamis: Kementerian, deskripsi, logo bersinar, serta daftar menteri/bendahara/staf di-render otomatis dari Spreadsheet -->
+        <!-- Kontainer dinamis kementerian di-render otomatis dari Spreadsheet -->
       </div>
 
     </section>
 
   </main>
 
-  <!-- GLOBAL FOOTER DINAMIS -->
+  <!-- GLOBAL FOOTER DINAMIS - 100% UTUH -->
   <footer id="mainGlobalFooter" class="hidden w-full bg-gradient-to-b from-[#0c1b2e] to-[#060e18] text-white relative overflow-hidden border-t-2 border-hydrangea-700/60 transition-all duration-300">
     
     <div class="footer-giant-watermark select-none pointer-events-none">
@@ -1178,7 +1140,7 @@
           </ul>
         </div>
 
-        <!-- KOLOM 3: Ikuti Kami (Dapat Disunting Link di Sheet INFO_WEB) -->
+        <!-- KOLOM 3: Ikuti Kami -->
         <div class="md:col-span-3 lg:col-span-4">
           <h4 class="text-sm font-black tracking-widest text-white uppercase mb-5 flex items-center gap-2">
             <span class="w-1.5 h-3.5 bg-hydrangea-400 rounded-full"></span>
@@ -1188,28 +1150,24 @@
             Terhubung langsung dengan aktivitas, prestasi, dan syiar santri Sekolah Alam Penghafal Al-Quran Al HIJRAH (SAPA AL HIJRAH).
           </p>
           <div class="flex items-center gap-3">
-            <!-- Facebook -->
             <a id="footerFbBtn" href="https://facebook.com" target="_blank" rel="noopener noreferrer" class="footer-social-btn" title="Facebook Resmi">
               <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/>
               </svg>
             </a>
 
-            <!-- Instagram -->
             <a id="footerIgBtn" href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="footer-social-btn" title="Instagram Resmi">
               <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
               </svg>
             </a>
 
-            <!-- Gmail Web Compose -->
             <a id="footerEmailBtn" href="https://mail.google.com/mail/?view=cm&fs=1&to=alhijrahb7@gmail.com" target="_blank" rel="noopener noreferrer" class="footer-social-btn" title="Kirim Surel Gmail">
               <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
               </svg>
             </a>
 
-            <!-- WhatsApp Hotline -->
             <a id="footerWaBtn" href="https://wa.me/6281234567890" target="_blank" rel="noopener noreferrer" class="footer-social-btn" title="Hubungi via WhatsApp">
               <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0012.04 2m.01 1.67c2.2 0 4.26.86 5.82 2.42a8.225 8.225 0 012.41 5.83c0 4.54-3.7 8.24-8.24 8.24-1.48 0-2.93-.4-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.19 8.19 0 01-1.26-4.38c0-4.54 3.7-8.24 8.24-8.24m4.52 11.66c-.19.53-1.06 1.04-1.47 1.08-.38.04-.88.06-2.55-.63-2.14-.88-3.52-3.05-3.63-3.2-.11-.15-.87-1.16-.87-2.22 0-1.06.55-1.58.75-1.8.19-.21.42-.27.56-.27.14 0 .28 0 .4.01.13.01.3-.05.47.36.19.45.64 1.56.7 1.68.06.12.1.26.02.41-.08.16-.12.25-.23.38-.11.13-.24.29-.34.39-.12.11-.24.23-.1.47.14.24.62 1.03 1.34 1.67.92.82 1.7 1.07 1.94 1.19.24.12.38.1.52-.06.14-.16.6-.7.76-.94.16-.24.32-.2.54-.12.22.08 1.4.66 1.64.78.24.12.4.18.46.28.06.1.06.59-.13 1.12z"/>
