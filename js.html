@@ -5,7 +5,7 @@
    * File: js.html
    * Terintegrasi: Loading Screen 3D Celestial Crystal, REST API Fetcher,
    * Native Photobooth WebCam (Aspect-Ratio Center-Crop Anti-Gepeng),
-   * Rounded-Corner High-Res Canvas Export Engine, & 7 Sheet Tematik.
+   * Universal ArcTo Rounded Canvas Engine, & 7 Sheet Tematik.
    * =========================================================================
    */
 
@@ -1660,7 +1660,7 @@
     var slot = document.getElementById(slotId);
     var video = slot ? slot.querySelector('video') : null;
 
-    // Standar HD 4:3 presisi (640x480)
+    // Resolusi HD 4:3 presisi (640x480)
     var canvas = document.createElement('canvas');
     canvas.width = 640;
     canvas.height = 480;
@@ -1683,7 +1683,7 @@
 
       var sx = 0, sy = 0, sw = vw, sh = vh;
 
-      // Smart Center-Crop Math: Menjamin tidak ada distorsi/gepeng pada HP apa pun
+      // Smart Aspect-Ratio Center-Crop Math: Menjamin wajah bulat alami dan anti-gepeng di HP mana pun
       if (videoAspect > targetAspect) {
         sw = vh * targetAspect;
         sh = vh;
@@ -1701,7 +1701,6 @@
         ctx.translate(canvas.width, 0);
         ctx.scale(-1, 1);
       }
-      // Gambar potongan tengah yang presisi proporsional ke canvas
       ctx.drawImage(video, sx, sy, sw, sh, 0, 0, canvas.width, canvas.height);
       ctx.restore();
     } else {
@@ -1753,28 +1752,24 @@
   }
 
   /**
-   * Helper Utility: Menggambar Jalur Persegi Panjang dengan Sudut Membulat (Rounded Rect)
+   * Helper Universal ArcTo: Menggambar Jalur Persegi Panjang Membulat (Rounded Rect)
+   * 100% Kompatibel di seluruh peramban HP & Desktop tanpa pernah menghasilkan kotak petak kaku
    */
   function drawRoundedRectPath(ctx, x, y, width, height, radius) {
     ctx.beginPath();
-    if (ctx.roundRect) {
-      ctx.roundRect(x, y, width, height, radius);
-    } else {
-      ctx.moveTo(x + radius, y);
-      ctx.lineTo(x + width - radius, y);
-      ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
-      ctx.lineTo(x + width, y + height - radius);
-      ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-      ctx.lineTo(x + radius, y + height);
-      ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
-      ctx.lineTo(x, y + radius);
-      ctx.quadraticCurveTo(x, y, x + radius, y);
-      ctx.closePath();
-    }
+    var r = radius;
+    if (width < 2 * r) r = width / 2;
+    if (height < 2 * r) r = height / 2;
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + width, y, x + width, y + height, r);
+    ctx.arcTo(x + width, y + height, x, y + height, r);
+    ctx.arcTo(x, y + height, x, y, r);
+    ctx.arcTo(x, y, x + width, y, r);
+    ctx.closePath();
   }
 
   /**
-   * Helper Utility: Memotong & Menggambar Foto dengan Sudut Membulat Halus (Rounded Photo)
+   * Helper Universal: Memotong & Menggambar Foto dengan Sudut Membulat Halus (Rounded Photo)
    */
   function drawRoundedImage(ctx, img, x, y, width, height, radius) {
     ctx.save();
@@ -1785,14 +1780,16 @@
   }
 
   /**
-   * Engine Ekspor Kanvas Resolusi Tinggi: Proporsional, Tebal, Estetik & Membulat (WYSIWYG)
+   * Engine Ekspor Kanvas Resolusi Tinggi:
+   * Distribusi Vertikal Merata (Anti-Bolong Bawah), Bingkai Artistik, Tanpa Emote, & True WYSIWYG
    */
   function renderFinalExportCanvas(ctx, canvas, template, imgs) {
-    var slotWidth = 490;
-    var slotHeight = 368;
-    var slotX = (canvas.width - slotWidth) / 2;
-    var startY = 175;
-    var gap = 44;
+    // Dimensi slot foto besar & proporsional yang mengisi tinggi strip secara harmonis
+    var slotWidth = 500;
+    var slotHeight = 390;
+    var slotX = (canvas.width - slotWidth) / 2; // 50px
+    var startY = 168;
+    var gap = 42;
     var photoRadius = 18;
 
     /* =========================================================================
@@ -1819,8 +1816,8 @@
         ctx.fillRect(canvas.width - 20, p, 10, 14);
       }
 
-      // Header Jendela Bidik (Skala Diperbesar & Tajam)
-      drawRoundedRectPath(ctx, canvas.width / 2 - 200, 48, 400, 52, 12);
+      // Header Jendela Bidik
+      drawRoundedRectPath(ctx, canvas.width / 2 - 200, 42, 400, 48, 12);
       ctx.fillStyle = '#ffffff';
       ctx.fill();
       ctx.lineWidth = 2;
@@ -1828,19 +1825,19 @@
       ctx.stroke();
 
       ctx.beginPath();
-      ctx.arc(canvas.width / 2 - 160, 74, 6, 0, Math.PI * 2);
+      ctx.arc(canvas.width / 2 - 160, 66, 6, 0, Math.PI * 2);
       ctx.fillStyle = '#ef4444';
       ctx.fill();
 
       ctx.fillStyle = '#0369a1';
       ctx.font = '900 16px monospace';
       ctx.textAlign = 'left';
-      ctx.fillText('REC 00:26 • ISO 400 • F/2.8', canvas.width / 2 - 140, 80);
+      ctx.fillText('REC 00:26 • ISO 400 • F/2.8', canvas.width / 2 - 140, 72);
 
       ctx.fillStyle = '#0c4a6e';
-      ctx.font = '900 26px "Plus Jakarta Sans", sans-serif';
+      ctx.font = '900 28px "Plus Jakarta Sans", sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText('STUDIO ARCHIVE 2026', canvas.width / 2, 138);
+      ctx.fillText('STUDIO ARCHIVE 2026', canvas.width / 2, 130);
 
       for (var a = 0; a < 3; a++) {
         var yAnalog = startY + a * (slotHeight + gap);
@@ -1850,7 +1847,7 @@
         ctx.fillStyle = '#ffffff';
         ctx.fill();
 
-        // Gambar foto membulat halus (Anti-Petak)
+        // Render foto membulat halus
         drawRoundedImage(ctx, imgs[a], slotX, yAnalog, slotWidth, slotHeight, photoRadius);
 
         // Sudut Viewfinder Brackets
@@ -1887,16 +1884,16 @@
       }
 
       ctx.fillStyle = '#082f49';
-      ctx.font = '900 20px monospace';
+      ctx.font = '900 22px monospace';
       ctx.textAlign = 'center';
-      ctx.fillText('BES-ALHIJRAH // 35MM OPTICAL CUTS', canvas.width / 2, canvas.height - 62);
+      ctx.fillText('BES-ALHIJRAH // 35MM OPTICAL CUTS', canvas.width / 2, 1530);
 
       ctx.fillStyle = '#0369a1';
-      ctx.font = '700 14px monospace';
-      ctx.fillText('OPTICAL ROLL 026 • BINTUJU TAPSEL', canvas.width / 2, canvas.height - 36);
+      ctx.font = '700 15px monospace';
+      ctx.fillText('OPTICAL ROLL 026 • BINTUJU TAPSEL', canvas.width / 2, 1565);
 
     /* =========================================================================
-     * TEMPLATE 2: BOTANICAL SCRAPBOOK (KREM - MEMBULAT, PROPORSI BESAR, SELA BERSIH)
+     * TEMPLATE 2: BOTANICAL SCRAPBOOK (KREM - ALBUM ANTIK DENGAN SIKU PENYANGGA FOTO)
      * ========================================================================= */
     } else if (template === 'herbarium') {
       ctx.fillStyle = '#f5eee2';
@@ -1918,54 +1915,98 @@
       ctx.fillRect(40, 36, 120, 32);
       ctx.fillRect(canvas.width - 160, canvas.height - 68, 120, 32);
 
-      // Stempel Pos Resmi Pesantren (Skala Proporsional Besar)
-      drawRoundedRectPath(ctx, canvas.width - 165, 46, 120, 34, 6);
+      // Stempel Pos Resmi Pesantren
+      drawRoundedRectPath(ctx, canvas.width - 165, 42, 120, 34, 6);
       ctx.strokeStyle = 'rgba(185, 28, 28, 0.7)';
       ctx.lineWidth = 2.5;
       ctx.stroke();
       ctx.fillStyle = '#b91c1c';
       ctx.font = '900 13px monospace';
       ctx.textAlign = 'center';
-      ctx.fillText('POSTAL // 2026', canvas.width - 105, 68);
+      ctx.fillText('POSTAL // 2026', canvas.width - 105, 64);
 
-      // Header Tipografi Besar & Padat
+      // Header Tipografi Megah & Padat
       ctx.fillStyle = '#2c251e';
-      ctx.font = 'bold 34px "Playfair Display", serif';
+      ctx.font = 'bold 36px "Playfair Display", Georgia, serif';
       ctx.textAlign = 'center';
-      ctx.fillText('🌿 Sekolah Alam Al Hijrah', canvas.width / 2, 98);
+      ctx.fillText('Sekolah Alam Al Hijrah', canvas.width / 2, 94);
 
       ctx.fillStyle = '#8c7b6b';
-      ctx.font = 'italic 18px "Playfair Display", serif';
-      ctx.fillText('Herbarium Journal • Bintuju Tapsel', canvas.width / 2, 134);
+      ctx.font = 'italic 18px "Playfair Display", Georgia, serif';
+      ctx.fillText('Herbarium Journal • Bintuju Tapsel', canvas.width / 2, 128);
 
-      // 3 Foto Polaroid dengan Sela Bersih Alami (Clean Gap & Rounded Corners)
+      // 3 Foto Album Kenangan dengan Siku Penyangga Fisik Antik (Vintage Mounting Corners)
       for (var h = 0; h < 3; h++) {
         var yHerb = startY + h * (slotHeight + gap);
         
-        // Backplate polaroid krem membulat halus
-        drawRoundedRectPath(ctx, slotX - 8, yHerb - 8, slotWidth + 16, slotHeight + 16, 20);
+        // Backplate passe-partout karton tebal krem
+        drawRoundedRectPath(ctx, slotX - 10, yHerb - 10, slotWidth + 20, slotHeight + 20, 22);
         ctx.fillStyle = '#faf7f2';
         ctx.fill();
-        ctx.lineWidth = 3;
+        ctx.lineWidth = 2.5;
         ctx.strokeStyle = '#d4c5b2';
         ctx.stroke();
 
-        // Render foto membulat halus (Anti-Petak)
+        // Render foto membulat halus
         drawRoundedImage(ctx, imgs[h], slotX, yHerb, slotWidth, slotHeight, photoRadius);
+
+        // 4 Siku Penyangga Foto Vintage (Vintage Photo Mounting Corners)
+        var cornerSize = 28;
+        ctx.fillStyle = '#8c7355';
+        // Siku Kiri Atas
+        ctx.beginPath();
+        ctx.moveTo(slotX, yHerb);
+        ctx.lineTo(slotX + cornerSize, yHerb);
+        ctx.lineTo(slotX, yHerb + cornerSize);
+        ctx.closePath();
+        ctx.fill();
+
+        // Siku Kanan Atas
+        ctx.beginPath();
+        ctx.moveTo(slotX + slotWidth, yHerb);
+        ctx.lineTo(slotX + slotWidth - cornerSize, yHerb);
+        ctx.lineTo(slotX + slotWidth, yHerb + cornerSize);
+        ctx.closePath();
+        ctx.fill();
+
+        // Siku Kiri Bawah
+        ctx.beginPath();
+        ctx.moveTo(slotX, yHerb + slotHeight);
+        ctx.lineTo(slotX + cornerSize, yHerb + slotHeight);
+        ctx.lineTo(slotX, yHerb + slotHeight - cornerSize);
+        ctx.closePath();
+        ctx.fill();
+
+        // Siku Kanan Bawah
+        ctx.beginPath();
+        ctx.moveTo(slotX + slotWidth, yHerb + slotHeight);
+        ctx.lineTo(slotX + slotWidth - cornerSize, yHerb + slotHeight);
+        ctx.lineTo(slotX + slotWidth, yHerb + slotHeight - cornerSize);
+        ctx.closePath();
+        ctx.fill();
+
+        // Tanda Seri Arsip Cetak Mesin Tik Antik
+        drawRoundedRectPath(ctx, slotX + slotWidth - 68, yHerb + slotHeight - 22, 60, 18, 4);
+        ctx.fillStyle = 'rgba(250, 247, 242, 0.9)';
+        ctx.fill();
+        ctx.fillStyle = '#8c7355';
+        ctx.font = '800 11px monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText('NO. 0' + (h + 1), slotX + slotWidth - 38, yHerb + slotHeight - 9);
       }
 
-      // Footer Jurnal Hangat & Terbaca Jelas
+      // Footer Jurnal Album Kenangan Rapat & Proporsional (Anti-Bolong Bawah)
       ctx.fillStyle = '#4a3f35';
-      ctx.font = 'bold 24px "Playfair Display", serif';
+      ctx.font = 'bold 26px "Playfair Display", Georgia, serif';
       ctx.textAlign = 'center';
-      ctx.fillText('🌾 Catatan Kenangan Santri', canvas.width / 2, canvas.height - 68);
+      ctx.fillText('Catatan Kenangan Santri', canvas.width / 2, 1515);
 
       ctx.fillStyle = '#8c7b6b';
-      ctx.font = 'italic 16px "Playfair Display", serif';
-      ctx.fillText('Lembar Khidmah Penghafal Al-Qur\'an', canvas.width / 2, canvas.height - 40);
+      ctx.font = 'italic 17px "Playfair Display", Georgia, serif';
+      ctx.fillText('Lembar Khidmah Penghafal Al-Qur\'an', canvas.width / 2, 1550);
 
     /* =========================================================================
-     * TEMPLATE 3: THE ROYAL DIPLOMATIC PRESS (NAVY - LIS EMAS GANDA, MEMBULAT, SELA BERSIH)
+     * TEMPLATE 3: THE ROYAL DIPLOMATIC PRESS (NAVY - LIS BEVELED EMAS & ORNAMEN SUDUT KERAJAAN)
      * ========================================================================= */
     } else {
       ctx.fillStyle = '#071322';
@@ -1989,41 +2030,77 @@
       ctx.fillText('⚜️', 52, 62);
       ctx.fillText('⚜️', canvas.width - 52, 62);
 
-      // Header Diplomatik Skala Megah & Tajam
+      // Header Diplomatik Megah & Padat
       ctx.fillStyle = '#f59e0b';
-      ctx.font = '900 32px "Cinzel", "Playfair Display", serif';
+      ctx.font = '900 34px "Cinzel", "Playfair Display", Georgia, serif';
       ctx.textAlign = 'center';
-      ctx.fillText('BES SAPA AL HIJRAH', canvas.width / 2, 92);
+      ctx.fillText('BES SAPA AL HIJRAH', canvas.width / 2, 94);
 
       ctx.fillStyle = '#cbd5e1';
-      ctx.font = '700 15px "Plus Jakarta Sans", sans-serif';
-      ctx.fillText('THE ROYAL DIPLOMATIC PRESS • 2026', canvas.width / 2, 130);
+      ctx.font = '700 16px "Plus Jakarta Sans", sans-serif';
+      ctx.fillText('THE ROYAL DIPLOMATIC PRESS • 2026', canvas.width / 2, 128);
 
-      // 3 Foto Kerajaan dengan Sela Bersih Alami (Clean Gap & Rounded Corners)
+      // 3 Foto Piagam dengan Lis Beveled Emas & Ornamen Sudut Geometris Kerajaan
       for (var d = 0; d < 3; d++) {
         var yDip = startY + d * (slotHeight + gap);
 
-        // Backplate emas gelap membulat
-        drawRoundedRectPath(ctx, slotX - 4, yDip - 4, slotWidth + 8, slotHeight + 8, 20);
+        // Backplate beveled emas gelap membulat
+        drawRoundedRectPath(ctx, slotX - 8, yDip - 8, slotWidth + 16, slotHeight + 16, 22);
         ctx.fillStyle = '#060e19';
         ctx.fill();
-        ctx.lineWidth = 4;
+        ctx.lineWidth = 3.5;
         ctx.strokeStyle = '#f59e0b';
         ctx.stroke();
 
-        // Render foto membulat halus (Anti-Petak)
+        // Lis satin emas dalam
+        drawRoundedRectPath(ctx, slotX - 4, yDip - 4, slotWidth + 8, slotHeight + 8, 20);
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = 'rgba(254, 240, 138, 0.5)';
+        ctx.stroke();
+
+        // Render foto membulat halus
         drawRoundedImage(ctx, imgs[d], slotX, yDip, slotWidth, slotHeight, photoRadius);
+
+        // 4 Ornamen Sudut Geometris Kerajaan Emas Murni (Royal Corner Brackets)
+        ctx.lineWidth = 2.5;
+        ctx.strokeStyle = '#fef08a';
+        var bLen = 22;
+        var bIns = 10;
+        // Top-Left
+        ctx.beginPath();
+        ctx.moveTo(slotX + bIns, yDip + bIns + bLen);
+        ctx.lineTo(slotX + bIns, yDip + bIns);
+        ctx.lineTo(slotX + bIns + bLen, yDip + bIns);
+        ctx.stroke();
+        // Top-Right
+        ctx.beginPath();
+        ctx.moveTo(slotX + slotWidth - bIns - bLen, yDip + bIns);
+        ctx.lineTo(slotX + slotWidth - bIns, yDip + bIns);
+        ctx.lineTo(slotX + slotWidth - bIns, yDip + bIns + bLen);
+        ctx.stroke();
+        // Bottom-Left
+        ctx.beginPath();
+        ctx.moveTo(slotX + bIns, yDip + slotHeight - bIns - bLen);
+        ctx.lineTo(slotX + bIns, yDip + slotHeight - bIns);
+        ctx.lineTo(slotX + bIns + bLen, yDip + slotHeight - bIns);
+        ctx.stroke();
+        // Bottom-Right
+        ctx.beginPath();
+        ctx.moveTo(slotX + slotWidth - bIns - bLen, yDip + slotHeight - bIns);
+        ctx.lineTo(slotX + slotWidth - bIns, yDip + slotHeight - bIns);
+        ctx.lineTo(slotX + slotWidth - bIns, yDip + slotHeight - bIns - bLen);
+        ctx.stroke();
       }
 
-      // Footer Resmi Berwibawa
+      // Footer Resmi Berwibawa Rapat & Proporsional (Anti-Bolong Bawah)
       ctx.fillStyle = '#f59e0b';
-      ctx.font = 'bold 22px "Cinzel", "Playfair Display", serif';
+      ctx.font = 'bold 24px "Cinzel", "Playfair Display", Georgia, serif';
       ctx.textAlign = 'center';
-      ctx.fillText('OFFICIAL EXECUTIVE MEMORABILIA', canvas.width / 2, canvas.height - 68);
+      ctx.fillText('OFFICIAL EXECUTIVE MEMORABILIA', canvas.width / 2, 1515);
 
       ctx.fillStyle = '#94a3b8';
-      ctx.font = '600 15px "Plus Jakarta Sans", sans-serif';
-      ctx.fillText('Mahkota Khidmah Generasi Qur\'ani', canvas.width / 2, canvas.height - 40);
+      ctx.font = '600 16px "Plus Jakarta Sans", sans-serif';
+      ctx.fillText('Mahkota Khidmah Generasi Qur\'ani', canvas.width / 2, 1550);
     }
 
     var link = document.createElement('a');
