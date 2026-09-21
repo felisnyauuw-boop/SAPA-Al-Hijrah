@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>BES SAPA AL HIJRAH 2026 - Portal Resmi Santri</title>
 
+  <!-- Favicon Resmi Lembaga: Menghilangkan Galat Favicon 404 di Console -->
+  <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1y4RKoHXuKXDnBLCs25jomFLXTkyQL7Pw">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Playfair+Display:ital,wght@0,600;0,800;1,600;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Amiri:ital@0;1&display=swap" rel="stylesheet">
@@ -51,6 +54,46 @@
       }
     };
   </script>
+
+  <!-- Critical Inline Preloader CSS: Mengunci Ukuran SVG Sejak Milidetik Ke-0 (Anti-Glitch / Anti-FOUC) -->
+  <style>
+    .celestial-loading-screen {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      background: radial-gradient(circle at 50% 45%, #0e1e38 0%, #0c1b2e 40%, #071220 80%, #03070d 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      overflow: hidden;
+      user-select: none;
+    }
+    .loading-crystal-container {
+      position: relative;
+      width: 130px;
+      height: 130px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+    .loading-polyhedron-svg {
+      width: 54px !important;
+      height: 54px !important;
+      max-width: 54px !important;
+      max-height: 54px !important;
+      display: block;
+    }
+    .celestial-loading-screen.loading-dismissed {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.85s ease;
+    }
+  </style>
 
   <!-- Emergency Hard-Kill Failsafe: Jaminan Layar Buka Maksimal 3.5 Detik -->
   <script>
@@ -104,7 +147,7 @@
 </head>
 <body class="antialiased selection:bg-hydrangea-400/30 selection:text-hydrangea-900 bg-[#eaf3fc] text-slate-800 min-h-screen flex flex-col justify-between">
 
-  <!-- 3D Celestial Crystal Loading Screen (1 Tema dengan Polyhedra & Stardust WebGL) -->
+  <!-- 3D Celestial Crystal Loading Screen -->
   <div id="appLoadingScreen" class="celestial-loading-screen">
     <div class="loading-ambient-halo"></div>
 
@@ -112,9 +155,9 @@
       <div class="loading-orbit-ring ring-outer"></div>
       <div class="loading-orbit-ring ring-middle"></div>
       
-      <!-- Polyhedron Crystal Emblem SVG -->
+      <!-- Polyhedron Crystal Emblem SVG Terkunci Dimensi Inline 54x54 -->
       <div class="loading-crystal-core">
-        <svg class="loading-polyhedron-svg filter-luminescent" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <svg class="loading-polyhedron-svg filter-luminescent" width="54" height="54" style="width: 54px; height: 54px; max-width: 54px; max-height: 54px;" viewBox="0 0 24 24" fill="none" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
           <circle cx="12" cy="12" r="2.5" fill="#F59E0B"/>
         </svg>
@@ -215,15 +258,15 @@
           <!-- Ambient Halo Backlight -->
           <div class="title-ambient-halo"></div>
 
-          <!-- Kicker: BES High-Fashion Spacing -->
+          <!-- Kicker: BES High-Fashion Spacing Dinamis dari Spreadsheet -->
           <div class="title-kicker-bes" id="homeHeroKicker">B E S</div>
 
-          <!-- Main Display: AL HIJRAH Monumental Glyph-Contoured Shimmer -->
+          <!-- Main Display: AL HIJRAH Monumental Glyph-Contoured Shimmer Dinamis -->
           <h1 class="title-main-alhijrah">
             <span class="title-text-gradient" id="homeHeroTitle">AL HIJRAH</span>
           </h1>
 
-          <!-- Year: 2026 with Diplomatic Hairline Accent -->
+          <!-- Year: 2026 with Diplomatic Hairline Accent Dinamis -->
           <div class="title-year-frame">
             <span class="year-flanking-hairline"></span>
             <span class="title-year-number" id="homeHeroYear">2026</span>
@@ -244,7 +287,7 @@
         </button>
       </div>
 
-      <!-- Copyright Beranda Dinamis dari Spreadsheet (Dapat Diedit di Sheet INFO_WEB) -->
+      <!-- Copyright Beranda Dinamis dari Spreadsheet -->
       <div id="homeCopyrightText" class="w-full pb-5 text-center text-xs text-hydrangea-800 font-extrabold select-none relative z-10">
         &copy; 2026 BES AL HIJRAH. Adab, Ilmu & Ukhuwah.
       </div>
