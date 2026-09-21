@@ -33,6 +33,9 @@
     overflow-x: hidden;
   }
 
+  /* -------------------------------------------------------------------------
+   * 1. 3D CELESTIAL CRYSTAL LOADING SCREEN
+   * ------------------------------------------------------------------------- */
   .celestial-loading-screen {
     position: fixed;
     inset: 0;
@@ -220,6 +223,9 @@
     100% { left: 100%; width: 30%; }
   }
 
+  /* -------------------------------------------------------------------------
+   * 2. ROYAL SILK ATMOSPHERE & WEBGL
+   * ------------------------------------------------------------------------- */
   .royal-silk-atmosphere {
     position: fixed;
     inset: 0;
@@ -251,6 +257,9 @@
     z-index: 2;
   }
 
+  /* -------------------------------------------------------------------------
+   * 3. NAVBAR CAPSULE & PROGRESS BEAM
+   * ------------------------------------------------------------------------- */
   .wide-silk-nav-capsule {
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.96) 0%, rgba(240, 248, 255, 0.92) 45%, rgba(224, 240, 254, 0.88) 100%);
     backdrop-filter: blur(24px);
@@ -336,17 +345,9 @@
     align-items: center;
   }
 
-  #page-photobooth {
-    height: 100vh;
-    max-height: 100vh;
-    overflow: hidden;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 14px;
-    padding-bottom: 12px;
-  }
-
+  /* -------------------------------------------------------------------------
+   * 4. BERANDA HERO TITLE RESPONSIF (ANTI-2 BARIS)
+   * ------------------------------------------------------------------------- */
   .aesthetic-ornamental-title {
     display: flex;
     flex-direction: column;
@@ -382,8 +383,8 @@
   .title-kicker-bes {
     font-family: 'Cinzel', 'Playfair Display', serif;
     font-weight: 900;
-    font-size: clamp(0.95rem, 3.8vw, 1.65rem);
-    letter-spacing: clamp(0.28em, 1.2vw, 0.56em);
+    font-size: clamp(0.9rem, 3.5vw, 1.65rem);
+    letter-spacing: clamp(0.24em, 1vw, 0.56em);
     text-transform: uppercase;
     color: #244b78;
     margin-bottom: 4px;
@@ -402,12 +403,11 @@
     overflow: visible;
   }
 
-  /* Fluid responsive title: Mengunci kata AL HIJRAH tepat 1 baris di seluruh layar ponsel */
   .title-text-gradient {
     font-family: 'Cinzel', 'Playfair Display', serif;
     font-weight: 900;
-    font-size: clamp(1.85rem, 8.4vw, 5.45rem);
-    letter-spacing: clamp(0.04em, 1.4vw, 0.16em);
+    font-size: clamp(1.75rem, 7.8vw, 5.25rem);
+    letter-spacing: clamp(0.02em, 1.1vw, 0.16em);
     line-height: 1.15;
     text-transform: uppercase;
     white-space: nowrap !important;
@@ -442,13 +442,13 @@
     align-items: center;
     justify-content: center;
     gap: 12px;
-    margin-top: 8px;
+    margin-top: 6px;
     position: relative;
     z-index: 2;
   }
 
   .year-flanking-hairline {
-    width: clamp(24px, 6vw, 80px);
+    width: clamp(20px, 5vw, 75px);
     height: 1.5px;
     background: linear-gradient(90deg, transparent 0%, #f59e0b 100%);
     border-radius: 999px;
@@ -461,8 +461,8 @@
   .title-year-number {
     font-family: 'Cinzel', 'Playfair Display', serif;
     font-weight: 800;
-    font-size: clamp(1.4rem, 5.5vw, 3.35rem);
-    letter-spacing: clamp(0.24em, 1vw, 0.46em);
+    font-size: clamp(1.3rem, 5vw, 3.2rem);
+    letter-spacing: clamp(0.2em, 0.8vw, 0.46em);
     line-height: 1;
     color: #1c3b5e;
     background: linear-gradient(135deg, #1c3b5e 0%, #386fa8 60%, #b45309 100%);
@@ -471,6 +471,433 @@
     filter: drop-shadow(0 2px 8px rgba(40, 83, 130, 0.22));
   }
 
+  /* -------------------------------------------------------------------------
+   * 5. PHOTOBOOTH STUDIO STAGE & FIT-TO-SCREEN (ANTI-KEPOTONG)
+   * ------------------------------------------------------------------------- */
+  #page-photobooth {
+    height: 100vh;
+    max-height: 100vh;
+    overflow: hidden;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  .carousel-stage-wrapper {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    perspective: 1200px;
+    flex: 1;
+    min-height: 0; /* Mengunci flexbox agar tidak meluber keluar layar HP */
+    overflow: hidden;
+  }
+
+  .carousel-strip-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    width: 100%;
+    max-width: 920px;
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .carousel-strip-item {
+    position: relative;
+    width: 172px;
+    height: 382px; /* Disesuaikan agar muat sempurna di layar HP */
+    border-radius: 20px;
+    padding: 8px;
+    cursor: pointer;
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s ease, filter 0.5s ease, box-shadow 0.5s ease;
+    user-select: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-shrink: 0;
+    will-change: transform, opacity;
+  }
+
+  @media (min-height: 750px) and (max-width: 639px) {
+    .carousel-strip-item { width: 185px; height: 405px; padding: 10px; }
+  }
+
+  @media (min-width: 640px) {
+    .carousel-strip-item { width: 225px; height: 495px; padding: 12px; }
+  }
+  @media (min-width: 1024px) {
+    .carousel-strip-item { width: 240px; height: 515px; padding: 14px; }
+  }
+
+  .carousel-strip-item.item-side {
+    transform: scale(0.85) translateZ(-40px);
+    opacity: 0.52;
+    filter: brightness(0.92);
+    z-index: 10;
+  }
+
+  .carousel-strip-item.item-side:hover {
+    opacity: 0.82;
+    transform: scale(0.89) translateZ(-20px);
+    filter: none;
+  }
+
+  .carousel-strip-item.item-center {
+    transform: scale(1.04) translateZ(30px);
+    opacity: 1;
+    filter: none;
+    z-index: 25;
+    box-shadow: 0 24px 48px -8px rgba(18, 37, 60, 0.35);
+    cursor: default;
+  }
+
+  .strip-slots-box {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    width: 100%;
+  }
+
+  .frame-photo-slot {
+    width: 100%;
+    height: 84px; /* Tinggi proporsional anti-gepeng di layar HP */
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #081321;
+  }
+
+  @media (min-height: 750px) and (max-width: 639px) {
+    .frame-photo-slot { height: 90px; }
+  }
+  @media (min-width: 640px) { .frame-photo-slot { height: 114px; } }
+  @media (min-width: 1024px) { .frame-photo-slot { height: 120px; } }
+
+  .frame-photo-slot video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scaleX(-1);
+  }
+  
+  .frame-photo-slot img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* -------------------------------------------------------------------------
+   * 6. TEMPLATE 1: RETRO VIEWFINDER STUDIO (100% UTUH SESUAI ASLI)
+   * ------------------------------------------------------------------------- */
+  .analog-film-theme {
+    background: linear-gradient(168deg, #e0f2fe 0%, #bae6fd 45%, #7dd3fc 100%) !important;
+    border: 3.5px solid #0284c7 !important;
+    color: #0c4a6e !important;
+    box-shadow: 0 18px 45px rgba(2, 132, 199, 0.35), 0 0 20px rgba(186, 230, 253, 0.5) !important;
+    overflow: hidden;
+  }
+
+  .film-perforation-strip {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 6px;
+    z-index: 15;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent 0px,
+      transparent 6px,
+      rgba(14, 74, 110, 0.38) 6px,
+      rgba(14, 74, 110, 0.38) 11px,
+      transparent 11px,
+      transparent 17px
+    );
+  }
+
+  .perf-left { left: 3px; }
+  .perf-right { right: 3px; }
+
+  .viewfinder-bracket {
+    position: absolute;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    font-weight: 900;
+    color: #0284c7;
+    z-index: 20;
+    pointer-events: none;
+    line-height: 1;
+    text-shadow: 0 0 4px rgba(255, 255, 255, 0.9);
+  }
+
+  .bracket-tl { top: 3px; left: 4px; }
+  .bracket-tr { top: 3px; right: 4px; }
+  .bracket-bl { bottom: 3px; left: 4px; }
+  .bracket-br { bottom: 3px; right: 4px; }
+
+  .viewfinder-strip-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    margin: 2px 0;
+    user-select: none;
+  }
+
+  .viewfinder-strip-divider .vf-line {
+    flex: 1;
+    height: 1px;
+    background: rgba(2, 132, 199, 0.45);
+    border-radius: 999px;
+  }
+
+  .viewfinder-strip-divider .vf-badge {
+    font-size: 7px;
+    color: #0369a1;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    background: rgba(255, 255, 255, 0.85);
+    padding: 1px 5px;
+    border-radius: 4px;
+    border: 0.5px solid rgba(2, 132, 199, 0.35);
+    box-shadow: 0 1px 4px rgba(2, 132, 199, 0.12);
+  }
+
+  .haru-polaroid-slot {
+    background-color: #ffffff !important;
+    border: 2.5px solid #ffffff !important;
+    border-radius: 9px !important;
+    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.22) !important;
+  }
+
+  /* -------------------------------------------------------------------------
+   * 7. TEMPLATE 2: BOTANICAL SCRAPBOOK (KREM - AKSEN STIKER SUDUT ESTETIK)
+   * ------------------------------------------------------------------------- */
+  .herbarium-journal-theme {
+    background: radial-gradient(circle at 50% 30%, #fdfbf7 0%, #f5eee2 60%, #eaddcc 100%) !important;
+    border: 3.5px solid #c8b79f !important;
+    color: #2c251e !important;
+    box-shadow: 0 18px 45px rgba(80, 60, 40, 0.18), inset 0 0 40px rgba(190, 165, 130, 0.18) !important;
+    overflow: hidden;
+  }
+
+  .washi-tape-strip {
+    position: absolute;
+    width: 44px;
+    height: 14px;
+    background: repeating-linear-gradient(45deg, rgba(214, 196, 174, 0.85), rgba(214, 196, 174, 0.85) 4px, rgba(235, 222, 204, 0.85) 4px, rgba(235, 222, 204, 0.85) 8px);
+    backdrop-filter: blur(4px);
+    border: 1px dashed rgba(160, 140, 115, 0.7);
+    pointer-events: none;
+    z-index: 30;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
+  }
+
+  .washi-top-left { top: 5px; left: 12px; transform: rotate(-8deg); }
+  .washi-bottom-right { bottom: 6px; right: 12px; transform: rotate(6deg); }
+
+  .scrapbook-stamp-seal {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    font-size: 7.5px;
+    font-weight: 900;
+    padding: 1px 5px;
+    border-radius: 4px;
+    background: rgba(220, 38, 38, 0.12);
+    border: 1.5px solid rgba(220, 38, 38, 0.45);
+    color: #b91c1c;
+    transform: rotate(10deg);
+    pointer-events: none;
+    user-select: none;
+    letter-spacing: 0.05em;
+  }
+
+  .herbarium-photo-slot {
+    background-color: #faf7f2 !important;
+    border: 2px solid #d4c5b2 !important;
+    border-radius: 8px !important;
+    box-shadow: 0 3px 8px rgba(60, 45, 30, 0.1) !important;
+  }
+
+  /* Stiker Pojok Estetik (Bukan Emote Berjejer) */
+  .herbarium-corner-sticker {
+    position: absolute;
+    z-index: 25;
+    font-size: 13px;
+    line-height: 1;
+    pointer-events: none;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    transition: transform 0.25s ease;
+  }
+
+  .sticker-tr { top: 4px; right: 5px; transform: rotate(12deg); }
+  .sticker-tl { top: 4px; left: 5px; transform: rotate(-12deg); }
+
+  /* Pembatas Mini Daun & Kopi (Hanya 10px, Sangat Ramping) */
+  .herbarium-mini-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 10px;
+    margin: 1px 0;
+    user-select: none;
+  }
+
+  .herbarium-mini-divider .h-mini-dash {
+    width: 20px;
+    height: 1px;
+    background: #c8b79f;
+    opacity: 0.7;
+    border-radius: 999px;
+  }
+
+  .herbarium-mini-divider .h-mini-icon {
+    font-size: 8px;
+    line-height: 1;
+    opacity: 0.85;
+  }
+
+  /* -------------------------------------------------------------------------
+   * 8. TEMPLATE 3: THE ROYAL DIPLOMATIC (NAVY - AKSEN MAHKOTA & BINTANG EMAS)
+   * ------------------------------------------------------------------------- */
+  .diplomatic-press-theme {
+    background: linear-gradient(180deg, #071322 0%, #0d1e34 50%, #040910 100%) !important;
+    border: 3.5px solid #f59e0b !important;
+    color: #ffffff !important;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 24px rgba(245, 158, 11, 0.3) !important;
+    overflow: hidden;
+  }
+
+  .royal-corner-filigree {
+    position: absolute;
+    font-size: 11px;
+    color: #f59e0b;
+    pointer-events: none;
+    user-select: none;
+    text-shadow: 0 0 8px rgba(245, 158, 11, 0.75);
+    z-index: 20;
+  }
+
+  .filigree-tl { top: 5px; left: 7px; }
+  .filigree-tr { top: 5px; right: 7px; }
+
+  .royal-gold-slot {
+    background-color: #060e19 !important;
+    border: 2px solid #f59e0b !important;
+    border-radius: 8px !important;
+    box-shadow: 0 0 12px rgba(245, 158, 11, 0.22) !important;
+  }
+
+  /* Stiker Sudut Emas Mewah (Mahkota & Kilau) */
+  .royal-corner-sticker {
+    position: absolute;
+    z-index: 25;
+    font-size: 13px;
+    line-height: 1;
+    pointer-events: none;
+    filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.65));
+    transition: transform 0.25s ease;
+  }
+
+  /* Hairline Emas Simetris Ramping (Hanya 10px, Sangat Mewah) */
+  .royal-mini-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 10px;
+    margin: 1px 0;
+    user-select: none;
+  }
+
+  .royal-mini-divider .royal-mini-line {
+    width: 24px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #f59e0b, transparent);
+  }
+
+  .royal-mini-divider .royal-mini-star {
+    color: #f59e0b;
+    font-size: 7.5px;
+    line-height: 1;
+    text-shadow: 0 0 6px rgba(245, 158, 11, 0.75);
+  }
+
+  /* -------------------------------------------------------------------------
+   * 9. PHOTOBOOTH FILTERS, COUNTDOWN & SHUTTER FLASH
+   * ------------------------------------------------------------------------- */
+  .live-filter-natural { filter: none; }
+  .live-filter-warm { filter: sepia(0.2) saturate(1.25) brightness(1.04); }
+  .live-filter-noir { filter: grayscale(1) contrast(1.2) brightness(0.96); }
+
+  .countdown-badge-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(8, 19, 33, 0.65);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 3rem;
+    font-weight: 900;
+    z-index: 40;
+    animation: countdownScale 1s ease-in-out infinite;
+  }
+
+  @keyframes countdownScale {
+    0% { transform: scale(0.6); opacity: 0; }
+    50% { transform: scale(1.15); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  .flash-active {
+    animation: shutterBlitz 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @keyframes shutterBlitz {
+    0% { opacity: 0; }
+    30% { opacity: 0.95; }
+    100% { opacity: 0; }
+  }
+
+  .slot-permission-container {
+    padding: 10px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    color: #cbd5e1;
+  }
+
+  .slot-permission-icon { width: 22px; height: 22px; color: #f87171; }
+  .slot-permission-title { font-size: 9px; font-weight: 700; line-height: 1.2; }
+
+  .slot-permission-btn {
+    margin-top: 4px;
+    padding: 2px 8px;
+    border-radius: 6px;
+    background: #32649a;
+    color: #ffffff;
+    font-size: 9px;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  /* -------------------------------------------------------------------------
+   * 10. HALAMAN TENTANG, KABINET & WARTA (100% UTUH)
+   * ------------------------------------------------------------------------- */
   .kolektiva-vision-title {
     font-family: 'Plus Jakarta Sans', sans-serif;
     font-weight: 950;
@@ -843,364 +1270,6 @@
     font-weight: 800;
     color: #ffffff !important;
     line-height: 1.3;
-  }
-
-  .carousel-stage-wrapper {
-    position: relative;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    perspective: 1200px;
-    flex: 1;
-    overflow: hidden;
-  }
-
-  .carousel-strip-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    width: 100%;
-    max-width: 920px;
-    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  .carousel-strip-item {
-    position: relative;
-    width: 180px;
-    height: 405px;
-    border-radius: 20px;
-    padding: 10px;
-    cursor: pointer;
-    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s ease, filter 0.5s ease, box-shadow 0.5s ease;
-    user-select: none;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    flex-shrink: 0;
-    will-change: transform, opacity;
-  }
-
-  @media (min-width: 640px) { .carousel-strip-item { width: 225px; height: 495px; padding: 12px; } }
-  @media (min-width: 1024px) { .carousel-strip-item { width: 240px; height: 515px; padding: 14px; } }
-
-  .carousel-strip-item.item-side {
-    transform: scale(0.85) translateZ(-40px);
-    opacity: 0.52;
-    filter: brightness(0.92);
-    z-index: 10;
-  }
-
-  .carousel-strip-item.item-side:hover {
-    opacity: 0.82;
-    transform: scale(0.89) translateZ(-20px);
-    filter: none;
-  }
-
-  .carousel-strip-item.item-center {
-    transform: scale(1.04) translateZ(30px);
-    opacity: 1;
-    filter: none;
-    z-index: 25;
-    box-shadow: 0 24px 48px -8px rgba(18, 37, 60, 0.35);
-    cursor: default;
-  }
-
-  .analog-film-theme {
-    background: linear-gradient(168deg, #e0f2fe 0%, #bae6fd 45%, #7dd3fc 100%) !important;
-    border: 3.5px solid #0284c7 !important;
-    color: #0c4a6e !important;
-    box-shadow: 0 18px 45px rgba(2, 132, 199, 0.35), 0 0 20px rgba(186, 230, 253, 0.5) !important;
-    overflow: hidden;
-  }
-
-  /* Perforasi rol film 35mm di sepanjang tepi kiri dan kanan */
-  .film-perforation-strip {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 6px;
-    z-index: 15;
-    pointer-events: none;
-    background: repeating-linear-gradient(
-      to bottom,
-      transparent 0px,
-      transparent 6px,
-      rgba(14, 74, 110, 0.38) 6px,
-      rgba(14, 74, 110, 0.38) 11px,
-      transparent 11px,
-      transparent 17px
-    );
-  }
-
-  .perf-left { left: 3px; }
-  .perf-right { right: 3px; }
-
-  /* Siku viewfinder optik di keempat sudut foto */
-  .viewfinder-bracket {
-    position: absolute;
-    font-family: 'Space Mono', monospace;
-    font-size: 11px;
-    font-weight: 900;
-    color: #0284c7;
-    z-index: 20;
-    pointer-events: none;
-    line-height: 1;
-    text-shadow: 0 0 4px rgba(255, 255, 255, 0.9);
-  }
-
-  .bracket-tl { top: 3px; left: 4px; }
-  .bracket-tr { top: 3px; right: 4px; }
-  .bracket-bl { bottom: 3px; left: 4px; }
-  .bracket-br { bottom: 3px; right: 4px; }
-
-  /* Pembatas teknis studio: Menggantikan deretan emotikon berjejer */
-  .viewfinder-strip-divider {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    margin: 3px 0;
-    user-select: none;
-  }
-
-  .viewfinder-strip-divider .vf-line {
-    flex: 1;
-    height: 1px;
-    background: rgba(2, 132, 199, 0.45);
-    border-radius: 999px;
-  }
-
-  .viewfinder-strip-divider .vf-badge {
-    font-size: 7px;
-    color: #0369a1;
-    font-weight: 900;
-    letter-spacing: 0.1em;
-    background: rgba(255, 255, 255, 0.85);
-    padding: 1.5px 6px;
-    border-radius: 4px;
-    border: 0.5px solid rgba(2, 132, 199, 0.35);
-    box-shadow: 0 1px 4px rgba(2, 132, 199, 0.12);
-  }
-
-  .haru-polaroid-slot {
-    background-color: #ffffff !important;
-    border: 3px solid #ffffff !important;
-    border-radius: 10px !important;
-    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.22) !important;
-  }
-
-  .herbarium-journal-theme {
-    background: radial-gradient(circle at 50% 30%, #fdfbf7 0%, #f5eee2 60%, #eaddcc 100%) !important;
-    border: 3.5px solid #c8b79f !important;
-    color: #2c251e !important;
-    box-shadow: 0 18px 45px rgba(80, 60, 40, 0.18), inset 0 0 40px rgba(190, 165, 130, 0.18) !important;
-    overflow: hidden;
-  }
-
-  .washi-tape-strip {
-    position: absolute;
-    width: 46px;
-    height: 15px;
-    background: repeating-linear-gradient(45deg, rgba(214, 196, 174, 0.85), rgba(214, 196, 174, 0.85) 4px, rgba(235, 222, 204, 0.85) 4px, rgba(235, 222, 204, 0.85) 8px);
-    backdrop-filter: blur(4px);
-    border: 1px dashed rgba(160, 140, 115, 0.7);
-    pointer-events: none;
-    z-index: 30;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
-  }
-
-  .washi-top-left { top: 6px; left: 14px; transform: rotate(-8deg); }
-  .washi-bottom-right { bottom: 8px; right: 14px; transform: rotate(6deg); }
-
-  .scrapbook-stamp-seal {
-    position: absolute;
-    top: 6px;
-    right: 12px;
-    font-size: 8px;
-    font-weight: 900;
-    padding: 1px 5px;
-    border-radius: 4px;
-    background: rgba(220, 38, 38, 0.12);
-    border: 1.5px solid rgba(220, 38, 38, 0.45);
-    color: #b91c1c;
-    transform: rotate(10deg);
-    pointer-events: none;
-    user-select: none;
-    letter-spacing: 0.05em;
-  }
-
-  .herbarium-photo-slot {
-    background-color: #faf7f2 !important;
-    border: 2.5px solid #d4c5b2 !important;
-    border-radius: 8px !important;
-    box-shadow: 0 4px 10px rgba(60, 45, 30, 0.12) !important;
-  }
-
-  /* Pembatas kutipan tulisan tangan: Menggantikan deretan emotikon berjejer */
-  .herbarium-quote-divider {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    margin: 3px 0;
-    user-select: none;
-  }
-
-  .herbarium-quote-divider .h-quote-dash {
-    width: 14px;
-    height: 1px;
-    background: #c8b79f;
-    border-radius: 999px;
-  }
-
-  .herbarium-quote-divider .h-quote-text {
-    font-family: 'Playfair Display', serif;
-    font-style: italic;
-    font-size: 7.5px;
-    font-weight: 600;
-    color: #6b5744;
-    letter-spacing: 0.03em;
-  }
-
-  .diplomatic-press-theme {
-    background: linear-gradient(180deg, #071322 0%, #0d1e34 50%, #040910 100%) !important;
-    border: 3.5px solid #f59e0b !important;
-    color: #ffffff !important;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 24px rgba(245, 158, 11, 0.3) !important;
-    overflow: hidden;
-  }
-
-  .royal-corner-filigree {
-    position: absolute;
-    font-size: 11px;
-    color: #f59e0b;
-    pointer-events: none;
-    user-select: none;
-    text-shadow: 0 0 8px rgba(245, 158, 11, 0.75);
-    z-index: 20;
-  }
-
-  .filigree-tl { top: 6px; left: 8px; }
-  .filigree-tr { top: 6px; right: 8px; }
-
-  .royal-gold-slot {
-    background-color: #060e19 !important;
-    border: 2.5px solid #f59e0b !important;
-    border-radius: 8px !important;
-    box-shadow: 0 0 14px rgba(245, 158, 11, 0.22) !important;
-  }
-
-  /* Pembatas hairline emas kepresidenan: Menggantikan deretan emotikon berjejer */
-  .royal-motto-divider {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    margin: 3px 0;
-    user-select: none;
-  }
-
-  .royal-motto-divider .royal-line-left {
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(245, 158, 11, 0.75));
-  }
-
-  .royal-motto-divider .royal-line-right {
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(90deg, rgba(245, 158, 11, 0.75), transparent);
-  }
-
-  .royal-motto-divider .royal-motto-badge {
-    font-family: 'Cinzel', 'Playfair Display', serif;
-    font-size: 6.5px;
-    color: #f59e0b;
-    font-weight: 900;
-    letter-spacing: 0.14em;
-    text-shadow: 0 0 8px rgba(245, 158, 11, 0.5);
-    white-space: nowrap;
-  }
-
-  .strip-slots-box { display: flex; flex-direction: column; gap: 4px; width: 100%; }
-
-  .frame-photo-slot {
-    width: 100%;
-    height: 90px;
-    border-radius: 8px;
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #081321;
-  }
-
-  @media (min-width: 640px) { .frame-photo-slot { height: 114px; } }
-  @media (min-width: 1024px) { .frame-photo-slot { height: 120px; } }
-
-  .frame-photo-slot video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
-  .frame-photo-slot img { width: 100%; height: 100%; object-fit: cover; }
-
-  .live-filter-natural { filter: none; }
-  .live-filter-warm { filter: sepia(0.2) saturate(1.25) brightness(1.04); }
-  .live-filter-noir { filter: grayscale(1) contrast(1.2) brightness(0.96); }
-
-  .countdown-badge-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(8, 19, 33, 0.65);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #ffffff;
-    font-size: 3rem;
-    font-weight: 900;
-    z-index: 40;
-    animation: countdownScale 1s ease-in-out infinite;
-  }
-
-  @keyframes countdownScale {
-    0% { transform: scale(0.6); opacity: 0; }
-    50% { transform: scale(1.15); opacity: 1; }
-    100% { transform: scale(1); opacity: 1; }
-  }
-
-  .flash-active {
-    animation: shutterBlitz 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-
-  @keyframes shutterBlitz {
-    0% { opacity: 0; }
-    30% { opacity: 0.95; }
-    100% { opacity: 0; }
-  }
-
-  .slot-permission-container {
-    padding: 10px;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    color: #cbd5e1;
-  }
-
-  .slot-permission-icon { width: 22px; height: 22px; color: #f87171; }
-  .slot-permission-title { font-size: 9px; font-weight: 700; line-height: 1.2; }
-
-  .slot-permission-btn {
-    margin-top: 4px;
-    padding: 2px 8px;
-    border-radius: 6px;
-    background: #32649a;
-    color: #ffffff;
-    font-size: 9px;
-    font-weight: 800;
-    cursor: pointer;
   }
 
   .news-editorial-card {
