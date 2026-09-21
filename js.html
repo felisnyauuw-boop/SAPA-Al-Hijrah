@@ -4,7 +4,8 @@
    * LOGIKA SISTEM TERPADU & TIGA DIMENSI - BES AL HIJRAH (GITHUB PAGES EDITION)
    * File: js.html
    * Terintegrasi: Loading Screen 3D Celestial Crystal, REST API Fetcher,
-   * Native Photobooth WebCam (Anti-Gepeng Center-Crop Math), & 7 Sheet Tematik.
+   * Native Photobooth WebCam (Aspect-Ratio Center-Crop Anti-Gepeng),
+   * Rounded-Corner High-Res Canvas Export Engine, & 7 Sheet Tematik.
    * =========================================================================
    */
 
@@ -1462,7 +1463,7 @@
 
     if (btnStart) {
       btnStart.disabled = true;
-      btnStart.className = 'w-full py-2.5 px-4 rounded-xl bg-slate-300 text-slate-500 font-bold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-not-allowed';
+      btnStart.className = 'w-full py-2 px-4 rounded-xl bg-slate-300 text-slate-500 font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2 cursor-not-allowed';
     }
     if (btnStartText) btnStartText.textContent = 'Menghubungkan Kamera...';
 
@@ -1517,7 +1518,7 @@
 
     if (btnStart) {
       btnStart.disabled = false;
-      btnStart.className = 'w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-hydrangea-700 to-hydrangea-600 hover:from-hydrangea-800 hover:to-hydrangea-700 text-white font-bold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 transform active:scale-98 cursor-pointer';
+      btnStart.className = 'w-full py-2 px-4 rounded-xl bg-gradient-to-r from-hydrangea-700 to-hydrangea-600 hover:from-hydrangea-800 hover:to-hydrangea-700 text-white font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2 transform active:scale-98 cursor-pointer';
     }
     if (btnStartText) btnStartText.textContent = 'Mulai Jepret 3 Pose 📸';
 
@@ -1534,7 +1535,7 @@
 
     if (btnStart) {
       btnStart.disabled = true;
-      btnStart.className = 'w-full py-2.5 px-4 rounded-xl bg-slate-300 text-slate-500 font-bold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-not-allowed';
+      btnStart.className = 'w-full py-2 px-4 rounded-xl bg-slate-300 text-slate-500 font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2 cursor-not-allowed';
     }
     if (btnStartText) btnStartText.textContent = 'Izinkan Kamera Dahulu';
     showToast('Izin akses kamera diperlukan browser.', 'warning');
@@ -1684,13 +1685,11 @@
 
       // Smart Center-Crop Math: Menjamin tidak ada distorsi/gepeng pada HP apa pun
       if (videoAspect > targetAspect) {
-        // Video lebih lebar (misal webcam laptop 16:9): crop sisi kiri & kanan
         sw = vh * targetAspect;
         sh = vh;
         sx = (vw - sw) / 2;
         sy = 0;
       } else {
-        // Video lebih tinggi/portrait (kamera smartphone 9:16 / 3:4): crop sisi atas & bawah
         sw = vw;
         sh = vw / targetAspect;
         sx = 0;
@@ -1753,12 +1752,48 @@
     }
   }
 
+  /**
+   * Helper Utility: Menggambar Jalur Persegi Panjang dengan Sudut Membulat (Rounded Rect)
+   */
+  function drawRoundedRectPath(ctx, x, y, width, height, radius) {
+    ctx.beginPath();
+    if (ctx.roundRect) {
+      ctx.roundRect(x, y, width, height, radius);
+    } else {
+      ctx.moveTo(x + radius, y);
+      ctx.lineTo(x + width - radius, y);
+      ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+      ctx.lineTo(x + width, y + height - radius);
+      ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+      ctx.lineTo(x + radius, y + height);
+      ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+      ctx.lineTo(x, y + radius);
+      ctx.quadraticCurveTo(x, y, x + radius, y);
+      ctx.closePath();
+    }
+  }
+
+  /**
+   * Helper Utility: Memotong & Menggambar Foto dengan Sudut Membulat Halus (Rounded Photo)
+   */
+  function drawRoundedImage(ctx, img, x, y, width, height, radius) {
+    ctx.save();
+    drawRoundedRectPath(ctx, x, y, width, height, radius);
+    ctx.clip();
+    ctx.drawImage(img, x, y, width, height);
+    ctx.restore();
+  }
+
+  /**
+   * Engine Ekspor Kanvas Resolusi Tinggi: Proporsional, Tebal, Estetik & Membulat (WYSIWYG)
+   */
   function renderFinalExportCanvas(ctx, canvas, template, imgs) {
     var slotWidth = 490;
     var slotHeight = 368;
     var slotX = (canvas.width - slotWidth) / 2;
-    var startY = 165;
-    var gap = 48;
+    var startY = 175;
+    var gap = 44;
+    var photoRadius = 18;
 
     /* =========================================================================
      * TEMPLATE 1: RETRO VIEWFINDER STUDIO (35MM FILM STRIP) - 100% UTUH
@@ -1771,247 +1806,224 @@
       ctx.fillStyle = skyGrad;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+      // Bingkai luar strip membulat halus
+      drawRoundedRectPath(ctx, 16, 16, canvas.width - 32, canvas.height - 32, 28);
+      ctx.lineWidth = 6;
+      ctx.strokeStyle = '#0284c7';
+      ctx.stroke();
+
       // Perforasi lubang rol film 35mm
       ctx.fillStyle = 'rgba(14, 74, 110, 0.35)';
-      for (var p = 25; p < canvas.height - 25; p += 22) {
+      for (var p = 30; p < canvas.height - 30; p += 22) {
         ctx.fillRect(10, p, 10, 14);
         ctx.fillRect(canvas.width - 20, p, 10, 14);
       }
 
-      ctx.lineWidth = 4;
-      ctx.strokeStyle = '#0284c7';
-      ctx.strokeRect(26, 26, canvas.width - 52, canvas.height - 52);
-
-      // Header Jendela Bidik
+      // Header Jendela Bidik (Skala Diperbesar & Tajam)
+      drawRoundedRectPath(ctx, canvas.width / 2 - 200, 48, 400, 52, 12);
       ctx.fillStyle = '#ffffff';
-      ctx.fillRect(canvas.width / 2 - 180, 48, 360, 46);
-      ctx.lineWidth = 1.5;
+      ctx.fill();
+      ctx.lineWidth = 2;
       ctx.strokeStyle = '#0284c7';
-      ctx.strokeRect(canvas.width / 2 - 180, 48, 360, 46);
+      ctx.stroke();
 
       ctx.beginPath();
-      ctx.arc(canvas.width / 2 - 145, 71, 5, 0, Math.PI * 2);
+      ctx.arc(canvas.width / 2 - 160, 74, 6, 0, Math.PI * 2);
       ctx.fillStyle = '#ef4444';
       ctx.fill();
 
       ctx.fillStyle = '#0369a1';
-      ctx.font = '900 13px monospace';
+      ctx.font = '900 16px monospace';
       ctx.textAlign = 'left';
-      ctx.fillText('REC 00:26 • ISO 400 • F/2.8', canvas.width / 2 - 130, 75);
+      ctx.fillText('REC 00:26 • ISO 400 • F/2.8', canvas.width / 2 - 140, 80);
 
       ctx.fillStyle = '#0c4a6e';
-      ctx.font = '900 20px "Plus Jakarta Sans", sans-serif';
+      ctx.font = '900 26px "Plus Jakarta Sans", sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText('STUDIO ARCHIVE 2026', canvas.width / 2, 128);
+      ctx.fillText('STUDIO ARCHIVE 2026', canvas.width / 2, 138);
 
       for (var a = 0; a < 3; a++) {
         var yAnalog = startY + a * (slotHeight + gap);
         
+        // Backplate polaroid putih membulat
+        drawRoundedRectPath(ctx, slotX - 8, yAnalog - 8, slotWidth + 16, slotHeight + 16, 20);
         ctx.fillStyle = '#ffffff';
-        ctx.fillRect(slotX - 8, yAnalog - 8, slotWidth + 16, slotHeight + 16);
-        ctx.drawImage(imgs[a], slotX, yAnalog, slotWidth, slotHeight);
+        ctx.fill();
+
+        // Gambar foto membulat halus (Anti-Petak)
+        drawRoundedImage(ctx, imgs[a], slotX, yAnalog, slotWidth, slotHeight, photoRadius);
 
         // Sudut Viewfinder Brackets
-        ctx.lineWidth = 3;
+        ctx.lineWidth = 3.5;
         ctx.strokeStyle = '#0284c7';
         // Top Left
-        ctx.beginPath(); ctx.moveTo(slotX + 12, yAnalog + 26); ctx.lineTo(slotX + 12, yAnalog + 12); ctx.lineTo(slotX + 26, yAnalog + 12); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(slotX + 14, yAnalog + 30); ctx.lineTo(slotX + 14, yAnalog + 14); ctx.lineTo(slotX + 30, yAnalog + 14); ctx.stroke();
         // Top Right
-        ctx.beginPath(); ctx.moveTo(slotX + slotWidth - 26, yAnalog + 12); ctx.lineTo(slotX + slotWidth - 12, yAnalog + 12); ctx.lineTo(slotX + slotWidth - 12, yAnalog + 26); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(slotX + slotWidth - 30, yAnalog + 14); ctx.lineTo(slotX + slotWidth - 14, yAnalog + 14); ctx.lineTo(slotX + slotWidth - 14, yAnalog + 30); ctx.stroke();
         // Bottom Left
-        ctx.beginPath(); ctx.moveTo(slotX + 12, yAnalog + slotHeight - 26); ctx.lineTo(slotX + 12, yAnalog + slotHeight - 12); ctx.lineTo(slotX + 26, yAnalog + slotHeight - 12); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(slotX + 14, yAnalog + slotHeight - 30); ctx.lineTo(slotX + 14, yAnalog + slotHeight - 14); ctx.lineTo(slotX + 30, yAnalog + slotHeight - 14); ctx.stroke();
         // Bottom Right
-        ctx.beginPath(); ctx.moveTo(slotX + slotWidth - 26, yAnalog + slotHeight - 12); ctx.lineTo(slotX + slotWidth - 12, yAnalog + slotHeight - 12); ctx.lineTo(slotX + slotWidth - 12, yAnalog + slotHeight - 26); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(slotX + slotWidth - 30, yAnalog + slotHeight - 14); ctx.lineTo(slotX + slotWidth - 14, yAnalog + slotHeight - 14); ctx.lineTo(slotX + slotWidth - 14, yAnalog + slotHeight - 30); ctx.stroke();
 
         // Divider Studio Kamera
         if (a < 2) {
           var yDivA = yAnalog + slotHeight + (gap / 2);
-          ctx.strokeStyle = 'rgba(2, 132, 199, 0.4)';
-          ctx.lineWidth = 1;
+          ctx.strokeStyle = 'rgba(2, 132, 199, 0.45)';
+          ctx.lineWidth = 1.5;
           ctx.beginPath(); ctx.moveTo(slotX + 20, yDivA); ctx.lineTo(slotX + slotWidth - 20, yDivA); ctx.stroke();
 
+          drawRoundedRectPath(ctx, canvas.width / 2 - 95, yDivA - 14, 190, 28, 8);
           ctx.fillStyle = '#ffffff';
-          ctx.fillRect(canvas.width / 2 - 75, yDivA - 11, 150, 22);
+          ctx.fill();
           ctx.strokeStyle = '#0284c7';
-          ctx.strokeRect(canvas.width / 2 - 75, yDivA - 11, 150, 22);
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
 
           ctx.fillStyle = '#0369a1';
-          ctx.font = '800 11px monospace';
+          ctx.font = '800 13px monospace';
           ctx.textAlign = 'center';
-          ctx.fillText(a === 0 ? '[ 02 • FOCUS LOCK ]' : '[ 03 • EXPOSURE ]', canvas.width / 2, yDivA + 4);
+          ctx.fillText(a === 0 ? '[ 02 • FOCUS LOCK ]' : '[ 03 • EXPOSURE ]', canvas.width / 2, yDivA + 5);
         }
       }
 
       ctx.fillStyle = '#082f49';
-      ctx.font = '900 16px monospace';
+      ctx.font = '900 20px monospace';
       ctx.textAlign = 'center';
-      ctx.fillText('BES-ALHIJRAH // 35MM OPTICAL CUTS', canvas.width / 2, canvas.height - 58);
+      ctx.fillText('BES-ALHIJRAH // 35MM OPTICAL CUTS', canvas.width / 2, canvas.height - 62);
 
       ctx.fillStyle = '#0369a1';
-      ctx.font = '700 12px monospace';
-      ctx.fillText('OPTICAL ROLL 026 • BINTUJU TAPSEL', canvas.width / 2, canvas.height - 34);
+      ctx.font = '700 14px monospace';
+      ctx.fillText('OPTICAL ROLL 026 • BINTUJU TAPSEL', canvas.width / 2, canvas.height - 36);
 
     /* =========================================================================
-     * TEMPLATE 2: BOTANICAL SCRAPBOOK (KREM - STIKER 3D DI SISI & SELA BERSIH)
+     * TEMPLATE 2: BOTANICAL SCRAPBOOK (KREM - MEMBULAT, PROPORSI BESAR, SELA BERSIH)
      * ========================================================================= */
     } else if (template === 'herbarium') {
       ctx.fillStyle = '#f5eee2';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      ctx.lineWidth = 6;
+      // Lis ganda scrapbook membulat halus
+      drawRoundedRectPath(ctx, 16, 16, canvas.width - 32, canvas.height - 32, 28);
+      ctx.lineWidth = 7;
       ctx.strokeStyle = '#c8b79f';
-      ctx.strokeRect(18, 18, canvas.width - 36, canvas.height - 36);
+      ctx.stroke();
 
-      ctx.lineWidth = 1.5;
+      drawRoundedRectPath(ctx, 24, 24, canvas.width - 48, canvas.height - 48, 22);
+      ctx.lineWidth = 2;
       ctx.strokeStyle = '#a48c6f';
-      ctx.strokeRect(26, 26, canvas.width - 52, canvas.height - 52);
+      ctx.stroke();
 
-      // Selotip Washi Tape Artistik
-      ctx.fillStyle = 'rgba(214, 196, 174, 0.9)';
-      ctx.fillRect(36, 32, 90, 26);
-      ctx.fillRect(canvas.width - 126, canvas.height - 58, 90, 26);
+      // Selotip Washi Tape Artistik di Sudut
+      ctx.fillStyle = 'rgba(214, 196, 174, 0.95)';
+      ctx.fillRect(40, 36, 120, 32);
+      ctx.fillRect(canvas.width - 160, canvas.height - 68, 120, 32);
 
-      // Stempel Pos Pesantren
-      ctx.strokeStyle = 'rgba(185, 28, 28, 0.55)';
-      ctx.lineWidth = 1.8;
-      ctx.strokeRect(canvas.width - 125, 42, 85, 26);
+      // Stempel Pos Resmi Pesantren (Skala Proporsional Besar)
+      drawRoundedRectPath(ctx, canvas.width - 165, 46, 120, 34, 6);
+      ctx.strokeStyle = 'rgba(185, 28, 28, 0.7)';
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
       ctx.fillStyle = '#b91c1c';
-      ctx.font = '900 10px monospace';
+      ctx.font = '900 13px monospace';
       ctx.textAlign = 'center';
-      ctx.fillText('POSTAL // 2026', canvas.width - 82, 59);
+      ctx.fillText('POSTAL // 2026', canvas.width - 105, 68);
 
-      // Header
+      // Header Tipografi Besar & Padat
       ctx.fillStyle = '#2c251e';
-      ctx.font = 'bold 28px "Playfair Display", serif';
+      ctx.font = 'bold 34px "Playfair Display", serif';
       ctx.textAlign = 'center';
-      ctx.fillText('🌿 Sekolah Alam Al Hijrah', canvas.width / 2, 85);
+      ctx.fillText('🌿 Sekolah Alam Al Hijrah', canvas.width / 2, 98);
 
       ctx.fillStyle = '#8c7b6b';
-      ctx.font = 'italic 15px "Playfair Display", serif';
-      ctx.fillText('Herbarium Journal • Bintuju Tapsel', canvas.width / 2, 116);
+      ctx.font = 'italic 18px "Playfair Display", serif';
+      ctx.fillText('Herbarium Journal • Bintuju Tapsel', canvas.width / 2, 134);
 
-      // Render 3 Foto Polarod dengan Sela Bersih Alami (Clean Gap)
+      // 3 Foto Polaroid dengan Sela Bersih Alami (Clean Gap & Rounded Corners)
       for (var h = 0; h < 3; h++) {
         var yHerb = startY + h * (slotHeight + gap);
+        
+        // Backplate polaroid krem membulat halus
+        drawRoundedRectPath(ctx, slotX - 8, yHerb - 8, slotWidth + 16, slotHeight + 16, 20);
         ctx.fillStyle = '#faf7f2';
-        ctx.fillRect(slotX - 8, yHerb - 8, slotWidth + 16, slotHeight + 16);
-        ctx.drawImage(imgs[h], slotX, yHerb, slotWidth, slotHeight);
-
+        ctx.fill();
+        ctx.lineWidth = 3;
         ctx.strokeStyle = '#d4c5b2';
-        ctx.lineWidth = 2.5;
-        ctx.strokeRect(slotX, yHerb, slotWidth, slotHeight);
+        ctx.stroke();
+
+        // Render foto membulat halus (Anti-Petak)
+        drawRoundedImage(ctx, imgs[h], slotX, yHerb, slotWidth, slotHeight, photoRadius);
       }
 
-      // STIKER 3D POPOUT DI SISI-SISI TERLUAR FRAME (LAYER PALING DEPAN)
-      ctx.save();
-      ctx.shadowColor = 'rgba(0, 0, 0, 0.28)';
-      ctx.shadowBlur = 12;
-      ctx.shadowOffsetX = 3;
-      ctx.shadowOffsetY = 6;
-      ctx.font = '34px serif';
-      ctx.textAlign = 'center';
-
-      // Stiker 1: Daun Zaitun 🌿 di sisi kiri atas frame 1
-      ctx.fillText('🌿', slotX - 10, startY + 28);
-
-      // Stiker 2: Bunga Matahari 🌻 di sisi kanan luar frame 2
-      var yHerbMid = startY + 1 * (slotHeight + gap) + (slotHeight / 2);
-      ctx.fillText('🌻', slotX + slotWidth + 14, yHerbMid);
-
-      // Stiker 3: Kopi Santri ☕ di sisi kiri luar frame 3
-      var yHerbBot = startY + 2 * (slotHeight + gap);
-      ctx.fillText('☕', slotX - 12, yHerbBot + slotHeight - 18);
-
-      // Stiker 4: Daun Gugur 🍂 di sisi kanan luar frame 3
-      ctx.fillText('🍂', slotX + slotWidth + 12, yHerbBot + 40);
-      ctx.restore();
-
-      // Footer Jurnal
+      // Footer Jurnal Hangat & Terbaca Jelas
       ctx.fillStyle = '#4a3f35';
-      ctx.font = 'bold 18px "Playfair Display", serif';
+      ctx.font = 'bold 24px "Playfair Display", serif';
       ctx.textAlign = 'center';
-      ctx.fillText('🌾 Catatan Kenangan Santri', canvas.width / 2, canvas.height - 62);
+      ctx.fillText('🌾 Catatan Kenangan Santri', canvas.width / 2, canvas.height - 68);
 
       ctx.fillStyle = '#8c7b6b';
-      ctx.font = 'italic 13px "Playfair Display", serif';
-      ctx.fillText('Lembar Khidmah Penghafal Al-Qur\'an', canvas.width / 2, canvas.height - 36);
+      ctx.font = 'italic 16px "Playfair Display", serif';
+      ctx.fillText('Lembar Khidmah Penghafal Al-Qur\'an', canvas.width / 2, canvas.height - 40);
 
     /* =========================================================================
-     * TEMPLATE 3: THE ROYAL DIPLOMATIC PRESS (NAVY - STIKER 3D EMAS & SELA BERSIH)
+     * TEMPLATE 3: THE ROYAL DIPLOMATIC PRESS (NAVY - LIS EMAS GANDA, MEMBULAT, SELA BERSIH)
      * ========================================================================= */
     } else {
       ctx.fillStyle = '#071322';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      ctx.lineWidth = 6;
+      // Lis ganda kerajaan membulat halus
+      drawRoundedRectPath(ctx, 16, 16, canvas.width - 32, canvas.height - 32, 28);
+      ctx.lineWidth = 7;
       ctx.strokeStyle = '#f59e0b';
-      ctx.strokeRect(16, 16, canvas.width - 32, canvas.height - 32);
+      ctx.stroke();
 
-      ctx.lineWidth = 1.5;
+      drawRoundedRectPath(ctx, 24, 24, canvas.width - 48, canvas.height - 48, 22);
+      ctx.lineWidth = 2;
       ctx.strokeStyle = '#fef08a';
-      ctx.strokeRect(26, 26, canvas.width - 52, canvas.height - 52);
+      ctx.stroke();
 
-      // Ornamen Sudut Fleur-de-lis (⚜️)
+      // Ornamen Sudut Fleur-de-lis (⚜️) Simetris
       ctx.fillStyle = '#f59e0b';
-      ctx.font = '20px serif';
+      ctx.font = '28px serif';
       ctx.textAlign = 'center';
-      ctx.fillText('⚜️', 44, 52);
-      ctx.fillText('⚜️', canvas.width - 44, 52);
+      ctx.fillText('⚜️', 52, 62);
+      ctx.fillText('⚜️', canvas.width - 52, 62);
 
-      // Header Diplomatik
+      // Header Diplomatik Skala Megah & Tajam
       ctx.fillStyle = '#f59e0b';
-      ctx.font = '900 24px "Cinzel", "Playfair Display", serif';
+      ctx.font = '900 32px "Cinzel", "Playfair Display", serif';
       ctx.textAlign = 'center';
-      ctx.fillText('BES SAPA AL HIJRAH', canvas.width / 2, 78);
+      ctx.fillText('BES SAPA AL HIJRAH', canvas.width / 2, 92);
 
       ctx.fillStyle = '#cbd5e1';
-      ctx.font = '700 12px "Plus Jakarta Sans", sans-serif';
-      ctx.fillText('THE ROYAL DIPLOMATIC PRESS • 2026', canvas.width / 2, 110);
+      ctx.font = '700 15px "Plus Jakarta Sans", sans-serif';
+      ctx.fillText('THE ROYAL DIPLOMATIC PRESS • 2026', canvas.width / 2, 130);
 
-      // Render 3 Foto Kerajaan dengan Sela Bersih Alami (Clean Gap)
+      // 3 Foto Kerajaan dengan Sela Bersih Alami (Clean Gap & Rounded Corners)
       for (var d = 0; d < 3; d++) {
         var yDip = startY + d * (slotHeight + gap);
-        ctx.drawImage(imgs[d], slotX, yDip, slotWidth, slotHeight);
+
+        // Backplate emas gelap membulat
+        drawRoundedRectPath(ctx, slotX - 4, yDip - 4, slotWidth + 8, slotHeight + 8, 20);
+        ctx.fillStyle = '#060e19';
+        ctx.fill();
+        ctx.lineWidth = 4;
         ctx.strokeStyle = '#f59e0b';
-        ctx.lineWidth = 3.5;
-        ctx.strokeRect(slotX, yDip, slotWidth, slotHeight);
+        ctx.stroke();
+
+        // Render foto membulat halus (Anti-Petak)
+        drawRoundedImage(ctx, imgs[d], slotX, yDip, slotWidth, slotHeight, photoRadius);
       }
 
-      // STIKER 3D POPOUT EMAS DI SISI-SISI TERLUAR FRAME (LAYER PALING DEPAN)
-      ctx.save();
-      ctx.shadowColor = 'rgba(245, 158, 11, 0.75)';
-      ctx.shadowBlur = 14;
-      ctx.shadowOffsetX = 3;
-      ctx.shadowOffsetY = 5;
-      ctx.font = '36px serif';
-      ctx.textAlign = 'center';
-
-      // Stiker 1: Bintang Kilau ✨ di sisi kanan atas frame 1
-      ctx.fillText('✨', slotX + slotWidth + 14, startY + 24);
-
-      // Stiker 2: Mahkota Emas 👑 di sisi kiri luar frame 2
-      var yDipMid = startY + 1 * (slotHeight + gap) + (slotHeight / 2);
-      ctx.fillText('👑', slotX - 14, yDipMid);
-
-      // Stiker 3: Fleur-de-lis ⚜️ di sisi kanan luar frame 3
-      var yDipBot = startY + 2 * (slotHeight + gap);
-      ctx.fillText('⚜️', slotX + slotWidth + 14, yDipBot + slotHeight - 20);
-
-      // Stiker 4: Bintang Khidmah ✦ di sisi kiri luar frame 1
-      ctx.font = '30px serif';
+      // Footer Resmi Berwibawa
       ctx.fillStyle = '#f59e0b';
-      ctx.fillText('✦', slotX - 12, startY + 50);
-      ctx.restore();
-
-      // Footer Resmi
-      ctx.fillStyle = '#f59e0b';
-      ctx.font = 'bold 15px "Cinzel", "Playfair Display", serif';
+      ctx.font = 'bold 22px "Cinzel", "Playfair Display", serif';
       ctx.textAlign = 'center';
-      ctx.fillText('OFFICIAL EXECUTIVE MEMORABILIA', canvas.width / 2, canvas.height - 62);
+      ctx.fillText('OFFICIAL EXECUTIVE MEMORABILIA', canvas.width / 2, canvas.height - 68);
 
       ctx.fillStyle = '#94a3b8';
-      ctx.font = '600 11px "Plus Jakarta Sans", sans-serif';
-      ctx.fillText('Mahkota Khidmah Generasi Qur\'ani', canvas.width / 2, canvas.height - 36);
+      ctx.font = '600 15px "Plus Jakarta Sans", sans-serif';
+      ctx.fillText('Mahkota Khidmah Generasi Qur\'ani', canvas.width / 2, canvas.height - 40);
     }
 
     var link = document.createElement('a');
