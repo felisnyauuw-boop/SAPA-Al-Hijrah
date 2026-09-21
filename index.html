@@ -52,6 +52,28 @@
     };
   </script>
 
+  <!-- Emergency Hard-Kill Failsafe: Jaminan Layar Buka Maksimal 3.5 Detik -->
+  <script>
+    window.__loadingScreenDismissed = false;
+    window.dismissLoadingScreen = function() {
+      if (window.__loadingScreenDismissed) return;
+      window.__loadingScreenDismissed = true;
+      var loader = document.getElementById('appLoadingScreen');
+      if (loader) {
+        loader.classList.add('loading-dismissed');
+        setTimeout(function() {
+          loader.style.display = 'none';
+        }, 900);
+      }
+    };
+    setTimeout(function() {
+      if (!window.__loadingScreenDismissed) {
+        console.warn('Failsafe Activated: Layar pemuatan dibuka otomatis.');
+        window.dismissLoadingScreen();
+      }
+    }, 3500);
+  </script>
+
   <?!= include('css'); ?>
 
   <!-- Dual-Mode Loader: Fallback CSS Otomatis untuk Hosting GitHub Pages -->
@@ -59,12 +81,21 @@
     (function() {
       if (typeof google === 'undefined') {
         fetch('css.html')
-          .then(function(res) { return res.text(); })
+          .then(function(res) {
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            return res.text();
+          })
           .then(function(html) {
             var temp = document.createElement('div');
             temp.innerHTML = html;
             var styleEl = temp.querySelector('style');
-            if (styleEl) document.head.appendChild(styleEl);
+            if (styleEl) {
+              document.head.appendChild(styleEl);
+            } else {
+              var newStyle = document.createElement('style');
+              newStyle.textContent = html.replace(/<\/?style[^>]*>/gi, '');
+              document.head.appendChild(newStyle);
+            }
           })
           .catch(function(err) { console.warn('Pemuatan css.html via GitHub:', err); });
       }
@@ -1103,18 +1134,39 @@
     (function() {
       if (typeof google === 'undefined') {
         fetch('js.html')
-          .then(function(res) { return res.text(); })
+          .then(function(res) {
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            return res.text();
+          })
           .then(function(html) {
             var temp = document.createElement('div');
             temp.innerHTML = html;
-            var scriptEl = temp.querySelector('script');
-            if (scriptEl) {
+            var scripts = temp.querySelectorAll('script');
+            if (scripts.length > 0) {
+              scripts.forEach(function(oldScript) {
+                var newScript = document.createElement('script');
+                Array.from(oldScript.attributes).forEach(function(attr) {
+                  newScript.setAttribute(attr.name, attr.value);
+                });
+                newScript.textContent = oldScript.textContent;
+                document.body.appendChild(newScript);
+              });
+            } else {
               var newScript = document.createElement('script');
-              newScript.textContent = scriptEl.textContent;
+              newScript.textContent = html.replace(/<\/?script[^>]*>/gi, '');
               document.body.appendChild(newScript);
             }
+            // Trigger inisialisasi jika DOM sudah siap saat file js.html selesai diunduh
+            if (document.readyState === 'complete' || document.readyState === 'interactive') {
+              window.dispatchEvent(new Event('DOMContentLoaded'));
+            }
           })
-          .catch(function(err) { console.warn('Pemuatan js.html via GitHub:', err); });
+          .catch(function(err) {
+            console.warn('Pemuatan js.html via GitHub:', err);
+            if (typeof window.dismissLoadingScreen === 'function') {
+              window.dismissLoadingScreen();
+            }
+          });
       }
     })();
   </script>
