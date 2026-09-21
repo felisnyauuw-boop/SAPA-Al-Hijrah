@@ -1758,7 +1758,7 @@
     var slotHeight = 368;
     var slotX = (canvas.width - slotWidth) / 2;
     var startY = 165;
-    var gap = 52;
+    var gap = 48;
 
     /* =========================================================================
      * TEMPLATE 1: RETRO VIEWFINDER STUDIO (35MM FILM STRIP) - 100% UTUH
@@ -1852,7 +1852,7 @@
       ctx.fillText('OPTICAL ROLL 026 • BINTUJU TAPSEL', canvas.width / 2, canvas.height - 34);
 
     /* =========================================================================
-     * TEMPLATE 2: BOTANICAL SCRAPBOOK (KREM - STIKER SUDUT ESTETIK)
+     * TEMPLATE 2: BOTANICAL SCRAPBOOK (KREM - STIKER 3D DI SISI & SELA BERSIH)
      * ========================================================================= */
     } else if (template === 'herbarium') {
       ctx.fillStyle = '#f5eee2';
@@ -1890,6 +1890,7 @@
       ctx.font = 'italic 15px "Playfair Display", serif';
       ctx.fillText('Herbarium Journal • Bintuju Tapsel', canvas.width / 2, 116);
 
+      // Render 3 Foto Polarod dengan Sela Bersih Alami (Clean Gap)
       for (var h = 0; h < 3; h++) {
         var yHerb = startY + h * (slotHeight + gap);
         ctx.fillStyle = '#faf7f2';
@@ -1899,33 +1900,33 @@
         ctx.strokeStyle = '#d4c5b2';
         ctx.lineWidth = 2.5;
         ctx.strokeRect(slotX, yHerb, slotWidth, slotHeight);
-
-        // Stiker Sudut Estetik di atas Frame Foto
-        ctx.font = '24px serif';
-        ctx.textAlign = 'center';
-        if (h === 0) {
-          ctx.fillText('🌿', slotX + slotWidth - 22, yHerb + 28);
-        } else if (h === 1) {
-          ctx.fillText('🌻', slotX + 24, yHerb + 28);
-        } else {
-          ctx.fillText('🍂', slotX + slotWidth - 22, yHerb + 28);
-        }
-
-        // Mini Divider Garis Halus & Ikon (Bukan Paragraf Tulisan Tebal)
-        if (h < 2) {
-          var yDivH = yHerb + slotHeight + (gap / 2);
-          ctx.strokeStyle = '#c8b79f';
-          ctx.lineWidth = 1.5;
-          ctx.beginPath(); ctx.moveTo(slotX + 50, yDivH); ctx.lineTo(canvas.width / 2 - 30, yDivH); ctx.stroke();
-          ctx.beginPath(); ctx.moveTo(canvas.width / 2 + 30, yDivH); ctx.lineTo(slotX + slotWidth - 50, yDivH); ctx.stroke();
-
-          ctx.font = '16px serif';
-          ctx.textAlign = 'center';
-          ctx.fillText(h === 0 ? '☕' : '📖', canvas.width / 2, yDivH + 6);
-        }
       }
 
-      // Footer
+      // STIKER 3D POPOUT DI SISI-SISI TERLUAR FRAME (LAYER PALING DEPAN)
+      ctx.save();
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.28)';
+      ctx.shadowBlur = 12;
+      ctx.shadowOffsetX = 3;
+      ctx.shadowOffsetY = 6;
+      ctx.font = '34px serif';
+      ctx.textAlign = 'center';
+
+      // Stiker 1: Daun Zaitun 🌿 di sisi kiri atas frame 1
+      ctx.fillText('🌿', slotX - 10, startY + 28);
+
+      // Stiker 2: Bunga Matahari 🌻 di sisi kanan luar frame 2
+      var yHerbMid = startY + 1 * (slotHeight + gap) + (slotHeight / 2);
+      ctx.fillText('🌻', slotX + slotWidth + 14, yHerbMid);
+
+      // Stiker 3: Kopi Santri ☕ di sisi kiri luar frame 3
+      var yHerbBot = startY + 2 * (slotHeight + gap);
+      ctx.fillText('☕', slotX - 12, yHerbBot + slotHeight - 18);
+
+      // Stiker 4: Daun Gugur 🍂 di sisi kanan luar frame 3
+      ctx.fillText('🍂', slotX + slotWidth + 12, yHerbBot + 40);
+      ctx.restore();
+
+      // Footer Jurnal
       ctx.fillStyle = '#4a3f35';
       ctx.font = 'bold 18px "Playfair Display", serif';
       ctx.textAlign = 'center';
@@ -1936,7 +1937,7 @@
       ctx.fillText('Lembar Khidmah Penghafal Al-Qur\'an', canvas.width / 2, canvas.height - 36);
 
     /* =========================================================================
-     * TEMPLATE 3: THE ROYAL DIPLOMATIC PRESS (NAVY - AKSEN EMAS MEWAH)
+     * TEMPLATE 3: THE ROYAL DIPLOMATIC PRESS (NAVY - STIKER 3D EMAS & SELA BERSIH)
      * ========================================================================= */
     } else {
       ctx.fillStyle = '#071322';
@@ -1967,49 +1968,42 @@
       ctx.font = '700 12px "Plus Jakarta Sans", sans-serif';
       ctx.fillText('THE ROYAL DIPLOMATIC PRESS • 2026', canvas.width / 2, 110);
 
+      // Render 3 Foto Kerajaan dengan Sela Bersih Alami (Clean Gap)
       for (var d = 0; d < 3; d++) {
         var yDip = startY + d * (slotHeight + gap);
         ctx.drawImage(imgs[d], slotX, yDip, slotWidth, slotHeight);
         ctx.strokeStyle = '#f59e0b';
         ctx.lineWidth = 3.5;
         ctx.strokeRect(slotX, yDip, slotWidth, slotHeight);
-
-        // Stiker Emas di Sudut Frame
-        ctx.font = '22px serif';
-        ctx.textAlign = 'center';
-        if (d === 0) {
-          ctx.fillText('✨', slotX + slotWidth - 22, yDip + 28);
-        } else if (d === 1) {
-          ctx.fillText('👑', slotX + 24, yDip + 28);
-        } else {
-          ctx.fillText('⚜️', slotX + slotWidth - 22, yDip + 28);
-        }
-
-        // Hairline Emas Simetris Mewah (Bukan Teks Tebal Memenuhi Ruang)
-        if (d < 2) {
-          var yDivD = yDip + slotHeight + (gap / 2);
-          
-          var goldLineGradL = ctx.createLinearGradient(slotX + 20, yDivD, canvas.width / 2 - 35, yDivD);
-          goldLineGradL.addColorStop(0, 'transparent');
-          goldLineGradL.addColorStop(1, '#f59e0b');
-          ctx.strokeStyle = goldLineGradL;
-          ctx.lineWidth = 1.5;
-          ctx.beginPath(); ctx.moveTo(slotX + 20, yDivD); ctx.lineTo(canvas.width / 2 - 35, yDivD); ctx.stroke();
-
-          var goldLineGradR = ctx.createLinearGradient(canvas.width / 2 + 35, yDivD, slotX + slotWidth - 20, yDivD);
-          goldLineGradR.addColorStop(0, '#f59e0b');
-          goldLineGradR.addColorStop(1, 'transparent');
-          ctx.strokeStyle = goldLineGradR;
-          ctx.beginPath(); ctx.moveTo(canvas.width / 2 + 35, yDivD); ctx.lineTo(slotX + slotWidth - 20, yDivD); ctx.stroke();
-
-          ctx.fillStyle = '#f59e0b';
-          ctx.font = '16px serif';
-          ctx.textAlign = 'center';
-          ctx.fillText('✦', canvas.width / 2, yDivD + 5);
-        }
       }
 
-      // Footer
+      // STIKER 3D POPOUT EMAS DI SISI-SISI TERLUAR FRAME (LAYER PALING DEPAN)
+      ctx.save();
+      ctx.shadowColor = 'rgba(245, 158, 11, 0.75)';
+      ctx.shadowBlur = 14;
+      ctx.shadowOffsetX = 3;
+      ctx.shadowOffsetY = 5;
+      ctx.font = '36px serif';
+      ctx.textAlign = 'center';
+
+      // Stiker 1: Bintang Kilau ✨ di sisi kanan atas frame 1
+      ctx.fillText('✨', slotX + slotWidth + 14, startY + 24);
+
+      // Stiker 2: Mahkota Emas 👑 di sisi kiri luar frame 2
+      var yDipMid = startY + 1 * (slotHeight + gap) + (slotHeight / 2);
+      ctx.fillText('👑', slotX - 14, yDipMid);
+
+      // Stiker 3: Fleur-de-lis ⚜️ di sisi kanan luar frame 3
+      var yDipBot = startY + 2 * (slotHeight + gap);
+      ctx.fillText('⚜️', slotX + slotWidth + 14, yDipBot + slotHeight - 20);
+
+      // Stiker 4: Bintang Khidmah ✦ di sisi kiri luar frame 1
+      ctx.font = '30px serif';
+      ctx.fillStyle = '#f59e0b';
+      ctx.fillText('✦', slotX - 12, startY + 50);
+      ctx.restore();
+
+      // Footer Resmi
       ctx.fillStyle = '#f59e0b';
       ctx.font = 'bold 15px "Cinzel", "Playfair Display", serif';
       ctx.textAlign = 'center';
