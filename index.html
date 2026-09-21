@@ -294,7 +294,7 @@
       </div>
     </section>
 
-    <!-- PAGE 2: PHOTOBOOTH STUDIO (REDESIGNED CREATIVE TEMPLATES) -->
+    <!-- PAGE 2: PHOTOBOOTH STUDIO (REDESIGNED COMPACT TEMPLATES) -->
     <section id="page-photobooth" class="page-section w-full">
       <div class="w-full max-w-2xl flex items-center justify-between px-2 flex-shrink-0">
         <button onclick="exitPhotobooth()" class="w-10 h-10 rounded-full bg-hydrangea-800 hover:bg-hydrangea-900 text-white flex items-center justify-center transition-all shadow-md active:scale-95 flex-shrink-0 cursor-pointer" title="Kembali ke Beranda">
@@ -318,7 +318,7 @@
       <div class="carousel-stage-wrapper">
         <div class="carousel-strip-container" id="carouselStripContainer">
           
-          <!-- Template 1: Retro Camera Studio / Viewfinder Perforated Film Strip -->
+          <!-- Template 1: Retro Camera Studio / Viewfinder Perforated Film Strip (100% UTUH - SUDAH OKEY) -->
           <div id="card-analog" onclick="revolveToTemplate('analog')" class="carousel-strip-item analog-film-theme group">
             <!-- Film Perforation Edge Accents -->
             <div class="film-perforation-strip perf-left"></div>
@@ -337,7 +337,7 @@
               </div>
             </div>
 
-            <!-- Slots dengan Optical Viewfinder Focus Markers (Bukan Emote Berjejer) -->
+            <!-- Slots dengan Optical Viewfinder Focus Markers -->
             <div class="strip-slots-box my-1 px-1 relative z-10">
               <div class="frame-photo-slot haru-polaroid-slot relative group/slot" id="slot-analog-1">
                 <div class="viewfinder-bracket bracket-tl">┌</div>
@@ -388,49 +388,56 @@
             </div>
           </div>
 
-          <!-- Template 2: Sekolah Alam Botanical Scrapbook (Artisan Journal) -->
+          <!-- Template 2: Botanical Scrapbook (KREM - TULISAN PANJANG DIHAPUS, GANTI STIKER ESTETIK) -->
           <div id="card-herbarium" onclick="revolveToTemplate('herbarium')" class="carousel-strip-item herbarium-journal-theme group">
             <!-- Organic Washi Paper Tapes -->
             <div class="washi-tape-strip washi-top-left"></div>
             <div class="washi-tape-strip washi-bottom-right"></div>
             <div class="scrapbook-stamp-seal">POSTAL // 2026</div>
 
-            <div class="text-center pt-2.5 pb-1 relative z-10">
+            <div class="text-center pt-2 pb-0.5 relative z-10">
               <div class="text-[9px] sm:text-[11px] font-serif font-black tracking-wider text-[#3d2e1e] flex items-center justify-center gap-1.5">
                 <span>🌿</span> <span>Sekolah Alam Al Hijrah</span>
               </div>
               <div class="text-[7px] sm:text-[8px] text-[#8c7b6b] font-serif italic">Herbarium Journal • Bintuju Tapsel</div>
             </div>
 
-            <!-- Slots dengan Organic Handscript Quote Dividers (Bukan Emote Berjejer) -->
+            <!-- Slots dengan Stiker Estetik di Sudut (Compact, Tanpa Tulisan Menggunung) -->
             <div class="strip-slots-box my-1 px-1 relative z-10">
-              <div class="frame-photo-slot herbarium-photo-slot" id="slot-herbarium-1"></div>
-              
-              <!-- Divider 1: Handscript Motto Adab -->
-              <div class="herbarium-quote-divider">
-                <span class="h-quote-dash"></span>
-                <span class="h-quote-text">“menabur adab, merawat fitrah”</span>
-                <span class="h-quote-dash"></span>
+              <!-- Slot 1 dengan Pin Daun Estetik -->
+              <div class="frame-photo-slot herbarium-photo-slot relative" id="slot-herbarium-1">
+                <span class="herbarium-corner-sticker sticker-tr" title="Fitrah">🌿</span>
               </div>
               
-              <div class="frame-photo-slot herbarium-photo-slot" id="slot-herbarium-2">
+              <!-- Mini Dashed Botanical Accent (Hanya 6px, Ringan & Manis) -->
+              <div class="herbarium-mini-divider">
+                <span class="h-mini-dash"></span>
+                <span class="h-mini-icon">☕</span>
+                <span class="h-mini-dash"></span>
+              </div>
+              
+              <!-- Slot 2 dengan Pin Bunga Matahari -->
+              <div class="frame-photo-slot herbarium-photo-slot relative" id="slot-herbarium-2">
+                <span class="herbarium-corner-sticker sticker-tl" title="Mekar">🌻</span>
                 <span class="text-xs text-amber-900/70 font-serif italic flex items-center gap-1"><span>Pose 2</span></span>
               </div>
               
-              <!-- Divider 2: Handscript Motto Ilmu -->
-              <div class="herbarium-quote-divider">
-                <span class="h-quote-dash"></span>
-                <span class="h-quote-text">“tumbuh mekar di bumi pesantren”</span>
-                <span class="h-quote-dash"></span>
+              <!-- Mini Dashed Botanical Accent -->
+              <div class="herbarium-mini-divider">
+                <span class="h-mini-dash"></span>
+                <span class="h-mini-icon">📖</span>
+                <span class="h-mini-dash"></span>
               </div>
               
-              <div class="frame-photo-slot herbarium-photo-slot" id="slot-herbarium-3">
+              <!-- Slot 3 dengan Pin Daun Gugur -->
+              <div class="frame-photo-slot herbarium-photo-slot relative" id="slot-herbarium-3">
+                <span class="herbarium-corner-sticker sticker-tr" title="Adab">🍂</span>
                 <span class="text-xs text-amber-900/70 font-serif italic flex items-center gap-1"><span>Pose 3</span></span>
               </div>
             </div>
 
             <!-- Footer: Natural Monogram Signet -->
-            <div class="pt-1.5 pb-1 text-center relative z-10 border-t border-[#d4c5b2]">
+            <div class="pt-1 pb-1 text-center relative z-10 border-t border-[#d4c5b2]">
               <div class="text-[8px] sm:text-[9px] text-[#4a3f35] font-serif font-bold tracking-wider uppercase flex items-center justify-center gap-1">
                 <span>🌾 Catatan Kenangan Santri</span>
               </div>
@@ -438,47 +445,54 @@
             </div>
           </div>
 
-          <!-- Template 3: The Royal Diplomatic & Golden Seal 👑⚜️ -->
+          <!-- Template 3: The Royal Diplomatic (NAVY - TULISAN GEDE DIHAPUS, GANTI MAHKOTA & BINTANG EMAS) -->
           <div id="card-diplomatic" onclick="revolveToTemplate('diplomatic')" class="carousel-strip-item diplomatic-press-theme group">
             <div class="royal-corner-filigree filigree-tl">⚜️</div>
             <div class="royal-corner-filigree filigree-tr">⚜️</div>
 
-            <div class="text-center pt-2 pb-1 relative z-10 border-b border-[#F59E0B]/30">
+            <div class="text-center pt-2 pb-0.5 relative z-10 border-b border-[#F59E0B]/30">
               <div class="inline-flex items-center gap-1 text-[9px] sm:text-[11px] font-serif font-black tracking-widest text-[#F59E0B] uppercase">
                 <span>BES SAPA AL HIJRAH</span>
               </div>
               <div class="text-[7px] sm:text-[8px] text-slate-300 tracking-widest uppercase font-semibold mt-0.5">The Royal Diplomatic Press 2026</div>
             </div>
 
-            <!-- Slots dengan Gold Hairline Motto Dividers (Bukan Emote Berjejer) -->
+            <!-- Slots dengan Aksen Sudut Emas Mewah (Compact, Tanpa Banner Tulisan Tebal) -->
             <div class="strip-slots-box my-1 px-1 relative z-10">
-              <div class="frame-photo-slot royal-gold-slot" id="slot-diplomatic-1"></div>
-              
-              <!-- Divider 1: Diplomatic Gold Hairline Motto -->
-              <div class="royal-motto-divider">
-                <span class="royal-line-left"></span>
-                <span class="royal-motto-badge">ADAB • ILMU • UKHUWAH</span>
-                <span class="royal-line-right"></span>
+              <!-- Slot 1 dengan Bintang Emas Berpendar -->
+              <div class="frame-photo-slot royal-gold-slot relative" id="slot-diplomatic-1">
+                <span class="royal-corner-sticker sticker-tr">✨</span>
               </div>
               
-              <div class="frame-photo-slot royal-gold-slot" id="slot-diplomatic-2">
+              <!-- Hairline Emas Simetris Mewah -->
+              <div class="royal-mini-divider">
+                <span class="royal-mini-line"></span>
+                <span class="royal-mini-star">✦</span>
+                <span class="royal-mini-line"></span>
+              </div>
+              
+              <!-- Slot 2 dengan Mahkota Emas Presidensial -->
+              <div class="frame-photo-slot royal-gold-slot relative" id="slot-diplomatic-2">
+                <span class="royal-corner-sticker sticker-tl">👑</span>
                 <span class="text-xs text-amber-300/80 font-serif italic flex items-center gap-1"><span>Pose 2</span></span>
               </div>
               
-              <!-- Divider 2: Presidential Insignia Hairline -->
-              <div class="royal-motto-divider">
-                <span class="royal-line-left"></span>
-                <span class="royal-motto-badge">KABINET PRESIDENSI 2026</span>
-                <span class="royal-line-right"></span>
+              <!-- Hairline Emas Simetris Mewah -->
+              <div class="royal-mini-divider">
+                <span class="royal-mini-line"></span>
+                <span class="royal-mini-star">✦</span>
+                <span class="royal-mini-line"></span>
               </div>
               
-              <div class="frame-photo-slot royal-gold-slot" id="slot-diplomatic-3">
+              <!-- Slot 3 dengan Segel Khidmah -->
+              <div class="frame-photo-slot royal-gold-slot relative" id="slot-diplomatic-3">
+                <span class="royal-corner-sticker sticker-tr">⚜️</span>
                 <span class="text-xs text-amber-300/80 font-serif italic flex items-center gap-1"><span>Pose 3</span></span>
               </div>
             </div>
 
             <!-- Footer: Diplomatic Seal & Memorabilia Tag -->
-            <div class="pt-1.5 pb-1 text-center relative z-10 border-t border-[#F59E0B]/30 flex flex-col items-center">
+            <div class="pt-1 pb-1 text-center relative z-10 border-t border-[#F59E0B]/30 flex flex-col items-center">
               <div class="inline-flex items-center gap-1.5 text-[8px] sm:text-[9px] text-[#F59E0B] font-serif font-black tracking-widest uppercase">
                 <span>OFFICIAL EXECUTIVE MEMORABILIA</span>
               </div>
@@ -490,7 +504,7 @@
       </div>
 
       <!-- Kontrol Photobooth: Tombol Kamera & Switch -->
-      <div class="w-full max-w-xs mt-2 flex flex-col gap-1.5 items-center flex-shrink-0">
+      <div class="w-full max-w-xs mt-1.5 flex flex-col gap-1.5 items-center flex-shrink-0 z-30">
         <button id="btnStartPhotoSequence" onclick="startPhotoSequence()" disabled class="w-full py-2.5 px-4 rounded-xl bg-slate-300 text-slate-500 font-bold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-not-allowed">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
@@ -1256,7 +1270,6 @@
               newScript.textContent = html.replace(/<\/?script[^>]*>/gi, '');
               document.body.appendChild(newScript);
             }
-            // Trigger inisialisasi jika DOM sudah siap saat file js.html selesai diunduh
             if (document.readyState === 'complete' || document.readyState === 'interactive') {
               window.dispatchEvent(new Event('DOMContentLoaded'));
             }
