@@ -33,9 +33,6 @@
     overflow-x: hidden;
   }
 
-  /* =========================================================================
-     3D CELESTIAL CRYSTAL LOADING SCREEN (1 Tema dengan WebGL Polyhedra)
-     ========================================================================= */
   .celestial-loading-screen {
     position: fixed;
     inset: 0;
@@ -133,8 +130,10 @@
   }
 
   .loading-polyhedron-svg {
-    width: 54px;
-    height: 54px;
+    width: 54px !important;
+    height: 54px !important;
+    max-width: 54px !important;
+    max-height: 54px !important;
     color: #a3caf6;
     filter: drop-shadow(0 0 20px rgba(163, 202, 246, 0.95)) drop-shadow(0 0 8px #ffffff);
   }
@@ -221,25 +220,6 @@
     100% { left: 100%; width: 30%; }
   }
 
-  .loading-status-text {
-    margin-top: 14px;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    color: #cbd5e1;
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
-    z-index: 5;
-    animation: statusBlink 2s ease-in-out infinite alternate;
-  }
-
-  @keyframes statusBlink {
-    0% { opacity: 0.65; }
-    100% { opacity: 1; }
-  }
-
-  /* =========================================================================
-     ATMOSPHERE & ELEMEN UTAMA
-     ========================================================================= */
   .royal-silk-atmosphere {
     position: fixed;
     inset: 0;
@@ -374,9 +354,10 @@
     justify-content: center;
     text-align: center;
     position: relative;
-    padding: 20px 24px;
+    padding: 16px 12px;
     animation: titleBreatheLevitate 6s ease-in-out infinite;
     will-change: transform;
+    max-width: 100vw;
   }
 
   @keyframes titleBreatheLevitate {
@@ -401,8 +382,8 @@
   .title-kicker-bes {
     font-family: 'Cinzel', 'Playfair Display', serif;
     font-weight: 900;
-    font-size: 1.15rem;
-    letter-spacing: 0.48em;
+    font-size: clamp(0.95rem, 3.8vw, 1.65rem);
+    letter-spacing: clamp(0.28em, 1.2vw, 0.56em);
     text-transform: uppercase;
     color: #244b78;
     margin-bottom: 4px;
@@ -414,18 +395,22 @@
   .title-main-alhijrah {
     position: relative;
     display: inline-block;
-    padding: 0 8px;
+    padding: 0 4px;
     z-index: 2;
     margin: 0;
+    white-space: nowrap !important;
+    overflow: visible;
   }
 
+  /* Fluid responsive title: Mengunci kata AL HIJRAH tepat 1 baris di seluruh layar ponsel */
   .title-text-gradient {
     font-family: 'Cinzel', 'Playfair Display', serif;
     font-weight: 900;
-    font-size: 2.85rem;
-    letter-spacing: 0.12em;
+    font-size: clamp(1.85rem, 8.4vw, 5.45rem);
+    letter-spacing: clamp(0.04em, 1.4vw, 0.16em);
     line-height: 1.15;
     text-transform: uppercase;
+    white-space: nowrap !important;
     background: linear-gradient(
       115deg,
       #091524 0%,
@@ -456,14 +441,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 16px;
-    margin-top: 10px;
+    gap: 12px;
+    margin-top: 8px;
     position: relative;
     z-index: 2;
   }
 
   .year-flanking-hairline {
-    width: 36px;
+    width: clamp(24px, 6vw, 80px);
     height: 1.5px;
     background: linear-gradient(90deg, transparent 0%, #f59e0b 100%);
     border-radius: 999px;
@@ -476,28 +461,14 @@
   .title-year-number {
     font-family: 'Cinzel', 'Playfair Display', serif;
     font-weight: 800;
-    font-size: 1.85rem;
-    letter-spacing: 0.38em;
+    font-size: clamp(1.4rem, 5.5vw, 3.35rem);
+    letter-spacing: clamp(0.24em, 1vw, 0.46em);
     line-height: 1;
     color: #1c3b5e;
     background: linear-gradient(135deg, #1c3b5e 0%, #386fa8 60%, #b45309 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     filter: drop-shadow(0 2px 8px rgba(40, 83, 130, 0.22));
-  }
-
-  @media (min-width: 640px) {
-    .title-kicker-bes { font-size: 1.45rem; letter-spacing: 0.52em; }
-    .title-text-gradient { font-size: 4.45rem; letter-spacing: 0.14em; }
-    .title-year-number { font-size: 2.85rem; letter-spacing: 0.42em; }
-    .year-flanking-hairline { width: 56px; height: 2px; }
-  }
-
-  @media (min-width: 1024px) {
-    .title-kicker-bes { font-size: 1.65rem; letter-spacing: 0.56em; }
-    .title-text-gradient { font-size: 5.45rem; letter-spacing: 0.16em; }
-    .title-year-number { font-size: 3.35rem; letter-spacing: 0.46em; }
-    .year-flanking-hairline { width: 80px; height: 2px; }
   }
 
   .kolektiva-vision-title {
@@ -936,31 +907,81 @@
     cursor: default;
   }
 
-  /* Template 1: Haru Sky Pastel */
   .analog-film-theme {
     background: linear-gradient(168deg, #e0f2fe 0%, #bae6fd 45%, #7dd3fc 100%) !important;
-    border: 3.5px solid #38bdf8 !important;
+    border: 3.5px solid #0284c7 !important;
     color: #0c4a6e !important;
-    box-shadow: 0 18px 45px rgba(56, 189, 248, 0.35), 0 0 20px rgba(186, 230, 253, 0.5) !important;
+    box-shadow: 0 18px 45px rgba(2, 132, 199, 0.35), 0 0 20px rgba(186, 230, 253, 0.5) !important;
     overflow: hidden;
   }
 
-  .haru-floating-sparkle {
+  /* Perforasi rol film 35mm di sepanjang tepi kiri dan kanan */
+  .film-perforation-strip {
     position: absolute;
-    font-size: 14px;
+    top: 0;
+    bottom: 0;
+    width: 6px;
+    z-index: 15;
     pointer-events: none;
-    user-select: none;
-    animation: haruSparklePulse 2.8s ease-in-out infinite;
-    z-index: 20;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent 0px,
+      transparent 6px,
+      rgba(14, 74, 110, 0.38) 6px,
+      rgba(14, 74, 110, 0.38) 11px,
+      transparent 11px,
+      transparent 17px
+    );
   }
 
-  .sparkle-tl { top: 6px; left: 8px; animation-delay: 0s; }
-  .sparkle-tr { top: 6px; right: 8px; animation-delay: 0.9s; }
-  .sparkle-br { bottom: 8px; right: 8px; animation-delay: 1.8s; }
+  .perf-left { left: 3px; }
+  .perf-right { right: 3px; }
 
-  @keyframes haruSparklePulse {
-    0%, 100% { transform: scale(0.9) rotate(0deg); opacity: 0.7; }
-    50% { transform: scale(1.2) rotate(12deg); opacity: 1; filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.9)); }
+  /* Siku viewfinder optik di keempat sudut foto */
+  .viewfinder-bracket {
+    position: absolute;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    font-weight: 900;
+    color: #0284c7;
+    z-index: 20;
+    pointer-events: none;
+    line-height: 1;
+    text-shadow: 0 0 4px rgba(255, 255, 255, 0.9);
+  }
+
+  .bracket-tl { top: 3px; left: 4px; }
+  .bracket-tr { top: 3px; right: 4px; }
+  .bracket-bl { bottom: 3px; left: 4px; }
+  .bracket-br { bottom: 3px; right: 4px; }
+
+  /* Pembatas teknis studio: Menggantikan deretan emotikon berjejer */
+  .viewfinder-strip-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin: 3px 0;
+    user-select: none;
+  }
+
+  .viewfinder-strip-divider .vf-line {
+    flex: 1;
+    height: 1px;
+    background: rgba(2, 132, 199, 0.45);
+    border-radius: 999px;
+  }
+
+  .viewfinder-strip-divider .vf-badge {
+    font-size: 7px;
+    color: #0369a1;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    background: rgba(255, 255, 255, 0.85);
+    padding: 1.5px 6px;
+    border-radius: 4px;
+    border: 0.5px solid rgba(2, 132, 199, 0.35);
+    box-shadow: 0 1px 4px rgba(2, 132, 199, 0.12);
   }
 
   .haru-polaroid-slot {
@@ -970,18 +991,6 @@
     box-shadow: 0 4px 12px rgba(14, 165, 233, 0.22) !important;
   }
 
-  .slot-sticker-divider {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    font-size: 9px;
-    margin: 2px 0;
-    user-select: none;
-    opacity: 0.9;
-  }
-
-  /* Template 2: Botanical Scrapbook */
   .herbarium-journal-theme {
     background: radial-gradient(circle at 50% 30%, #fdfbf7 0%, #f5eee2 60%, #eaddcc 100%) !important;
     border: 3.5px solid #c8b79f !important;
@@ -1029,19 +1038,32 @@
     box-shadow: 0 4px 10px rgba(60, 45, 30, 0.12) !important;
   }
 
-  .nature-leaf-divider {
+  /* Pembatas kutipan tulisan tangan: Menggantikan deretan emotikon berjejer */
+  .herbarium-quote-divider {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 6px;
-    font-size: 8px;
-    color: #8c7b6b;
-    font-weight: bold;
-    margin: 2px 0;
+    margin: 3px 0;
     user-select: none;
   }
 
-  /* Template 3: Royal Diplomatic */
+  .herbarium-quote-divider .h-quote-dash {
+    width: 14px;
+    height: 1px;
+    background: #c8b79f;
+    border-radius: 999px;
+  }
+
+  .herbarium-quote-divider .h-quote-text {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 7.5px;
+    font-weight: 600;
+    color: #6b5744;
+    letter-spacing: 0.03em;
+  }
+
   .diplomatic-press-theme {
     background: linear-gradient(180deg, #071322 0%, #0d1e34 50%, #040910 100%) !important;
     border: 3.5px solid #f59e0b !important;
@@ -1070,16 +1092,36 @@
     box-shadow: 0 0 14px rgba(245, 158, 11, 0.22) !important;
   }
 
-  .royal-insignia-divider {
+  /* Pembatas hairline emas kepresidenan: Menggantikan deretan emotikon berjejer */
+  .royal-motto-divider {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 7px;
-    font-size: 8px;
-    color: #f59e0b;
-    margin: 2px 0;
+    gap: 6px;
+    margin: 3px 0;
     user-select: none;
-    text-shadow: 0 0 6px rgba(245, 158, 11, 0.5);
+  }
+
+  .royal-motto-divider .royal-line-left {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(245, 158, 11, 0.75));
+  }
+
+  .royal-motto-divider .royal-line-right {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(245, 158, 11, 0.75), transparent);
+  }
+
+  .royal-motto-divider .royal-motto-badge {
+    font-family: 'Cinzel', 'Playfair Display', serif;
+    font-size: 6.5px;
+    color: #f59e0b;
+    font-weight: 900;
+    letter-spacing: 0.14em;
+    text-shadow: 0 0 8px rgba(245, 158, 11, 0.5);
+    white-space: nowrap;
   }
 
   .strip-slots-box { display: flex; flex-direction: column; gap: 4px; width: 100%; }
@@ -1105,34 +1147,6 @@
   .live-filter-natural { filter: none; }
   .live-filter-warm { filter: sepia(0.2) saturate(1.25) brightness(1.04); }
   .live-filter-noir { filter: grayscale(1) contrast(1.2) brightness(0.96); }
-
-  .camera-filter-pill-bar {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    padding: 3px 6px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.9);
-    border: 1px solid rgba(110, 162, 219, 0.5);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  }
-
-  .filter-pill-btn {
-    padding: 3px 10px;
-    border-radius: 999px;
-    font-size: 10px;
-    font-weight: 800;
-    color: #244b78;
-    transition: all 0.25s ease;
-    cursor: pointer;
-  }
-
-  .filter-pill-btn.active-filter-pill {
-    background: #183354;
-    color: #f59e0b;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-  }
 
   .countdown-badge-overlay {
     position: absolute;
@@ -1229,14 +1243,8 @@
   }
 
   @keyframes detailCurtainIn {
-    0% {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
   }
 
   .news-floating-category-tag {
