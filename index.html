@@ -9,8 +9,8 @@
   <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1y4RKoHXuKXDnBLCs25jomFLXTkyQL7Pw">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Playfair+Display:ital,wght@0,600;0,800;1,600;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Amiri:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Playfair+Display:ital,wght@0,600;0,800;1,600;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Amiri:ital@0;1&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
   <!-- Tailwind CSS Engine -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -27,6 +27,7 @@
             serif: ['"Playfair Display"', 'serif'],
             decorative: ['"Cinzel Decorative"', '"Playfair Display"', 'serif'],
             arabic: ['"Amiri"', 'serif'],
+            mono: ['"Space Mono"', 'monospace'],
           },
           colors: {
             hydrangea: {
@@ -261,9 +262,9 @@
           <!-- Kicker: BES High-Fashion Spacing Dinamis dari Spreadsheet -->
           <div class="title-kicker-bes" id="homeHeroKicker">B E S</div>
 
-          <!-- Main Display: AL HIJRAH Monumental Glyph-Contoured Shimmer Dinamis -->
-          <h1 class="title-main-alhijrah">
-            <span class="title-text-gradient" id="homeHeroTitle">AL HIJRAH</span>
+          <!-- Main Display: AL HIJRAH Terkunci 1 Baris Penuh (Anti-Gepeng & Anti-Wrap) -->
+          <h1 class="title-main-alhijrah whitespace-nowrap overflow-visible">
+            <span class="title-text-gradient whitespace-nowrap select-none" id="homeHeroTitle">AL HIJRAH</span>
           </h1>
 
           <!-- Year: 2026 with Diplomatic Hairline Accent Dinamis -->
@@ -293,7 +294,7 @@
       </div>
     </section>
 
-    <!-- PAGE 2: PHOTOBOOTH STUDIO (NATIVE KAMERA PADA GITHUB PAGES) -->
+    <!-- PAGE 2: PHOTOBOOTH STUDIO (REDESIGNED CREATIVE TEMPLATES) -->
     <section id="page-photobooth" class="page-section w-full">
       <div class="w-full max-w-2xl flex items-center justify-between px-2 flex-shrink-0">
         <button onclick="exitPhotobooth()" class="w-10 h-10 rounded-full bg-hydrangea-800 hover:bg-hydrangea-900 text-white flex items-center justify-center transition-all shadow-md active:scale-95 flex-shrink-0 cursor-pointer" title="Kembali ke Beranda">
@@ -317,80 +318,123 @@
       <div class="carousel-stage-wrapper">
         <div class="carousel-strip-container" id="carouselStripContainer">
           
-          <!-- Template 1: Haru Sky Pastel & Cloud Sparkle ☁️✨ -->
+          <!-- Template 1: Retro Camera Studio / Viewfinder Perforated Film Strip -->
           <div id="card-analog" onclick="revolveToTemplate('analog')" class="carousel-strip-item analog-film-theme group">
-            <div class="haru-floating-sparkle sparkle-tl">✨</div>
-            <div class="haru-floating-sparkle sparkle-tr">☁️</div>
-            <div class="haru-floating-sparkle sparkle-br">🫧</div>
+            <!-- Film Perforation Edge Accents -->
+            <div class="film-perforation-strip perf-left"></div>
+            <div class="film-perforation-strip perf-right"></div>
             
-            <div class="text-center pt-1.5 pb-1 relative z-10">
-              <div class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-white/95 text-[8px] sm:text-[9px] font-black text-sky-600 shadow-sm border border-sky-200 uppercase tracking-wider">
-                <span>☁️</span> <span>HARU SANTRI</span> <span>✨</span>
+            <!-- Viewfinder Studio Header Status -->
+            <div class="pt-2 pb-1 px-3 relative z-10">
+              <div class="flex items-center justify-between font-mono text-[7px] sm:text-[8px] text-sky-900 font-bold uppercase tracking-wider">
+                <span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span> REC 00:26</span>
+                <span class="bg-white/90 px-1.5 py-0.5 rounded text-sky-700 shadow-xs">ISO 400 • F/2.8</span>
               </div>
-              <div class="flex items-center justify-between px-3 mt-1 text-[7px] sm:text-[8px] text-sky-800 font-extrabold">
-                <span>LIFE 4 CUTS 🧸</span>
-                <span class="font-mono bg-white/90 text-sky-700 px-1.5 py-0.5 rounded shadow-xs">'26 09 19</span>
+              <div class="text-center mt-1">
+                <div class="inline-block px-3 py-0.5 rounded-full bg-sky-900 text-white text-[8px] sm:text-[9px] font-mono font-black tracking-widest uppercase shadow-xs">
+                  STUDIO ARCHIVE 2026
+                </div>
               </div>
             </div>
 
+            <!-- Slots dengan Optical Viewfinder Focus Markers (Bukan Emote Berjejer) -->
             <div class="strip-slots-box my-1 px-1 relative z-10">
-              <div class="frame-photo-slot haru-polaroid-slot" id="slot-analog-1"></div>
-              <div class="slot-sticker-divider">
-                <span>✨</span><span>🎀</span><span>☁️</span><span>⭐</span>
+              <div class="frame-photo-slot haru-polaroid-slot relative group/slot" id="slot-analog-1">
+                <div class="viewfinder-bracket bracket-tl">┌</div>
+                <div class="viewfinder-bracket bracket-tr">┐</div>
+                <div class="viewfinder-bracket bracket-bl">└</div>
+                <div class="viewfinder-bracket bracket-br">┘</div>
               </div>
-              <div class="frame-photo-slot haru-polaroid-slot" id="slot-analog-2">
-                <span class="text-xs text-sky-500 font-extrabold flex items-center gap-1"><span>Pose 2</span> <span>🌸</span></span>
+              
+              <!-- Divider 1: Optical Focus Barcode Marker -->
+              <div class="viewfinder-strip-divider">
+                <span class="vf-line"></span>
+                <span class="vf-badge font-mono">[ 02 • FOCUS LOCK ]</span>
+                <span class="vf-line"></span>
               </div>
-              <div class="slot-sticker-divider">
-                <span>🫧</span><span>💖</span><span>✨</span><span>🧸</span>
+              
+              <div class="frame-photo-slot haru-polaroid-slot relative group/slot" id="slot-analog-2">
+                <div class="viewfinder-bracket bracket-tl">┌</div>
+                <div class="viewfinder-bracket bracket-tr">┐</div>
+                <div class="viewfinder-bracket bracket-bl">└</div>
+                <div class="viewfinder-bracket bracket-br">┘</div>
+                <span class="text-xs text-sky-600 font-mono font-bold flex items-center gap-1"><span>Pose 2</span></span>
               </div>
-              <div class="frame-photo-slot haru-polaroid-slot" id="slot-analog-3">
-                <span class="text-xs text-sky-500 font-extrabold flex items-center gap-1"><span>Pose 3</span> <span>⭐</span></span>
+              
+              <!-- Divider 2: Optical Shutter Marker -->
+              <div class="viewfinder-strip-divider">
+                <span class="vf-line"></span>
+                <span class="vf-badge font-mono">[ 03 • EXPOSURE ]</span>
+                <span class="vf-line"></span>
+              </div>
+              
+              <div class="frame-photo-slot haru-polaroid-slot relative group/slot" id="slot-analog-3">
+                <div class="viewfinder-bracket bracket-tl">┌</div>
+                <div class="viewfinder-bracket bracket-tr">┐</div>
+                <div class="viewfinder-bracket bracket-bl">└</div>
+                <div class="viewfinder-bracket bracket-br">┘</div>
+                <span class="text-xs text-sky-600 font-mono font-bold flex items-center gap-1"><span>Pose 3</span></span>
               </div>
             </div>
 
-            <div class="pt-1 text-center relative z-10 border-t border-sky-200/90">
-              <div class="text-[8px] sm:text-[9px] font-black text-sky-900 tracking-wider flex items-center justify-center gap-1">
-                <span>📸</span> <span>BES AL HIJRAH Y2K CUTS</span> <span>🫧</span>
+            <!-- Footer: 35mm Chronicle & Metadata Barcode -->
+            <div class="pt-1.5 pb-1 text-center relative z-10 border-t border-sky-300/80">
+              <div class="text-[8px] sm:text-[9px] font-mono font-black text-sky-950 tracking-wider flex items-center justify-center gap-1.5">
+                <span>BES-ALHIJRAH // 35MM CUTS</span>
               </div>
-              <div class="text-[6px] sm:text-[7px] text-sky-700 font-bold uppercase tracking-widest mt-0.5">SWEET YOUTH MEMORIES • 2026</div>
+              <div class="text-[6px] sm:text-[7px] font-mono text-sky-800 font-semibold tracking-widest mt-0.5 uppercase">
+                OPTICAL ROLL 026 • BINTUJU TAPSEL
+              </div>
             </div>
           </div>
 
-          <!-- Template 2: Sekolah Alam Botanical Scrapbook 🌿🌻 -->
+          <!-- Template 2: Sekolah Alam Botanical Scrapbook (Artisan Journal) -->
           <div id="card-herbarium" onclick="revolveToTemplate('herbarium')" class="carousel-strip-item herbarium-journal-theme group">
+            <!-- Organic Washi Paper Tapes -->
             <div class="washi-tape-strip washi-top-left"></div>
             <div class="washi-tape-strip washi-bottom-right"></div>
-            <div class="scrapbook-stamp-seal">📮 2026</div>
+            <div class="scrapbook-stamp-seal">POSTAL // 2026</div>
 
-            <div class="text-center pt-2 pb-1 relative z-10">
+            <div class="text-center pt-2.5 pb-1 relative z-10">
               <div class="text-[9px] sm:text-[11px] font-serif font-black tracking-wider text-[#3d2e1e] flex items-center justify-center gap-1.5">
-                <span>🌿</span> <span>Sekolah Alam Al Hijrah</span> <span>☕</span>
+                <span>🌿</span> <span>Sekolah Alam Al Hijrah</span>
               </div>
               <div class="text-[7px] sm:text-[8px] text-[#8c7b6b] font-serif italic">Herbarium Journal • Bintuju Tapsel</div>
             </div>
 
+            <!-- Slots dengan Organic Handscript Quote Dividers (Bukan Emote Berjejer) -->
             <div class="strip-slots-box my-1 px-1 relative z-10">
               <div class="frame-photo-slot herbarium-photo-slot" id="slot-herbarium-1"></div>
-              <div class="nature-leaf-divider">
-                <span>🍃</span><span>── ☕ ──</span><span>🌻</span>
+              
+              <!-- Divider 1: Handscript Motto Adab -->
+              <div class="herbarium-quote-divider">
+                <span class="h-quote-dash"></span>
+                <span class="h-quote-text">“menabur adab, merawat fitrah”</span>
+                <span class="h-quote-dash"></span>
               </div>
+              
               <div class="frame-photo-slot herbarium-photo-slot" id="slot-herbarium-2">
-                <span class="text-xs text-amber-900/70 font-serif italic flex items-center gap-1"><span>Pose 2</span> <span>🌿</span></span>
+                <span class="text-xs text-amber-900/70 font-serif italic flex items-center gap-1"><span>Pose 2</span></span>
               </div>
-              <div class="nature-leaf-divider">
-                <span>📖</span><span>── 🍂 ──</span><span>🌱</span>
+              
+              <!-- Divider 2: Handscript Motto Ilmu -->
+              <div class="herbarium-quote-divider">
+                <span class="h-quote-dash"></span>
+                <span class="h-quote-text">“tumbuh mekar di bumi pesantren”</span>
+                <span class="h-quote-dash"></span>
               </div>
+              
               <div class="frame-photo-slot herbarium-photo-slot" id="slot-herbarium-3">
-                <span class="text-xs text-amber-900/70 font-serif italic flex items-center gap-1"><span>Pose 3</span> <span>🍂</span></span>
+                <span class="text-xs text-amber-900/70 font-serif italic flex items-center gap-1"><span>Pose 3</span></span>
               </div>
             </div>
 
-            <div class="pt-1 text-center relative z-10 border-t border-[#d4c5b2]">
-              <div class="text-[8px] sm:text-[9px] text-[#4a3f35] font-black tracking-wider uppercase flex items-center justify-center gap-1">
-                <span>🌾</span> <span>Catatan Kenangan Santri</span> <span>🍃</span>
+            <!-- Footer: Natural Monogram Signet -->
+            <div class="pt-1.5 pb-1 text-center relative z-10 border-t border-[#d4c5b2]">
+              <div class="text-[8px] sm:text-[9px] text-[#4a3f35] font-serif font-bold tracking-wider uppercase flex items-center justify-center gap-1">
+                <span>🌾 Catatan Kenangan Santri</span>
               </div>
-              <div class="text-[6px] sm:text-[7px] text-[#8c7b6b] font-medium">Mekar Bertumbuh di Bumi Pesantren</div>
+              <div class="text-[6px] sm:text-[7px] text-[#8c7b6b] font-medium italic">Lembar Khidmah Penghafal Al-Qur'an</div>
             </div>
           </div>
 
@@ -401,38 +445,51 @@
 
             <div class="text-center pt-2 pb-1 relative z-10 border-b border-[#F59E0B]/30">
               <div class="inline-flex items-center gap-1 text-[9px] sm:text-[11px] font-serif font-black tracking-widest text-[#F59E0B] uppercase">
-                <span>👑</span> <span>BES SAPA AL HIJRAH</span> <span>🏛️</span>
+                <span>BES SAPA AL HIJRAH</span>
               </div>
               <div class="text-[7px] sm:text-[8px] text-slate-300 tracking-widest uppercase font-semibold mt-0.5">The Royal Diplomatic Press 2026</div>
             </div>
 
+            <!-- Slots dengan Gold Hairline Motto Dividers (Bukan Emote Berjejer) -->
             <div class="strip-slots-box my-1 px-1 relative z-10">
               <div class="frame-photo-slot royal-gold-slot" id="slot-diplomatic-1"></div>
-              <div class="royal-insignia-divider">
-                <span>⭐</span><span>⚜️</span><span>👑</span><span>⚜️</span><span>⭐</span>
+              
+              <!-- Divider 1: Diplomatic Gold Hairline Motto -->
+              <div class="royal-motto-divider">
+                <span class="royal-line-left"></span>
+                <span class="royal-motto-badge">ADAB • ILMU • UKHUWAH</span>
+                <span class="royal-line-right"></span>
               </div>
+              
               <div class="frame-photo-slot royal-gold-slot" id="slot-diplomatic-2">
-                <span class="text-xs text-amber-300/80 font-serif italic flex items-center gap-1"><span>Pose 2</span> <span>💎</span></span>
+                <span class="text-xs text-amber-300/80 font-serif italic flex items-center gap-1"><span>Pose 2</span></span>
               </div>
-              <div class="royal-insignia-divider">
-                <span>🎖️</span><span>⚜️</span><span>⭐</span><span>⚜️</span><span>🎖️</span>
+              
+              <!-- Divider 2: Presidential Insignia Hairline -->
+              <div class="royal-motto-divider">
+                <span class="royal-line-left"></span>
+                <span class="royal-motto-badge">KABINET PRESIDENSI 2026</span>
+                <span class="royal-line-right"></span>
               </div>
+              
               <div class="frame-photo-slot royal-gold-slot" id="slot-diplomatic-3">
-                <span class="text-xs text-amber-300/80 font-serif italic flex items-center gap-1"><span>Pose 3</span> <span>👑</span></span>
+                <span class="text-xs text-amber-300/80 font-serif italic flex items-center gap-1"><span>Pose 3</span></span>
               </div>
             </div>
 
-            <div class="pt-1.5 text-center relative z-10 border-t border-[#F59E0B]/30 flex flex-col items-center">
+            <!-- Footer: Diplomatic Seal & Memorabilia Tag -->
+            <div class="pt-1.5 pb-1 text-center relative z-10 border-t border-[#F59E0B]/30 flex flex-col items-center">
               <div class="inline-flex items-center gap-1.5 text-[8px] sm:text-[9px] text-[#F59E0B] font-serif font-black tracking-widest uppercase">
-                <span>⚜️</span> <span>ADAB • ILMU • UKHUWAH</span> <span>⚜️</span>
+                <span>OFFICIAL EXECUTIVE MEMORABILIA</span>
               </div>
-              <div class="text-[6px] sm:text-[7px] text-slate-400 tracking-wider uppercase mt-0.5">Official Executive Memorabilia</div>
+              <div class="text-[6px] sm:text-[7px] text-slate-400 tracking-wider uppercase mt-0.5">Mahkota Khidmah Generasi Qur'ani</div>
             </div>
           </div>
 
         </div>
       </div>
 
+      <!-- Kontrol Photobooth: Tombol Kamera & Switch -->
       <div class="w-full max-w-xs mt-2 flex flex-col gap-1.5 items-center flex-shrink-0">
         <button id="btnStartPhotoSequence" onclick="startPhotoSequence()" disabled class="w-full py-2.5 px-4 rounded-xl bg-slate-300 text-slate-500 font-bold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-not-allowed">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
