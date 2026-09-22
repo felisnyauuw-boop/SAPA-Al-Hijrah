@@ -5,7 +5,8 @@
    * File: js.html
    * Terintegrasi: Loading Screen 3D Celestial Crystal, REST API Fetcher,
    * Native Photobooth WebCam (Aspect-Ratio Center-Crop Anti-Gepeng),
-   * Universal ArcTo Rounded Canvas Engine, & 7 Sheet Tematik.
+   * Universal ArcTo Rounded Canvas Engine, Audio BGM Controller,
+   * YouTube Channels Sync, & 8 Sheet Tematik (Termasuk KEGIATAN).
    * =========================================================================
    */
 
@@ -24,7 +25,12 @@
     pendidikan: [],
     programUnggulan: [],
     visiMisi: { visi: null, misi: [] },
+    kegiatan: [],
     news: { items: [], activeArticleId: null },
+    audio: {
+      isPlaying: false,
+      player: null
+    },
     photobooth: {
       stream: null,
       facingMode: 'user',
@@ -144,9 +150,7 @@
       { type: 'icosa', radius: 28 * scaleFactor, norm: [-0.22, -0.42, -140], color: 0xdbeafe, rotSpeed: [-0.008, 0.006, 0.005], floatAmp: 10, floatFreq: 1.3 },
       { type: 'icosa', radius: 38 * scaleFactor, norm: [0.44, -0.08, -60], color: 0x244b78, rotSpeed: [0.005, -0.008, 0.006], floatAmp: 14, floatFreq: 0.9 },
       { type: 'octa', radius: 42 * scaleFactor, norm: [0.38, -0.32, -100], color: 0xf0f7ff, rotSpeed: [-0.007, 0.006, -0.007], floatAmp: 15, floatFreq: 1.05 },
-      { type: 'dodeca', radius: 30 * scaleFactor, norm: [0.22, -0.42, -130], color: 0xdbeafe, rotSpeed: [0.009, -0.005, 0.006], floatAmp: 11, floatFreq: 1.15 },
-      { type: 'tetra', radius: 22 * scaleFactor, norm: [-0.15, 0.32, -320], color: 0x386fa8, rotSpeed: [0.004, 0.005, 0.004], floatAmp: 9, floatFreq: 0.6 },
-      { type: 'octa', radius: 24 * scaleFactor, norm: [0.15, 0.32, -310], color: 0x1c3b5e, rotSpeed: [-0.005, 0.006, -0.004], floatAmp: 9, floatFreq: 0.65 }
+      { type: 'dodeca', radius: 30 * scaleFactor, norm: [0.22, -0.42, -130], color: 0xdbeafe, rotSpeed: [0.009, -0.005, 0.006], floatAmp: 11, floatFreq: 1.15 }
     ];
 
     for (var i = 0; i < polyConfigs.length; i++) {
@@ -352,6 +356,66 @@
     }
 
     threeEngine.renderer.render(threeEngine.scene, threeEngine.camera);
+  }
+
+  function formatDropboxAudioUrl(url) {
+    if (!url) return '';
+    var s = String(url).trim();
+    if (s.indexOf('dropbox.com') !== -1) {
+      if (s.indexOf('dl=0') !== -1) {
+        s = s.replace('dl=0', 'dl=1');
+      } else if (s.indexOf('dl=1') === -1 && s.indexOf('raw=1') === -1) {
+        s += (s.indexOf('?') === -1 ? '?' : '&') + 'dl=1';
+      }
+    }
+    return s;
+  }
+
+  function initBackgroundAudioPlayer() {
+    var player = document.getElementById('bgmAudioPlayer');
+    if (!player) return;
+
+    var rawUrl = (appState.infoWeb && appState.infoWeb.LINK_AUDIO_BGM) ? appState.infoWeb.LINK_AUDIO_BGM : 'https://www.dropbox.com/scl/fi/txgkrlcpo5q0sf5x245v5/VID-20260921-WA0115.mp3?rlkey=sycb0et2f7gdrz6rtag69xweb&st=ukfxycxy&dl=1';
+    var streamUrl = formatDropboxAudioUrl(rawUrl);
+
+    player.src = streamUrl;
+    player.volume = 0.65;
+    // Jaminan: TIDAK MEMUTAR OTOMATIS (NO AUTOPLAY)
+  }
+
+  function toggleBgmPlayPause() {
+    var player = document.getElementById('bgmAudioPlayer');
+    var capsule = document.getElementById('btnToggleBgm');
+    var playIcon = document.getElementById('audioIconPlay');
+    var pauseIcon = document.getElementById('audioIconPause');
+
+    if (!player) return;
+
+    if (!player.src || player.src === window.location.href) {
+      var rawUrl = (appState.infoWeb && appState.infoWeb.LINK_AUDIO_BGM) ? appState.infoWeb.LINK_AUDIO_BGM : 'https://www.dropbox.com/scl/fi/txgkrlcpo5q0sf5x245v5/VID-20260921-WA0115.mp3?rlkey=sycb0et2f7gdrz6rtag69xweb&st=ukfxycxy&dl=1';
+      player.src = formatDropboxAudioUrl(rawUrl);
+    }
+
+    if (player.paused) {
+      var playPromise = player.play();
+      if (playPromise !== undefined) {
+        playPromise.then(function() {
+          if (capsule) capsule.classList.add('is-playing');
+          if (playIcon) playIcon.classList.add('hidden');
+          if (pauseIcon) pauseIcon.classList.remove('hidden');
+          showToast('Memutar Musik Latar Santri 🎵', 'success');
+        }).catch(function(err) {
+          console.warn('Playback gesture requirement:', err);
+          showToast('Ketuk sekali lagi untuk memutar audio.', 'warning');
+        });
+      }
+    } else {
+      player.pause();
+      if (capsule) capsule.classList.remove('is-playing');
+      if (playIcon) playIcon.classList.remove('hidden');
+      if (pauseIcon) pauseIcon.classList.add('hidden');
+      showToast('Musik dijeda ⏸️', 'info');
+    }
   }
 
   function formatGoogleDriveImageUrl(url) {
@@ -907,6 +971,62 @@
     container.innerHTML = html;
   }
 
+  var KEGIATAN_ICON_MAP = {
+    penulisan: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>',
+    vokal: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>',
+    desain: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>',
+    sanggar: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>',
+    orasi: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/></svg>',
+    mtq: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>',
+    default: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>'
+  };
+
+  function renderKegiatanSantriSection() {
+    var container = document.getElementById('kegiatanSantriGridContainer');
+    if (!container) return;
+
+    var list = appState.kegiatan || [];
+    if (!list || list.length === 0) {
+      list = [
+        { no: '01', title: 'Penerbitan Karya Tulis', desc: 'Wadah literasi santri dalam melahirkan karya tulis ilmiah, opini, antologi puisi, riset turots islami, dan penerbitan buletin berkala pesantren.', badge: 'LITERASI & RISET', icon: 'penulisan' },
+        { no: '02', title: 'Voice Club', desc: 'Pengembangan olah vokal santri, teknik pernafasan, paduan suara islami, nasyid acapella, serta seni lantunan syair syiar dakwah kontemporer.', badge: 'SENI SUARA & NASYID', icon: 'vokal' },
+        { no: '03', title: 'Desain Grafis', desc: 'Eksplorasi kreativitas digital santri, penguasaan perangkat lunak desain, tipografi, pembuatan poster dakwah, dan publikasi visual media sosial.', badge: 'KREATIF & MULTIMEDIA', icon: 'desain' },
+        { no: '04', title: 'Sanggar Jalahan Poda', desc: 'Wadah pelestarian kearifan lokal Tapanuli Selatan, pengenalan sastra dan falsafah adat Dalihan Na Tolu yang diselaraskan dengan keluhuran adab santri.', badge: 'BUDAYA & KEARIFAN LOKAL', icon: 'sanggar' },
+        { no: '05', title: 'Pengembangan Public Speaking', desc: 'Pelatihan orasi dan retorika tiga bahasa (Bahasa Arab, Inggris, Indonesia), khutbah jum\'at, teknik presentasi, serta diplomasi kepemimpinan santri.', badge: 'KEPEMIMPINAN & DIPLOMASI', icon: 'orasi' },
+        { no: '06', title: 'Pengembangan Musabaqah Tilawatil Quran', desc: 'Pembinaan intensif seni baca Al-Qur\'an, penguasaan kaidah tajwid tingkat lanjut, fashahah, variasi naghom/lagu maqam, dan persiapan kafilah MTQ.', badge: 'SYIAR QUR\'ANI', icon: 'mtq' }
+      ];
+    }
+
+    var html = '';
+    for (var i = 0; i < list.length; i++) {
+      var item = list[i];
+      var iconSvg = KEGIATAN_ICON_MAP[item.icon] || KEGIATAN_ICON_MAP.default;
+      var numLabel = item.no || (i + 1 < 10 ? '0' + (i + 1) : String(i + 1));
+
+      html += '<div class="kegiatan-santri-card group scroll-reveal">' +
+        '<div class="kegiatan-no-watermark">' + numLabel + '</div>' +
+        '<div>' +
+          '<div class="kegiatan-icon-capsule">' +
+            iconSvg +
+          '</div>' +
+          '<span class="kegiatan-badge-pill">' + (item.badge || 'WADAH SANTRI') + '</span>' +
+          '<h4 class="text-base sm:text-lg font-black text-hydrangea-950 mt-1 mb-2.5 leading-snug">' +
+            item.title +
+          '</h4>' +
+          '<p class="text-xs sm:text-sm text-slate-600 font-medium leading-relaxed">' +
+            item.desc +
+          '</p>' +
+        '</div>' +
+        '<div class="pt-4 mt-4 border-t border-hydrangea-100 flex items-center justify-between text-[11px] font-bold text-hydrangea-800">' +
+          '<span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-hydrangea-600"></span> SAPA AL HIJRAH</span>' +
+          '<span class="text-hydrangea-500 font-mono tracking-wider">#' + numLabel + '</span>' +
+        '</div>' +
+      '</div>';
+    }
+
+    container.innerHTML = html;
+  }
+
   function applyLoadedData(data) {
     appState.infoWeb = data.infoWeb || data.config || {};
     appState.sambutan = data.sambutan || data.speech || [];
@@ -914,6 +1034,7 @@
     appState.pendidikan = data.pendidikan || [];
     appState.programUnggulan = data.programUnggulan || [];
     appState.visiMisi = data.visiMisi || { visi: null, misi: [] };
+    appState.kegiatan = data.kegiatan || [];
 
     if (data.warta && Array.isArray(data.warta)) {
       appState.news.items = data.warta;
@@ -930,6 +1051,8 @@
     renderPendidikanSection();
     renderProgramUnggulanSection();
     renderVisiMisiSection();
+    renderKegiatanSantriSection();
+    initBackgroundAudioPlayer();
 
     var topSlot = document.getElementById('presidiumTopSlot');
     var presidiumBox = document.getElementById('presidiumShowcaseBox');
@@ -968,7 +1091,10 @@
         LINK_WHATSAPP: 'https://wa.me/6281234567890',
         LINK_INSTAGRAM: 'https://instagram.com',
         LINK_FACEBOOK: 'https://facebook.com',
-        EMAIL_RESMI: 'alhijrahb7@gmail.com'
+        EMAIL_RESMI: 'alhijrahb7@gmail.com',
+        LINK_AUDIO_BGM: 'https://www.dropbox.com/scl/fi/txgkrlcpo5q0sf5x245v5/VID-20260921-WA0115.mp3?rlkey=sycb0et2f7gdrz6rtag69xweb&st=ukfxycxy&dl=1',
+        LINK_YOUTUBE_1: 'https://youtube.com/@aqilatv873?si=Gp8Gi5kSEVseyD3_',
+        LINK_YOUTUBE_2: 'https://youtube.com/@al-hijrahb7chanel23?si=MBf2mKyBoqPgwQ1G'
       },
       sambutan: [
         {
@@ -1027,6 +1153,14 @@
         { ministry: 'Kementerian Sarana & Prasarana', desc: 'Memelihara sarana prasarana...', icon: 'sarpras', position: 'Menteri', name: 'Salsa', order: 8 },
         { ministry: 'Kementerian Kesehatan', desc: 'Menjaga kesehatan fisik santri...', icon: 'kesehatan', position: 'Menteri', name: 'Safa', order: 9 },
         { ministry: 'Kementerian Komunikasi & Hubungan Masyarakat', desc: 'Menjadi corong syiar...', icon: 'kominfo', position: 'Menteri', name: 'Salsabila', order: 10 }
+      ],
+      kegiatan: [
+        { no: '01', title: 'Penerbitan Karya Tulis', desc: 'Wadah literasi santri dalam melahirkan karya tulis ilmiah, opini, antologi puisi, riset turots islami, dan penerbitan buletin berkala pesantren.', badge: 'LITERASI & RISET', icon: 'penulisan' },
+        { no: '02', title: 'Voice Club', desc: 'Pengembangan olah vokal santri, teknik pernafasan, paduan suara islami, nasyid acapella, serta seni lantunan syair syiar dakwah kontemporer.', badge: 'SENI SUARA & NASYID', icon: 'vokal' },
+        { no: '03', title: 'Desain Grafis', desc: 'Eksplorasi kreativitas digital santri, penguasaan perangkat lunak desain, tipografi, pembuatan poster dakwah, dan publikasi visual media sosial.', badge: 'KREATIF & MULTIMEDIA', icon: 'desain' },
+        { no: '04', title: 'Sanggar Jalahan Poda', desc: 'Wadah pelestarian kearifan lokal Tapanuli Selatan, pengenalan sastra dan falsafah adat Dalihan Na Tolu yang diselaraskan dengan keluhuran adab santri.', badge: 'BUDAYA & KEARIFAN LOKAL', icon: 'sanggar' },
+        { no: '05', title: 'Pengembangan Public Speaking', desc: 'Pelatihan orasi dan retorika tiga bahasa (Bahasa Arab, Inggris, Indonesia), khutbah jum\'at, teknik presentasi, serta diplomasi kepemimpinan santri.', badge: 'KEPEMIMPINAN & DIPLOMASI', icon: 'orasi' },
+        { no: '06', title: 'Pengembangan Musabaqah Tilawatil Quran', desc: 'Pembinaan intensif seni baca Al-Qur\'an, penguasaan kaidah tajwid tingkat lanjut, fashahah, variasi naghom/lagu maqam, dan persiapan kafilah MTQ.', badge: 'SYIAR QUR\'ANI', icon: 'mtq' }
       ]
     };
     applyLoadedData(fallback);
@@ -1131,6 +1265,10 @@
 
     setElementHrefSafely('footerFbBtn', info.LINK_FACEBOOK);
     setElementHrefSafely('footerIgBtn', info.LINK_INSTAGRAM);
+
+    // Dua Tautan Resmi YouTube Channel
+    setElementHrefSafely('footerYt1Btn', info.LINK_YOUTUBE_1 || 'https://youtube.com/@aqilatv873?si=Gp8Gi5kSEVseyD3_');
+    setElementHrefSafely('footerYt2Btn', info.LINK_YOUTUBE_2 || 'https://youtube.com/@al-hijrahb7chanel23?si=MBf2mKyBoqPgwQ1G');
 
     var rawEmail = info.EMAIL_RESMI || 'alhijrahb7@gmail.com';
     var cleanEmail = String(rawEmail).replace(/^mailto:/i, '').trim();
@@ -1751,10 +1889,6 @@
     }
   }
 
-  /**
-   * Helper Universal ArcTo: Menggambar Jalur Persegi Panjang Membulat (Rounded Rect)
-   * 100% Kompatibel di seluruh peramban HP & Desktop tanpa pernah menghasilkan kotak petak kaku
-   */
   function drawRoundedRectPath(ctx, x, y, width, height, radius) {
     ctx.beginPath();
     var r = radius;
@@ -1768,9 +1902,6 @@
     ctx.closePath();
   }
 
-  /**
-   * Helper Universal: Memotong & Menggambar Foto dengan Sudut Membulat Halus (Rounded Photo)
-   */
   function drawRoundedImage(ctx, img, x, y, width, height, radius) {
     ctx.save();
     drawRoundedRectPath(ctx, x, y, width, height, radius);
@@ -1779,10 +1910,6 @@
     ctx.restore();
   }
 
-  /**
-   * Engine Ekspor Kanvas Resolusi Tinggi:
-   * Distribusi Vertikal Merata (Anti-Bolong Bawah), Bingkai Artistik, Tanpa Emote, & True WYSIWYG
-   */
   function renderFinalExportCanvas(ctx, canvas, template, imgs) {
     // Dimensi slot foto besar & proporsional yang mengisi tinggi strip secara harmonis
     var slotWidth = 500;
@@ -1792,9 +1919,7 @@
     var gap = 42;
     var photoRadius = 18;
 
-    /* =========================================================================
-     * TEMPLATE 1: RETRO VIEWFINDER STUDIO (35MM FILM STRIP) - 100% UTUH
-     * ========================================================================= */
+    /* TEMPLATE 1: RETRO VIEWFINDER STUDIO (35MM FILM STRIP) */
     if (template === 'analog') {
       var skyGrad = ctx.createLinearGradient(0, 0, 0, canvas.height);
       skyGrad.addColorStop(0, '#e0f2fe');
@@ -1892,9 +2017,7 @@
       ctx.font = '700 15px monospace';
       ctx.fillText('OPTICAL ROLL 026 • BINTUJU TAPSEL', canvas.width / 2, 1565);
 
-    /* =========================================================================
-     * TEMPLATE 2: BOTANICAL SCRAPBOOK (KREM - ALBUM ANTIK DENGAN SIKU PENYANGGA FOTO)
-     * ========================================================================= */
+    /* TEMPLATE 2: BOTANICAL SCRAPBOOK (KREM - ALBUM ANTIK DENGAN SIKU PENYANGGA FOTO) */
     } else if (template === 'herbarium') {
       ctx.fillStyle = '#f5eee2';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -2005,9 +2128,7 @@
       ctx.font = 'italic 17px "Playfair Display", Georgia, serif';
       ctx.fillText('Lembar Khidmah Penghafal Al-Qur\'an', canvas.width / 2, 1550);
 
-    /* =========================================================================
-     * TEMPLATE 3: THE ROYAL DIPLOMATIC PRESS (NAVY - LIS BEVELED EMAS & ORNAMEN SUDUT KERAJAAN)
-     * ========================================================================= */
+    /* TEMPLATE 3: THE ROYAL DIPLOMATIC PRESS (NAVY - LIS BEVELED EMAS & ORNAMEN SUDUT KERAJAAN) */
     } else {
       ctx.fillStyle = '#071322';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
