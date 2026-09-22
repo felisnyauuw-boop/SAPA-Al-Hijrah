@@ -403,10 +403,9 @@
           if (capsule) capsule.classList.add('is-playing');
           if (playIcon) playIcon.classList.add('hidden');
           if (pauseIcon) pauseIcon.classList.remove('hidden');
-          showToast('Memutar Musik Latar Santri 🎵', 'success');
+          // Notifikasi dinonaktifkan sesuai permintaan pengguna
         }).catch(function(err) {
           console.warn('Playback gesture requirement:', err);
-          showToast('Ketuk sekali lagi untuk memutar audio.', 'warning');
         });
       }
     } else {
@@ -414,7 +413,7 @@
       if (capsule) capsule.classList.remove('is-playing');
       if (playIcon) playIcon.classList.remove('hidden');
       if (pauseIcon) pauseIcon.classList.add('hidden');
-      showToast('Musik dijeda ⏸️', 'info');
+      // Notifikasi dinonaktifkan sesuai permintaan pengguna
     }
   }
 
@@ -1266,7 +1265,7 @@
     setElementHrefSafely('footerFbBtn', info.LINK_FACEBOOK);
     setElementHrefSafely('footerIgBtn', info.LINK_INSTAGRAM);
 
-    // Dua Tautan Resmi YouTube Channel
+    // Dua Tautan Resmi YouTube Channel dari Spreadsheet
     setElementHrefSafely('footerYt1Btn', info.LINK_YOUTUBE_1 || 'https://youtube.com/@aqilatv873?si=Gp8Gi5kSEVseyD3_');
     setElementHrefSafely('footerYt2Btn', info.LINK_YOUTUBE_2 || 'https://youtube.com/@al-hijrahb7chanel23?si=MBf2mKyBoqPgwQ1G');
 
