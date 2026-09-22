@@ -523,7 +523,7 @@
       <div id="cameraFlash" class="hidden fixed inset-0 pointer-events-none bg-white z-50"></div>
     </section>
 
-    <!-- PAGE 3: TENTANG (ABOUT) - 100% UTUH -->
+    <!-- PAGE 3: TENTANG (ABOUT) - DILENGKAPI WADAH DINAMIS KEGIATAN SANTRI -->
     <section id="page-about" class="page-section w-full flex-col max-w-6xl mx-auto px-4 sm:px-6 pt-24 sm:pt-28 pb-20">
       
       <!-- 1. VISI UTAMA (DARI SHEET VISI_MISI) -->
@@ -776,7 +776,7 @@
       </div>
 
       <!-- 5. SANTREPRENEUR & KEMITRAAN (DARI SHEET PROGRAM_UNGGULAN) -->
-      <div class="scroll-reveal grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
+      <div class="scroll-reveal grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch mb-20">
         <div class="editorial-feature-card flex flex-col justify-between">
           <div>
             <div class="flex items-center justify-between mb-4">
@@ -826,6 +826,31 @@
             <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-hydrangea-50 text-hydrangea-900 border border-hydrangea-200" id="aboutPartTag1">Edukasi Lingkungan</span>
             <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-hydrangea-50 text-hydrangea-900 border border-hydrangea-200" id="aboutPartTag2">Pengabdian Kampus</span>
             <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-hydrangea-50 text-hydrangea-900 border border-hydrangea-200" id="aboutPartTag3">Potensi Tapanuli Selatan</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. WADAH PENGEMBANGAN POTENSI & KEGIATAN SANTRI (DARI SHEET KEGIATAN - DINAMIS) -->
+      <div class="scroll-reveal pt-14 border-t border-hydrangea-200">
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-8 pb-3 border-b border-hydrangea-200 gap-2">
+          <div>
+            <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-[11px] font-black bg-hydrangea-100 text-hydrangea-800 border border-hydrangea-300 w-max mb-2 uppercase tracking-widest">
+              RUANG EKSPLORASI & MINAT BAKAT
+            </div>
+            <h3 class="text-2xl sm:text-3xl font-black text-hydrangea-950 tracking-tight">
+              Kegiatan & Wadah Santri
+            </h3>
+          </div>
+          <span class="text-xs font-semibold text-slate-500">
+            Pemberdayaan Karakter & Kepemimpinan
+          </span>
+        </div>
+
+        <!-- Wadah Grid Dinamis Kolom Kegiatan -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="kegiatanSantriGridContainer">
+          <!-- Diisi otomatis oleh JavaScript dari Sheet KEGIATAN -->
+          <div class="p-6 rounded-2xl bg-white/90 border border-hydrangea-200 shadow-sm animate-pulse text-xs text-slate-400">
+            Menyiapkan kegiatan santri...
           </div>
         </div>
       </div>
@@ -1095,7 +1120,7 @@
 
   </main>
 
-  <!-- GLOBAL FOOTER DINAMIS - 100% UTUH -->
+  <!-- GLOBAL FOOTER DINAMIS - DENGAN 2 LINK YOUTUBE RESMI -->
   <footer id="mainGlobalFooter" class="hidden w-full bg-gradient-to-b from-[#0c1b2e] to-[#060e18] text-white relative overflow-hidden border-t-2 border-hydrangea-700/60 transition-all duration-300">
     
     <div class="footer-giant-watermark select-none pointer-events-none">
@@ -1167,7 +1192,7 @@
           </ul>
         </div>
 
-        <!-- KOLOM 3: Ikuti Kami -->
+        <!-- KOLOM 3: Ikuti Kami (DENGAN 2 TOMBOL YOUTUBE RESMI) -->
         <div class="md:col-span-3 lg:col-span-4">
           <h4 class="text-sm font-black tracking-widest text-white uppercase mb-5 flex items-center gap-2">
             <span class="w-1.5 h-3.5 bg-hydrangea-400 rounded-full"></span>
@@ -1176,7 +1201,7 @@
           <p class="text-xs text-slate-300 leading-relaxed mb-4">
             Terhubung langsung dengan aktivitas, prestasi, dan syiar santri Sekolah Alam Penghafal Al-Quran Al HIJRAH (SAPA AL HIJRAH).
           </p>
-          <div class="flex items-center gap-3">
+          <div class="flex flex-wrap items-center gap-3">
             <a id="footerFbBtn" href="https://facebook.com" target="_blank" rel="noopener noreferrer" class="footer-social-btn" title="Facebook Resmi">
               <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/>
@@ -1186,6 +1211,20 @@
             <a id="footerIgBtn" href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="footer-social-btn" title="Instagram Resmi">
               <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+              </svg>
+            </a>
+
+            <!-- Tombol YouTube Channel 1: Aqila TV -->
+            <a id="footerYt1Btn" href="https://youtube.com/@aqilatv873?si=Gp8Gi5kSEVseyD3_" target="_blank" rel="noopener noreferrer" class="footer-social-btn group/yt1" title="YouTube: Aqila TV">
+              <svg class="w-4 h-4 text-red-500 group-hover/yt1:text-white transition-colors" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+              </svg>
+            </a>
+
+            <!-- Tombol YouTube Channel 2: Al-Hijrah B7 Chanel -->
+            <a id="footerYt2Btn" href="https://youtube.com/@al-hijrahb7chanel23?si=MBf2mKyBoqPgwQ1G" target="_blank" rel="noopener noreferrer" class="footer-social-btn group/yt2" title="YouTube: Al-Hijrah B7 Chanel">
+              <svg class="w-4 h-4 text-red-500 group-hover/yt2:text-white transition-colors" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
               </svg>
             </a>
 
@@ -1217,6 +1256,37 @@
     </div>
   </footer>
 
+  <!-- FLOATING CELESTIAL CRYSTAL AUDIO PLAYER (KIRI BAWAH LAYAR) -->
+  <div id="floatingAudioContainer" class="fixed bottom-6 left-6 z-40 flex items-center select-none">
+    <audio id="bgmAudioPlayer" preload="none" loop></audio>
+    <button id="btnToggleBgm" onclick="toggleBgmPlayPause()" class="crystal-audio-capsule group flex items-center gap-2.5 px-3.5 py-2.5 rounded-full cursor-pointer transition-all duration-300 shadow-xl border border-hydrangea-300/70" title="Putar Musik Latar">
+      
+      <!-- Crystal Jewel Core Icon / Play Pause Indicator -->
+      <div class="crystal-icon-wrapper w-7 h-7 rounded-full flex items-center justify-center bg-gradient-to-tr from-hydrangea-800 to-hydrangea-600 text-amber-300 shadow-inner transition-transform group-hover:scale-105">
+        <svg id="audioIconPlay" class="w-3.5 h-3.5 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+        <svg id="audioIconPause" class="w-3.5 h-3.5 hidden" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+        </svg>
+      </div>
+
+      <!-- Equalizer Waveform Bars Animasi Kristal -->
+      <div class="audio-equalizer-bars flex items-end gap-1 h-3.5 px-0.5" id="audioEqualizerBars">
+        <span class="eq-bar eq-bar-1"></span>
+        <span class="eq-bar eq-bar-2"></span>
+        <span class="eq-bar eq-bar-3"></span>
+        <span class="eq-bar eq-bar-4"></span>
+      </div>
+
+      <!-- Text Label (Desktop / Tablet) -->
+      <span class="text-[11px] font-black text-hydrangea-900 tracking-wider uppercase hidden sm:inline-block pr-1 font-sans" id="audioTrackLabel">
+        BGM SANTRI
+      </span>
+    </button>
+  </div>
+
+  <!-- TOMBOL SCROLL TO TOP (KANAN BAWAH LAYAR) -->
   <button id="btnScrollToTop" onclick="scrollToTopSmooth()" class="hidden fixed bottom-6 right-6 z-40 w-11 h-11 rounded-full bg-hydrangea-800 hover:bg-hydrangea-900 text-white shadow-xl flex items-center justify-center transition-all duration-300 transform hover:-translate-y-1 active:scale-95 cursor-pointer border-2 border-hydrangea-400/50" title="Kembali ke Atas" aria-label="Kembali ke Atas">
     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 10l7-7m0 0l7 7m-7-7v18" />
@@ -1232,7 +1302,6 @@
   <script>
     (function() {
       if (typeof google === 'undefined') {
-        // Parameter ?v=Date.now() mutlak memaksa HP memuat kode JavaScript baru, bukan memori cache lama!
         fetch('js.html?v=' + Date.now())
           .then(function(res) {
             if (!res.ok) throw new Error('HTTP ' + res.status);
